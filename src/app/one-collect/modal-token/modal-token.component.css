@@ -1,0 +1,96 @@
+strong {
+  font-weight: 500;
+}
+
+span.red {
+  font-size: 16px;
+  font-weight: 600;
+  color: red;
+}
+
+/* Modal Header*/
+.modal-dialog {
+  width: 375px;
+}
+.modal .modal-header {
+  background: #173e77;
+  padding: 10px 15px;
+}
+.modal .modal-header button,
+.modal .modal-header h4 {
+  color: #fff;
+}
+.modal .modal-header button {
+  opacity: 0.75;
+}
+.modal .modal-header h4 {
+  background-color: none;
+  font-size: 15px;
+}
+
+/* Modal Body */
+.modal-body {
+  font-size: 14px;
+}
+.modal-body p {
+  display: block;
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: justify;
+}
+.modal-body p::before {
+  content: '\2022';
+  margin-right: 5px;
+}
+.modal-body .row {
+  align-items: flex-start;
+}
+.modal-body input[type='text'],
+.modal-body input[type='password'] {
+  font-weight: 500;
+}
+.modal-body .item {
+  display: block;
+  margin-top: 10px;
+}
+.modal-body .item span {
+  display: inline-block;
+  width: 75px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: right;
+}
+.modal-body .item input {
+  margin-left: 10px;
+  padding: 3px;
+}
+.modal-body label {
+  cursor: pointer;
+}
+
+/* Modal Footer */
+.modal-footer {
+  padding: 10px 15px;
+}
+.modal-footer span {
+  font-size: 14px;
+  font-weight: 600;
+  margin-right: 10px;
+}
+.modal-footer span.red {
+  color: red;
+  float: left;
+  width: 180px;
+  text-align: left;
+}
+.modal-footer span.green {
+  color: #228b22;
+  width: 180px;
+}
+
+textarea {
+  resize: none;
+  width: 340px;
+  height: 75px;
+}

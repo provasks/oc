@@ -1,0 +1,254 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "onecollect": {
+      "root": "",
+      "sourceRoot": "src",
+      "projectType": "application",
+      "prefix": "oc",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/onecollect",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "src/tsconfig.app.json",
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/bootstrap/dist/css/bootstrap-theme.min.css",
+              "node_modules/font-awesome/css/font-awesome.min.css",
+              "node_modules/bootstrap-daterangepicker/daterangepicker.css",
+              "src/assets/netapp-library/css/luci.css",
+              "src/assets/netapp-library/css/luci-site.css",
+              "src/assets/netapp-library/font/sourcesanspro.css",
+              "src/assets/css/custom-styles.css",
+              "src/styles.css"
+            ],
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/bootstrap/dist/js/bootstrap.min.js",
+              "node_modules/bootstrap-daterangepicker/moment.min.js",
+              "node_modules/bootstrap-daterangepicker/daterangepicker.js",
+              "src/assets/netapp-library/scripts/luci.js"
+            ]
+          },
+          "configurations": {
+            "netapp": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "../vendors/netapp/environments/environment.ts"
+                },
+                {
+                  "replace": "src/favicon.ico",
+                  "with": "../vendors/netapp/images/favicon.ico"
+                },
+                {
+                  "replace": "src/assets/css/",
+                  "with": "../vendors/netapp/css/"
+                },
+                {
+                  "replace": "src/assets/default/",
+                  "with": "../vendors/netapp/i18n/"
+                },
+                {
+                  "replace": "src/assets/custom/i18n/",
+                  "with": "../vendors/netapp/i18n/"
+                }
+              ]
+            },
+            "netapp-prod": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "../vendors/netapp/environments/environment.prod.ts"
+                },
+                {
+                  "replace": "src/favicon.ico",
+                  "with": "../vendors/netapp/images/favicon.ico"
+                },
+                {
+                  "replace": "src/assets/css/",
+                  "with": "../vendors/netapp/css/"
+                },
+                {
+                  "replace": "src/assets/default/",
+                  "with": "../vendors/netapp/i18n/"
+                },
+                {
+                  "replace": "src/assets/custom/i18n/",
+                  "with": "../vendors/netapp/i18n/"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            },
+            "lenovo": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "../vendors/lenovo/environments/environment.ts"
+                },
+                {
+                  "replace": "src/favicon.ico",
+                  "with": "../vendors/lenovo/images/favicon.ico"
+                },
+                {
+                  "replace": "src/assets/css/",
+                  "with": "../vendors/lenovo/css/"
+                },
+				{
+                  "replace": "src/assets/html/whatsnew.html",
+                  "with": "../vendors/lenovo/html/whatsnew.html"
+                },
+                {
+                  "replace": "src/assets/default/",
+                  "with": "../vendors/netapp/i18n/"
+                },
+                {
+                  "replace": "src/assets/custom/i18n/",
+                  "with": "../vendors/lenovo/i18n/"
+                }
+              ]
+            },
+            "lenovo-prod": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "../vendors/lenovo/environments/environment.prod.ts"
+                },
+                {
+                  "replace": "src/favicon.ico",
+                  "with": "../vendors/lenovo/images/favicon.ico"
+                },
+                {
+                  "replace": "src/assets/css/",
+                  "with": "../vendors/lenovo/css/"
+                },
+				{
+                  "replace": "src/assets/html/whatsnew.html",
+                  "with": "../vendors/lenovo/html/whatsnew.html"
+                },
+                {
+                  "replace": "src/assets/default/",
+                  "with": "../vendors/netapp/i18n/"
+                },
+                {
+                  "replace": "src/assets/custom/i18n/",
+                  "with": "../vendors/lenovo/i18n/"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            },
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "onecollect:build"
+          },
+          "configurations": {
+            "netapp": {
+              "browserTarget": "onecollect:build:netapp"
+            },
+            "lenovo": {
+              "browserTarget": "onecollect:build:lenovo"
+            },
+            "production": {
+              "browserTarget": "onecollect:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "onecollect:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/test.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "src/tsconfig.spec.json",
+            "karmaConfig": "src/karma.conf.js",
+            "styles": ["src/styles.css"],
+            "scripts": [],
+            "assets": ["src/favicon.ico", "src/assets"]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["src/tsconfig.app.json", "src/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**"]
+          }
+        }
+      }
+    },
+    "onecollect-e2e": {
+      "root": "e2e/",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "e2e/protractor.conf.js",
+            "devServerTarget": "onecollect:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "onecollect:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "e2e/tsconfig.e2e.json",
+            "exclude": ["**/node_modules/**"]
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "onecollect"
+}

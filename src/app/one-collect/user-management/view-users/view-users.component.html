@@ -1,0 +1,248 @@
+<!--##################################-->
+<!-- Modals and Toast messages -->
+<!--##################################-->
+
+<!-- Modal to edit user -->
+<oc-modal-edit-user></oc-modal-edit-user>
+
+<!-- Modal to confirm user deletion -->
+<oc-modal-notification
+  [id]="'remove-user'"
+  [notification]="notification"
+  (onConfirmed)="confirmDeleteUser($event)"
+>
+</oc-modal-notification>
+
+<!-- Toast to confirm user deletion -->
+<div id="alert-user-deleted" class="alert alert-success">
+  {{ 'Usermgmnt_delete_success' | translate }}
+</div>
+
+<!--##################################-->
+<!-- Main content for User Management -->
+<!--##################################-->
+<oc-tour-user-management
+  [hidden]="!tourStarted"
+  [grid]="grid"
+  (toggleTour)="toggleTour($event)"
+></oc-tour-user-management>
+
+<!-- Link to add a new user-->
+<div [hidden]="tourStarted">
+  <div class="new-user">
+    <a (click)="initCreateUser()">
+      <i class="fa fa-plus" aria-hidden="true"></i>
+      {{ 'Usermgmnt_create_user' | translate }}
+    </a>
+  </div>
+
+  <div *ngIf="showContent">
+    <div class="tab-content-wrap" *ngIf="!users || !users.length">
+      <div class="tab-content-empty">
+        {{ 'Usermgmnt_nouser' | translate
+        }}<a routerLink="/main/new-collection">{{
+          'Usermgmnt_newuser' | translate
+        }}</a>
+      </div>
+    </div>
+    <!--END .tab-content-wrap-->
+
+    <div class="tab-content-wrap" *ngIf="users && users.length">
+      <div class="tab-content">
+        <!-- Grid view of users-->
+        <div class="grid-wrap" *ngIf="users && users.length">
+          <div
+            id="{{ grid.meta.tableId }}-right-scroll"
+            class="right-scroll"
+            (click)="grid.rightScroll()"
+            [hidden]="!grid.showRightScroll"
+            data-spy="affix"
+          >
+            <i class="fa fa-chevron-right" aria-hidden="true"></i>
+          </div>
+          <div
+            id="{{ grid.meta.tableId }}-left-scroll"
+            class="left-scroll"
+            (click)="grid.leftScroll()"
+            [hidden]="!grid.showLeftScroll"
+            data-spy="affix"
+          >
+            <i class="fa fa-chevron-left" aria-hidden="true"></i>
+          </div>
+
+          <div id="{{ grid.meta.tableId }}" class="smart-grid">
+            <table
+              class="table"
+              [ngClass]="{
+                'table-bordered': grid.meta.tableBordered,
+                'table-striped': grid.meta.tableStriped
+              }"
+            >
+              <tbody>
+                <!--Headers-->
+                <tr class="headers">
+                  <th class="row-select" *ngIf="grid.meta.selectAll">
+                    <div class="custom-checkbox">
+                      <input
+                        type="checkbox"
+                        [(ngModel)]="checkAll"
+                        (click)="toggleChecked()"
+                        [disabled]="disableCheckAll"
+                      />
+                      <label></label>
+                    </div>
+                  </th>
+                  <th
+                    class="actions"
+                    *ngIf="grid.meta.actions"
+                    [style.min-width]="grid.meta.actionsWidth"
+                    [style.width]="grid.meta.actionsWidth"
+                  >
+                    <a (click)="gridDo('toggleFilters')"
+                      ><i class="fa fa-filter" aria-hidden="true"></i
+                    ></a>
+                    {{ grid.meta.actionsTitle | translate }}
+                  </th>
+                  <ng-container
+                    *ngFor="let header of grid.headers; let i = index"
+                  >
+                    <ng-container *ngIf="header.sort !== false">
+                      <th
+                        class="sortable"
+                        [style.min-width]="
+                          header.width || grid.meta.minCellWidth
+                        "
+                        [style.width]="header.width || grid.meta.minCellWidth"
+                        (click)="gridDo('sort', i)"
+                      >
+                        {{ header.title | translate }}
+                        <i class="fa fa-sort" aria-hidden="true"></i>
+                      </th>
+                    </ng-container>
+                    <ng-container *ngIf="header.sort === false">
+                      <th
+                        [style.min-width]="
+                          header.width || grid.meta.minCellWidth
+                        "
+                        [style.width]="header.width || grid.meta.minCellWidth"
+                      >
+                        {{ header.title | translate }}
+                      </th>
+                    </ng-container>
+                  </ng-container>
+                  <th class="blank-column"></th>
+                </tr>
+
+                <!--Filters Row-->
+                <tr class="filters" *ngIf="grid.showFilters">
+                  <td class="row-select" *ngIf="grid.meta.selectAll"></td>
+                  <td class="actions" *ngIf="grid.meta.actions">&nbsp;</td>
+                  <td *ngFor="let header of grid.headers; let i = index">
+                    <ng-container *ngIf="header.filter !== false">
+                      <input
+                        id="{{ grid.meta.tableId }}-filter-{{ i }}"
+                        type="text"
+                        (input)="gridDo('filter', i, $event.target.value)"
+                      /><!--
+                 -->
+                      <div
+                        class="close-filter"
+                        (click)="gridDo('clearFilter', i)"
+                      >
+                        <i class="fa fa-close" aria-hidden="true"></i>
+                      </div>
+                    </ng-container>
+                  </td>
+                  <td class="blank-column"></td>
+                </tr>
+
+                <!--Data Rows-->
+                <ng-container *ngFor="let user of users; let i = index">
+                  <ng-container *ngIf="user.showRow">
+                    <tr>
+                      <td class="row-select" *ngIf="grid.meta.selectAll">
+                        <div class="custom-checkbox">
+                          <input
+                            type="checkbox"
+                            [(ngModel)]="user.selected"
+                            [disabled]="user.disabled"
+                          />
+                          <label></label>
+                        </div>
+                      </td>
+
+                      <td class="actions" *ngIf="grid.meta.actions">
+                        <div class="tools">
+                          <button
+                            id="{{ grid.meta.tableId }}-btn-tools-{{ i }}"
+                            class="btn btn-primary btn-xs btn-tools"
+                            (click)="grid.viewActions(i)"
+                            data-toggle="tooltip"
+                            title="{{ 'Usermgmnt_moreactions' | translate }}"
+                          >
+                            <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                          </button>
+                        </div>
+                        <span
+                          id="{{ grid.meta.tableId }}-tools-dropdown-{{ i }}"
+                          class="tools-dropdown"
+                        >
+                          <ul>
+                            <!--Edit User-->
+                            <li
+                              *ngIf="user.username != 'admin'"
+                              (click)="initEditUser(i)"
+                            >
+                              <i class="fa fa-pencil" aria-hidden="true"></i>
+                              {{ 'Usermgmnt_edituser' | translate }}
+                            </li>
+                            <!--Delete User-->
+                            <li
+                              *ngIf="user.username != 'admin'"
+                              (click)="initDeleteUser(i)"
+                            >
+                              <i class="fa fa-trash" aria-hidden="true"></i>
+                              {{ 'Usermgmnt_deleteuser' | translate }}
+                            </li>
+                            <!--Change Password-->
+                            <li (click)="initChangePassword(i)">
+                              <i class="fa fa-key" aria-hidden="true"></i>
+                              {{ 'Usermgmnt_pwd_change' | translate }}
+                            </li>
+                          </ul>
+                        </span>
+                      </td>
+
+                      <td>{{ user.username }}</td>
+
+                      <td>{{ user.email }}</td>
+
+                      <td>{{ user.role }}</td>
+
+                      <td>{{ user.last_login | date: 'medium' }}</td>
+
+                      <td class="blank-column"></td>
+                    </tr>
+                  </ng-container>
+                </ng-container>
+              </tbody>
+            </table>
+
+            <div
+              class="hide-scroll"
+              *ngIf="
+                !grid.meta.showBottomScroll &&
+                (grid.showRightScroll || grid.showLeftScroll)
+              "
+            >
+              &nbsp;
+            </div>
+          </div>
+          <!--END .smart-grid-->
+        </div>
+        <!--END .grid-wrap-->
+      </div>
+    </div>
+    <!--END .tab-content-wrap-->
+  </div>
+</div>

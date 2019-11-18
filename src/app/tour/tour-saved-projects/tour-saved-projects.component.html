@@ -1,0 +1,117 @@
+<div>
+  <div class="tab-content-wrap">
+    <div class="tab-content">
+      <!-- Grid view of Jobs-->
+      <div class="grid-wrap">
+        <div id="{{ grid.meta.tableId }}" class="smart-grid">
+          <table
+            class="table"
+            [ngClass]="{
+              'table-bordered': grid.meta.tableBordered,
+              'table-striped': grid.meta.tableStriped
+            }"
+          >
+            <tbody>
+              <!--Headers-->
+              <tr class="headers">
+                <th
+                  class="actions"
+                  *ngIf="grid.meta.actions"
+                  [style.min-width]="grid.meta.actionsWidth"
+                  [style.width]="grid.meta.actionsWidth"
+                >
+                  <a tourAnchor="filter"
+                    ><i class="fa fa-filter" aria-hidden="true"></i
+                  ></a>
+                  {{ grid.meta.actionsTitle }}
+                </th>
+                <ng-container
+                  *ngFor="let header of grid.headers; let i = index"
+                >
+                  <ng-container *ngIf="header.sort !== false">
+                    <th
+                      class="sortable"
+                      [tourAnchor]="header.key"
+                      [style.min-width]="header.width || grid.meta.minCellWidth"
+                      [style.width]="header.width || grid.meta.minCellWidth"
+                    >
+                      {{ header.title }}
+                      <i class="fa fa-sort" aria-hidden="true"></i>
+                    </th>
+                  </ng-container>
+                  <ng-container *ngIf="header.sort === false">
+                    <th
+                      [style.min-width]="header.width || grid.meta.minCellWidth"
+                      [style.width]="header.width || grid.meta.minCellWidth"
+                    >
+                      {{ header.title }}
+                    </th>
+                  </ng-container>
+                </ng-container>
+                <th class="blank-column"></th>
+              </tr>
+
+              <!--Data Rows-->
+              <tr>
+                <td class="actions" *ngIf="grid.meta.actions">
+                  <div class="tools">
+                    <button
+                      tourAnchor="more-actions"
+                      id="{{ grid.meta.tableId }}-btn-tools-{{ i }}"
+                      class="btn btn-primary btn-xs btn-tools"
+                      data-toggle="tooltip"
+                      title="More Actions"
+                    >
+                      <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                  <span id="tools-dropdown-test" class="tools-dropdown">
+                    <ul>
+                      <!--Replay-->
+                      <li tourAnchor="replay">
+                        <i class="fa fa-play" aria-hidden="true"></i>Replay
+                      </li>
+                      <!--Clone Project-->
+                      <li tourAnchor="clone">
+                        <i class="fa fa-copy" aria-hidden="true"></i>Clone
+                        Project
+                      </li>
+                      <!--Schedule-->
+                      <li tourAnchor="schedule">
+                        <i class="fa fa-clock-o" aria-hidden="true"></i>Add
+                        Schedule
+                      </li>
+                      <!--Edit Project-->
+                      <li tourAnchor="edit">
+                        <i class="fa fa-pencil" aria-hidden="true"></i>Edit
+                        Project
+                      </li>
+                      <!--Delete Project-->
+                      <li tourAnchor="delete">
+                        <i class="fa fa-trash" aria-hidden="true"></i>Delete
+                        Project
+                      </li>
+                    </ul>
+                  </span>
+                </td>
+
+                <td>SampleJob_20180213095030</td>
+
+                <td>Sample_Group</td>
+
+                <td>Component Based</td>
+
+                <td>Feb 13, 2018, 3:20:30 PM</td>
+
+                <td class="blank-column"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!--END .smart-grid-->
+      </div>
+      <!--END .grid-wrap-->
+    </div>
+  </div>
+  <!--END .tab-content-wrap-->
+</div>

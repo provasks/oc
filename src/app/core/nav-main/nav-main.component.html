@@ -1,0 +1,292 @@
+<div id="main-navigation">
+  <div class="luci-button-group">
+    <label
+      class="luci-button luci-button--secondary luci-button--small luci-button--input"
+      role="button"
+      aria-pressed="false"
+    >
+      <div class="luci-tooltip luci-tooltip--right-bottom">
+        <input
+          type="radio"
+          class="luci-button__input"
+          name="tabSelect"
+          value="data-collection"
+          [(ngModel)]="tab"
+        />
+        <span class="luci-button__inner" (click)="changeTab('data-collection')">
+          <span
+            class="luci-button__text luci-tooltip__trigger"
+            aria-describedby="luci-tooltip-53527"
+          >
+            {{ 'Collection_nav' | translate }}
+          </span>
+          <div
+            class="luci-tooltip__content"
+            role="tooltip"
+            id="luci-tooltip-53527"
+          >
+            <div class="luci-tooltip__content-inner">
+              <div class="luci-tooltip__text">
+                {{ 'ToolTipText_Data_Collection_Jobs' | translate }}
+              </div>
+            </div>
+          </div>
+        </span>
+      </div>
+    </label>
+    <label
+      class="luci-button luci-button--secondary luci-button--small luci-button--input"
+      role="button"
+      aria-pressed="false"
+    >
+      <div class="luci-tooltip luci-tooltip--right-bottom">
+        <input
+          type="radio"
+          class="luci-button__input"
+          name="tabSelect"
+          value="data-view"
+          [(ngModel)]="tab"
+          (change)="changeTab()"
+        />
+        <span class="luci-button__inner">
+          <span
+            class="luci-button__text luci-tooltip__trigger"
+            aria-describedby="luci-tooltip-53528"
+          >
+            {{ 'Dataview_nav' | translate }}
+          </span>
+          <div
+            class="luci-tooltip__content"
+            role="tooltip"
+            id="luci-tooltip-53528"
+          >
+            <div class="luci-tooltip__content-inner">
+              <div class="luci-tooltip__text">
+                {{ 'ToolTipText_Data_View' | translate }}
+              </div>
+            </div>
+          </div>
+        </span>
+      </div>
+    </label>
+    <label
+      class="luci-button luci-button--secondary luci-button--small luci-button--input"
+      role="button"
+      aria-pressed="false"
+    >
+      <div class="luci-tooltip luci-tooltip--right-bottom">
+        <input
+          type="radio"
+          class="luci-button__input"
+          name="tabSelect"
+          value="saved-projects"
+          [(ngModel)]="tab"
+          (change)="changeTab()"
+        />
+        <span class="luci-button__inner">
+          <span
+            class="luci-button__text luci-tooltip__trigger"
+            aria-describedby="luci-tooltip-53529"
+          >
+            {{ 'Savedproject_nav' | translate }}
+          </span>
+          <div
+            class="luci-tooltip__content"
+            role="tooltip"
+            id="luci-tooltip-53529"
+          >
+            <div class="luci-tooltip__content-inner">
+              <div class="luci-tooltip__text">
+                {{ 'ToolTipText_Saved_Projects' | translate }}
+              </div>
+            </div>
+          </div>
+        </span>
+      </div>
+    </label>
+    <label
+      class="luci-button luci-button--secondary luci-button--small luci-button--input"
+      role="button"
+      aria-pressed="false"
+    >
+      <div class="luci-tooltip luci-tooltip--right-bottom">
+        <input
+          type="radio"
+          class="luci-button__input"
+          name="tabSelect"
+          value="scheduled-jobs"
+          [(ngModel)]="tab"
+          (change)="changeTab()"
+        />
+        <span class="luci-button__inner">
+          <span
+            class="luci-button__text luci-tooltip__trigger"
+            aria-describedby="luci-tooltip-53528"
+          >
+            {{ 'Scheduledproject_nav' | translate }}
+          </span>
+          <div
+            class="luci-tooltip__content"
+            role="tooltip"
+            id="luci-tooltip-53528"
+          >
+            <div class="luci-tooltip__content-inner">
+              <div class="luci-tooltip__text">
+                {{ 'ToolTipText_Scheduled_Jobs' | translate }}
+              </div>
+            </div>
+          </div>
+        </span>
+      </div>
+    </label>
+    <label
+      *ngIf="client.features.asupUpload"
+      class="luci-button luci-button--secondary luci-button--small luci-button--input"
+      role="button"
+      aria-pressed="false"
+    >
+      <div class="luci-tooltip luci-tooltip--right-bottom">
+        <input
+          type="radio"
+          class="luci-button__input"
+          name="tabSelect"
+          value="upload-asup"
+          [(ngModel)]="tab"
+          (change)="changeTab()"
+        />
+        <span class="luci-button__inner">
+          <span
+            class="luci-button__text luci-tooltip__trigger"
+            aria-describedby="luci-tooltip-53530"
+          >
+            {{ 'Asup_nav' | translate }}
+          </span>
+          <div
+            class="luci-tooltip__content"
+            role="tooltip"
+            id="luci-tooltip-53530"
+          >
+            <div class="luci-tooltip__content-inner">
+              <div class="luci-tooltip__text">
+                {{ 'ToolTipText_Upload_to_Autosupport' | translate }}
+              </div>
+            </div>
+          </div>
+        </span>
+      </div>
+    </label>
+    <label
+      class="luci-button luci-button--secondary luci-button--small luci-button--input"
+      role="button"
+      aria-pressed="false"
+      *ngIf="
+        client.features.userManagement &&
+        activeUser &&
+        activeUser.hosted &&
+        activeUser.is_superuser
+      "
+    >
+      <div class="luci-tooltip luci-tooltip--right-bottom">
+        <input
+          type="radio"
+          class="luci-button__input"
+          name="tabSelect"
+          value="user-management"
+          [(ngModel)]="tab"
+          (change)="changeTab()"
+        />
+        <span class="luci-button__inner">
+          <span
+            class="luci-button__text luci-tooltip__trigger"
+            aria-describedby="luci-tooltip-53531"
+          >
+            {{ 'Usermgnt_nav' | translate }}
+          </span>
+          <div
+            class="luci-tooltip__content"
+            role="tooltip"
+            id="luci-tooltip-53531"
+          >
+            <div class="luci-tooltip__content-inner">
+              <div class="luci-tooltip__text">
+                {{ 'ToolTipText_User_Management' | translate }}
+              </div>
+            </div>
+          </div>
+        </span>
+      </div>
+    </label>
+    <label
+      class="luci-button luci-button--secondary luci-button--small luci-button--input"
+      role="button"
+      aria-pressed="false"
+      *ngIf="router.isActive('/imtadvise', false)"
+    >
+      <div class="luci-tooltip luci-tooltip--right-bottom">
+        <input
+          type="radio"
+          class="luci-button__input"
+          name="tabSelect"
+          value="imtadvise"
+          [(ngModel)]="tab"
+          (change)="changeTab()"
+        />
+        <span class="luci-button__inner">
+          <span
+            class="luci-button__text luci-tooltip__trigger"
+            aria-describedby="luci-tooltip-53532"
+          >
+            {{ 'Addons_nav' | translate }}
+          </span>
+          <div
+            class="luci-tooltip__content"
+            role="tooltip"
+            id="luci-tooltip-53532"
+          >
+            <div class="luci-tooltip__content-inner">
+              <div class="luci-tooltip__text">
+                This is a default tooltip for ADD-ONS.
+              </div>
+            </div>
+          </div>
+        </span>
+      </div>
+    </label>
+    <label
+      *ngIf="client.features.credentialManager"
+      class="luci-button luci-button--secondary luci-button--small luci-button--input"
+      role="button"
+      aria-pressed="false"
+    >
+      <div class="luci-tooltip luci-tooltip--right-bottom">
+        <input
+          type="radio"
+          class="luci-button__input"
+          name="tabSelect"
+          value="credentials"
+          [(ngModel)]="tab"
+          (change)="changeTab()"
+        />
+        <span class="luci-button__inner">
+          <span
+            class="luci-button__text luci-tooltip__trigger"
+            aria-describedby="luci-tooltip-53531"
+          >
+            {{ 'Credential_nav' | translate }}
+          </span>
+          <div
+            class="luci-tooltip__content"
+            role="tooltip"
+            id="luci-tooltip-53531"
+          >
+            <div class="luci-tooltip__content-inner">
+              <div class="luci-tooltip__text">
+                {{ 'ToolTipText_Credential' | translate }}
+              </div>
+            </div>
+          </div>
+        </span>
+      </div>
+    </label>
+  </div>
+</div>

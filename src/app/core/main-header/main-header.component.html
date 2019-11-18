@@ -1,0 +1,420 @@
+<!-- ############################# -->
+<!-- Modal Items -->
+<!-- ############################# -->
+<oc-modal-notification
+  [id]="'confirm-shutdown'"
+  [notification]="notifyShutdown"
+  (onConfirmed)="shutDown($event)"
+>
+</oc-modal-notification>
+
+<!-- Modal to create new user in user management -->
+<oc-modal-create-user></oc-modal-create-user>
+
+<!-- Modal to change password -->
+<oc-modal-change-password></oc-modal-change-password>
+
+<div id="oc-app-notification-modal" class="modal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+        <h4 class="modal-title">
+          {{ 'Notification_modal_title' | translate }}
+        </h4>
+      </div>
+      <div class="modal-body">
+        <span class="ca-notification-loader" *ngIf="!notificationMsg"></span>
+        <div
+          *ngIf="notificationMsg"
+          class="notification-msg"
+          [innerHtml]="notificationMsg | safeHtml"
+        ></div>
+        <br />
+        <div *ngIf="plugin_updates != false">
+          <h3 class="mar">
+            {{ 'Notification_modal_table_title_OC' | translate }}
+            <span
+              class="alert alert-info"
+              style="border: none;font-size: small;position: inherit;background-color: #d9edf7;"
+              id="update-toast"
+              [hidden]="!versionChange"
+            >
+              {{ 'Notification_modal_toast_msg' | translate }}
+            </span>
+            <span
+              class="alert alert-info"
+              style="position: inherit;margin-left: 30%;background-color: #d9edf7;border: none;"
+              id="update-success"
+            >
+              {{ 'Notification_modal_toast_success' | translate }}
+            </span>
+            <span
+              class="alert alert-info"
+              style="position: inherit;margin-left:auto;background-color: #FFF0F5;;border: none;color:red"
+              id="update-error"
+            >
+              <strong style="font-weight: bolder;">{{
+                'Notification_modal_toast_failed' | translate
+              }}</strong>
+              {{ errorMsg }}
+            </span>
+          </h3>
+          <table border="0" class="table table-hover">
+            <thead>
+              <tr>
+                <th>{{ 'Notification_modal_table_column1' | translate }}</th>
+                <th>{{ 'Notification_modal_table_column2' | translate }}</th>
+                <th>{{ 'Notification_modal_table_column3' | translate }}</th>
+              </tr>
+            </thead>
+
+            <tbody *ngFor="let data of notification_data" let i="index">
+              <tr
+                data-target="#plugin_count"
+                data-toggle="collapse"
+                class="clickable"
+                *ngIf="
+                  data.status == 'Upgrade available' ||
+                  data.status == 'Not installed'
+                "
+              >
+                <td>
+                  <p style="color:red;">{{ data.name }}</p>
+                </td>
+                <td>
+                  <p style="color:red;">{{ data.old_version }}</p>
+                </td>
+                <td>
+                  <p style="color:red;">{{ data.new_version }}</p>
+                </td>
+                <td>
+                  <button
+                    class="btn btn-primary"
+                    (click)="updatepluginfolder(data.name)"
+                  >
+                    {{ 'Notification_modal_update_button' | translate }}
+                  </button>
+                  <button class="btn btn-primary" *ngIf="data.arrow == false">
+                    <i
+                      class="fa fa-angle-double-down"
+                      (click)="getrow(data.plugin_count)"
+                      aria-hidden="true"
+                      data-toggle="tooltip"
+                      title="{{
+                        'Notification_modal_expand_tooltip' | translate
+                      }}"
+                    ></i>
+                  </button>
+                  <button class="btn btn-primary" *ngIf="data.arrow == true">
+                    <i
+                      class="fa fa-angle-double-up"
+                      (click)="getrow(data.plugin_count)"
+                      aria-hidden="true"
+                      data-toggle="tooltip"
+                      title="{{
+                        'Notification_modal_collapse_tooltip' | translate
+                      }}"
+                    ></i>
+                  </button>
+                </td>
+              </tr>
+              <tr
+                [hidden]="data.showrow == false"
+                style="background-color: whitesmoke;"
+              >
+                <td
+                  id="plugin_count"
+                  colspan="6"
+                  [innerHtml]="data.plugin_update_data | safeHtml"
+                ></td>
+              </tr>
+              <tr *ngIf="data.status == 'Latest version installed'">
+                <td>
+                  <p style="color:green;">{{ data.name }}</p>
+                </td>
+                <td>
+                  <p style="color:green;">{{ data.old_version }}</p>
+                </td>
+                <td>
+                  <p style="color:green;">{{ data.new_version }}</p>
+                </td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="versionChange">
+            <strong
+              >{{ 'Notification_modal_update_file' | translate }}&nbsp;</strong
+            >&nbsp;
+            <label class="btn btn-primary btn-xs"
+              >{{ 'Importfile_choosefile' | translate }}
+              <input
+                type="file"
+                style="display:none"
+                id="myFile"
+                (change)="selectfolder($event)"
+                (click)="resetFolder($event)"
+                multiple
+              />
+            </label>
+            <label
+              id="fileLabel"
+              style="padding-left: 10px;font-weight: 100; padding-right: 5%;"
+              >{{ fileLabel }}</label
+            >
+            <span
+              class="upload-msg"
+              [ngClass]="{
+                pass: typeCheck == 'pass',
+                fail: typeCheck == 'fail'
+              }"
+              ><strong style="font-weight: bold">{{ uploadMsg }}</strong></span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-primary" data-dismiss="modal">
+          {{ 'Notification_modal_modal_close' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ############################# -->
+<!-- Main Header -->
+<!-- ############################# -->
+<header id="header-wrap" class="luci-site-page-shell__header">
+  <div class="luci-site-page-shell__header-inner">
+    <div class="luci-site-top-hat">
+      <div class="luci-site-top-hat__utils">
+        <a
+          *ngIf="client.features.home"
+          class="luci-list-group__element luci-list-group__element--link"
+          href="{{'ProductURL'|translate}}"
+          target="_blank"
+        >
+          <span>{{ 'NetApp' | translate }}</span>
+        </a>
+        <a
+          *ngIf="client.features.support"
+          class="luci-list-group__element luci-list-group__element--link"
+          href="{{ client.urls.support.oc }}"
+          target="_blank"
+        >
+          <span>{{ 'Support' | translate }}</span>
+        </a>
+        <a
+          *ngIf="client.features.survey"
+          class="luci-list-group__element luci-list-group__element--link"
+          href="{{ client.urls.survey }}"
+          target="_blank"
+        >
+          <span>{{ 'Survey' | translate }}</span>
+        </a>
+      </div>
+
+      <div
+        class="luci-site-top-hat__utils top-hat-right"
+        [hidden]="!showTopHatNav()"
+      >
+        <a
+          routerLink="/main/collection/projects"
+          class="luci-link luci-link--small luci-link--on-dark"
+        >
+          <i class="fa fa-home" aria-hidden="true"></i>
+          <span>{{ 'Home' | translate }}</span>
+        </a>
+
+        <a
+          (click)="showSettingsModal()"
+          class="luci-link luci-link--small luci-link--on-dark"
+        >
+          <i class="fa fa-cog" aria-hidden="true"></i>
+          <span>{{ 'Settings' | translate }}</span>
+        </a>
+
+        <div class="luci-menu">
+          <a
+            class="luci-link undefined luci-menu__trigger luci-link--small luci-link--on-dark"
+            href="#"
+            aria-expanded="false"
+            aria-haspopup="true"
+          >
+            <i class="fa fa-info-circle" aria-hidden="true"></i>
+            <span>{{ 'Help_title' | translate }}</span>
+          </a>
+          <div
+            class="luci-menu__content luci-container--light"
+            role="menu"
+            aria-hidden="true"
+          >
+            <div class="luci-menu__body">
+              <ul class="luci-list-group">
+                <li
+                  class="luci-list-group__item"
+                  *ngIf="client.features.whatsNew"
+                >
+                  <a
+                    class="luci-list-group__element luci-list-group__element--link"
+                    href="assets/html/whatsnew.html"
+                    target="_blank"
+                  >
+                    {{ 'Help_dropdown3' | translate }}
+                  </a>
+                </li>
+                <li
+                  class="luci-list-group__item"
+                  *ngIf="client.features.demoVideo"
+                >
+                  <a
+                    class="luci-list-group__element luci-list-group__element--link"
+                    href="{{ client.urls.demoVideo.oc }}"
+                    target="_blank"
+                  >
+                    {{ 'Help_dropdown4' | translate }}
+                  </a>
+                </li>
+                <li
+                  class="luci-list-group__item"
+                  *ngIf="client.features.installationGuide"
+                >
+                  <a
+                    class="luci-list-group__element luci-list-group__element--link"
+                    href="{{ client.urls.userGuide.oc }}"
+                    target="_blank"
+                  >
+                    {{ 'Help_dropdown5' | translate }}
+                  </a>
+                </li>
+                <li
+                  class="luci-list-group__item"
+                  *ngIf="client.features.reportProblem"
+                >
+                  <a
+                    class="luci-list-group__element luci-list-group__element--link"
+                    href="{{ client.urls.reportProblem.oc }}"
+                    target="_blank"
+                  >
+                    {{ 'Help_dropdown6' | translate }}
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <a
+          *ngIf="client.features.tour"
+          (click)="startTour()"
+          class="luci-link luci-link--small luci-link--on-dark"
+        >
+          <i class="fa fa-play" aria-hidden="true"></i>
+          <span>{{ 'Start_tour' | translate }}</span>
+        </a>
+
+        <a
+          *ngIf="client.features.notification"
+          (click)="displayNotificationModal()"
+          class="luci-link luci-link--small luci-link--on-dark"
+          data-toggle="modal"
+          data-target="#oc-app-notification-modal"
+        >
+          <i
+            class="fa fa-bell"
+            aria-hidden="true"
+            [ngClass]="{ 'new-notification': versionChange }"
+          ></i>
+          <span>{{ 'Notification_modal_title' | translate }}</span>
+        </a>
+
+        <div class="luci-menu">
+          <a
+            class="luci-link undefined luci-menu__trigger luci-link--small luci-link--on-dark"
+            aria-expanded="false"
+            aria-haspopup="true"
+          >
+            <i class="fa fa-user" aria-hidden="true"></i>
+            <span *ngIf="activeUser">{{ activeUser.username }}</span>
+          </a>
+          <div
+            class="luci-menu__content luci-container--light"
+            role="menu"
+            aria-hidden="true"
+            *ngIf="activeUser && activeUser.hosted"
+          >
+            <div class="luci-menu__body">
+              <ul class="luci-list-group">
+                <li
+                  class="luci-list-group__item"
+                  *ngIf="activeUser && activeUser.is_superuser"
+                >
+                  <a
+                    class="luci-list-group__element luci-list-group__element--link"
+                    (click)="initCreateUser()"
+                  >
+                    {{ 'User_create' | translate }}
+                  </a>
+                </li>
+                <li class="luci-list-group__item">
+                  <a
+                    class="luci-list-group__element luci-list-group__element--link"
+                  >
+                    <span (click)="initChangePassword()">
+                      {{ 'User_password' | translate }}
+                    </span>
+                  </a>
+                </li>
+                <li class="luci-list-group__item">
+                  <a
+                    class="luci-list-group__element luci-list-group__element--link"
+                    (click)="logoutUser()"
+                  >
+                    {{ 'User_logout' | translate }}
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <a
+          (click)="confirmShutdown()"
+          class="luci-link luci-link--small luci-link--on-dark"
+          *ngIf="activeUser && activeUser.is_superuser"
+        >
+          <i class="fa fa-power-off" aria-hidden="true"></i>
+          <span>{{ 'Shutdown' | translate }}</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="luci-site-property-bar">
+      <a routerLink="/main/collection/projects">
+        <ng-container *ngIf="client.isOEM">
+            <span class="luci-icon luci-site-property-bar__logo" aria-hidden="true">
+              <img src="{{client.urls.logo}}" />
+            </span>
+        </ng-container>
+        <ng-container *ngIf="!client.isOEM">
+            <svg class="luci-icon luci-site-property-bar__logo" aria-hidden="true">
+                <use xlink:href="assets/netapp-library/svg/sprite.svg#netapp-mark"></use>
+            </svg>
+        </ng-container>
+      </a>
+      <span class="luci-site-property-bar__title">
+        <a
+          routerLink="/main/collection/projects"
+          class="luci-site-property-bar__home-link"
+        >
+          {{ 'OC_title' | translate }}
+        </a>
+      </span>
+    </div>
+  </div>
+</header>

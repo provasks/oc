@@ -1,0 +1,66 @@
+<div id="upload-asup-modal" class="modal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+        <h4 class="modal-title">{{ 'Upload_asup_title' | translate }}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="item">
+              <span
+                ><strong>{{ 'Upload_asup_case' | translate }}</strong
+                >&nbsp;<small>{{
+                  'Upload_asup_bracket' | translate
+                }}</small></span
+              >
+              <input
+                type="text"
+                [(ngModel)]="metaData.caseId"
+                placeholder="{{ 'Optional' | translate }}"
+              />
+            </div>
+            <div class="item">
+              <span
+                ><strong>{{ 'Upload_asup_opp' | translate }}</strong
+                >&nbsp;<small>{{
+                  'Upload_asup_bracket1' | translate
+                }}</small></span
+              >
+              <input
+                type="text"
+                [(ngModel)]="metaData.opportunityId"
+                placeholder="{{ 'Optional' | translate }}"
+              />
+            </div>
+            <div class="item">
+              <span
+                ><strong>{{ 'Upload_asup_comment' | translate }}</strong
+                >&nbsp;<small></small
+              ></span>
+              <textarea
+                [(ngModel)]="metaData.comments"
+                placeholder="{{ 'Optional' | translate }}"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          class="btn btn-primary"
+          data-dismiss="modal"
+          (click)="onUploadConfirmed.emit(true)"
+        >
+          {{ 'Upload' | translate }}
+        </button>
+        <button class="btn btn-primary" data-dismiss="modal">
+          {{ 'Cancel' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

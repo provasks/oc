@@ -1,0 +1,67 @@
+<div [id]="id" class="modal fade modal-asup" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+        <h4 class="modal-title">{{ 'ASUP_modal_title' | translate }}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="table table-striped">
+          <tr>
+            <th>
+              <div class="custom-checkbox">
+                <input
+                  type="checkbox"
+                  [(ngModel)]="checkAll"
+                  (click)="toggleChecked()"
+                />
+                <label></label>
+              </div>
+            </th>
+            <ng-container *ngFor="let field of fields">
+              <th
+                *ngIf="!field.onlyIn || field.onlyIn.indexOf(searchType) != -1"
+              >
+                {{ field.title }}
+              </th>
+            </ng-container>
+          </tr>
+          <tr
+            class="row-data"
+            [ngClass]="{ selected: row.selected }"
+            *ngFor="let row of modalRows; let rowIdx = index"
+            (click)="toggleSelectRow(rowIdx)"
+          >
+            <td>
+              <div class="custom-checkbox">
+                <input type="checkbox" [(ngModel)]="row.selected" />
+                <label></label>
+              </div>
+            </td>
+            <ng-container *ngFor="let field of fields">
+              <td
+                *ngIf="!field.onlyIn || field.onlyIn.indexOf(searchType) != -1"
+              >
+                {{ row[field.key] }}
+              </td>
+            </ng-container>
+          </tr>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          class="btn btn-primary"
+          data-dismiss="modal"
+          (click)="addSelected()"
+        >
+          {{ 'ASUP_modal_updatebutton' | translate }}
+        </button>
+        <button class="btn btn-primary" data-dismiss="modal">
+          {{ 'ASUP_modal_close' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

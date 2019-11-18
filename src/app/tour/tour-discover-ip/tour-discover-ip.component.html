@@ -1,0 +1,568 @@
+<div class="tab-content" id="discover-ip">
+  <div class="basic-options ip-range">
+    <div>
+      <div class="basic-option">
+        <span><strong>IP Range / Subnet</strong>&nbsp;</span>
+        <input
+          type="text"
+          placeholder="10.195.66.0/24"
+          tourAnchor="ip-range"
+          value="10.195.66.45-60"
+        />
+        <div class="basic-option gap-20">
+          <label>SNMP Community String</label>
+          <input
+            type="text"
+            placeholder="private, public"
+            tourAnchor="community-string"
+          />
+        </div>
+        <button
+          class="btn btn-primary"
+          tourAnchor="discover"
+        >
+          Discover
+        </button>
+        <div class="basic-option gap-20">
+          <div class="custom-checkbox" tourAnchor="use-credential">
+            <input type="checkbox" />
+            <label></label>
+          </div>
+          <label>Use saved credentials</label>
+          <i aria-hidden="true" class="fa fa-info-circle"></i>
+        </div>
+        <div class="basic-option gap-20">
+          <label>Filter </label>
+          <select
+            tourAnchor="filter"
+            id="filter"
+            [(ngModel)]="selectedFilter"
+          >
+            <option *ngFor="let f of settings.filter" value="{{ f.value }}">
+              {{ f.text }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div tourAnchor="export">
+      <button class="luci-button luci-button--primary luci-button--small">
+        <i class="fa fa-download"></i>Export
+      </button>
+    </div>
+  </div>
+  <div class="table-outer-wrap">
+    <div class="actions">
+      <a><i aria-hidden="true" class="fa fa-edit"></i>Update Credentials</a
+      ><a tourAnchor="reset"><i aria-hidden="true" class="fa fa-refresh"></i>Reset</a
+      ><button class="btn btn-primary btn-xs">Validate</button
+      ><button class="btn btn-primary btn-xs">
+        Save/Collect</button
+      ><label class="pull-right">Total records: 3</label>
+    </div>
+    <div class="table-data-wrap">
+      <div
+        class="left-scroll"
+        data-offset-top="1"
+        data-spy="affix"
+        id="left-scroll"
+      >
+        <i aria-hidden="true" class="fa fa-chevron-left"></i>
+      </div>
+      <div
+        class="right-scroll"
+        data-offset-top="1"
+        data-spy="affix"
+        id="right-scroll"
+      >
+        <i aria-hidden="true" class="fa fa-chevron-right"></i>
+      </div>
+      <div class="table-data" id="table-data">
+        <div class="row">
+          <div class="input-table col-xs-12">
+            <div class="tbl-header">
+              <span class="tools"
+                ><div class="custom-checkbox">
+                  <input type="checkbox" checked /><label></label>
+                </div>
+
+                <a
+                  ><i aria-hidden="true" class="fa fa-angle-double-right"></i
+                ></a>
+
+                <a><i aria-hidden="true" class="fa fa-filter"></i></a>
+                Actions </span
+              ><span class="type sortable"><p>Type</p> </span
+              ><span class="subtype sortable"><p>Sub Type</p> </span
+              ><span class="persona sortable"><p>Persona</p> </span>
+
+              <span class="hostname sortable"><p>Hostname or IP</p> </span>
+
+              <span class="username sortable"><p>Username</p> </span>
+
+              <span class="password"> Password </span>
+
+              <span class="privatekey"> Private Key </span>
+
+              <span class="port sortable"><p>Port</p> </span>
+
+              <span class="privileged_password" hidden="">
+                Privilege Password
+              </span>
+
+              <span class="enable_sudo" hidden="">Enable Sudo</span
+              ><span class="sudo_password" hidden="">Sudo Password</span
+              ><span class="enable_mfa">Enable MFA</span
+              ><span class="mfa_key">SSH MFA Key Path</span
+              ><span class="enable_autodiscover" hidden=""
+                >Enable Auto-discovery</span
+              ><span class="sid_list" hidden="">SID List</span
+              ><span class="perf_start" hidden="">Start Date Time</span
+              ><span class="perf_end" hidden="">End Date Time</span>
+            </div>
+          </div>
+        </div>
+        <div class="row" hidden="">
+          <div class="input-table col-xs-12">
+            <div class="tbl-filters">
+              <span class="tools">&nbsp;</span>
+
+              <span class="type"
+                ><input type="text" id="filter-type2"/>
+                <div class="close-filter">
+                  <i aria-hidden="true" class="fa fa-close"></i></div
+              ></span>
+
+              <span class="subtype"
+                ><input type="text" id="filter-subtype2"/>
+                <div class="close-filter">
+                  <i aria-hidden="true" class="fa fa-close"></i></div
+              ></span>
+
+              <span class="persona"
+                ><input type="text" id="filter-persona2"/>
+                <div class="close-filter">
+                  <i aria-hidden="true" class="fa fa-close"></i></div
+              ></span>
+
+              <span class="hostname"
+                ><input type="text" id="filter-hostname2"/>
+                <div class="close-filter">
+                  <i aria-hidden="true" class="fa fa-close"></i></div
+              ></span>
+
+              <span class="username"
+                ><input type="text" id="filter-username2"/>
+                <div class="close-filter">
+                  <i aria-hidden="true" class="fa fa-close"></i></div
+              ></span>
+
+              <span class="password"> &nbsp; </span>
+
+              <span class="privatekey"
+                ><input type="text" id="filter-privatekey2"/>
+                <div class="close-filter">
+                  <i aria-hidden="true" class="fa fa-close"></i></div
+              ></span>
+
+              <span class="port"
+                ><input type="text" id="filter-port2"/>
+                <div class="close-filter">
+                  <i aria-hidden="true" class="fa fa-close"></i></div
+              ></span>
+
+              <span class="privileged_password" hidden="">
+                &nbsp;
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-table col-xs-12">
+            <div class="tbl-row-wrap show-row">
+              <div class="tbl-row even">
+                <span class="tools"
+                  ><div class="custom-checkbox">
+                    <input type="checkbox" checked /><label></label>
+                  </div>
+                  <button
+                    class="btn btn-primary btn-xs"
+                    data-toggle="tooltip"
+                    title="Delete"
+                  >
+                    <i aria-hidden="true" class="fa fa-trash"></i></button
+                  ><span data-toggle="tooltip" title="Commands"
+                    ><button
+                      class="btn btn-primary btn-xs"
+                      data-backdrop="static"
+                      data-keyboard="false"
+                      data-target="#commands-modal"
+                      data-toggle="modal"
+                      disabled
+                    >
+                      <i aria-hidden="true" class="fa fa-list-alt"></i></button
+                  ></span>
+
+                  <button
+                    class="btn btn-primary btn-xs"
+                    data-toggle="tooltip"
+                    title="Collapse"
+                  >
+                    <i
+                      aria-hidden="true"
+                      class="fa fa-angle-double-down"
+                    ></i></button></span
+                ><span class="type" tourAnchor="mapped"
+                  ><select>
+                    <option value="0: Object" data-index="0"
+                      >Cloud Services</option
+                    ><option value="1: Object" data-index="1"
+                      >Ethernet Switch</option
+                    ><option value="2: Object" data-index="2">FC Switch</option
+                    ><option value="3: Object" data-index="3">Host</option
+                    ><option value="4: Object" data-index="4"
+                      >Hybrid Switch</option
+                    ><option value="5: Object" data-index="5">Hypervisor</option
+                    ><option value="6: Object" data-index="6">MAX Data</option
+                    ><option value="7: Object" data-index="7"
+                      >Other Storage Controller</option
+                    ><option value="8: Object" data-index="8"
+                      >Storage Controller</option
+                    ></select
+                  ></span
+                ><span class="subtype"
+                  ><select>
+                    <option value="0: Object">Data ONTAP 7Mode</option
+                    ><option value="1: Object">E-Series - SMCli</option
+                    ><option value="2: Object"
+                      >E-Series - Web Services Proxy</option
+                    ><option value="3: Object">ONTAP</option
+                    ><option value="4: Object">PerfArchive - ONTAP</option
+                    ><option value="5: Object">ServiceProcessor - ONTAP</option
+                    ><option value="6: Object">SolidFire - Cluster</option
+                    ><option value="7: Object">SolidFire - Node</option></select
+                  ></span
+                ><span class="persona"
+                  ><select>
+                    <option value="0: Object">General</option
+                    ><option value="1: Object">Dblade</option
+                    ><option value="2: Object">Diagnostic</option></select
+                  ></span
+                >
+
+                <span class="hostname">
+                  <input
+                    value="10.195.66.45"
+                    type="text"
+                    autocomplete="off"
+                  /> </span
+                ><span class="username">
+                  <input value="admin" type="text" /> </span
+                ><span class="password"> <input type="password" /> </span
+                ><span class="privatekey">
+                  <button
+                    class="btn btn-xs btn-primary"
+                    data-toggle="tooltip"
+                    title="Private Key"
+                  >
+                    <i aria-hidden="true" class="fa fa-key"></i></button
+                  ><input hidden="" type="file" id="key-0" /><span
+                    class="filename"
+                  >
+                  </span
+                  ><span class="filename">
+                    <i aria-hidden="true" class="fa fa-fw"></i
+                  ></span> </span
+                ><span class="port"> <input disabled type="text" /> </span
+                ><span class="privileged_password" hidden="">
+                  <input disabled type="password" /> </span
+                ><span class="enable_sudo" hidden=""
+                  ><div class="custom-checkbox">
+                    <input
+                      type="checkbox"
+                      disabled
+                    /><label></label></div></span
+                ><span class="sudo_password" hidden=""
+                  ><input autocomplete="off" type="password" disabled/></span
+                ><span class="enable_mfa"
+                  ><div class="custom-checkbox">
+                    <input type="checkbox" /><label></label></div></span
+                ><span class="mfa_key"><input type="text" disabled/></span
+                ><span class="enable_autodiscover" hidden=""
+                  ><div class="custom-checkbox">
+                    <input
+                      type="checkbox"
+                      disabled
+                    /><label></label></div></span
+                ><span class="sid_list" hidden=""><input type="text"/></span
+                ><span class="perf_start" hidden=""> </span
+                ><span class="perf_end" hidden=""> </span>
+              </div>
+              <div>
+                <div class="tbl-result-wrap clearfix">
+                  <div class="tbl-result">
+                    <span tourAnchor="data">
+                      OS/Software : NetApp Release SierraNevada__8.2.4
+                      Cluster-Mode: Sun Jun 28 07:23:11 IST 2015
+                    </span>
+                    <p>
+                      Hostname :
+                      CLUS_F3240-66-42-44.btcrre.lab.eng.btc.netapp.in
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tbl-row-wrap show-row">
+              <div class="tbl-row even">
+                <span class="tools"
+                  ><div class="custom-checkbox">
+                    <input type="checkbox" checked /><label></label>
+                  </div>
+                  <button
+                    class="btn btn-primary btn-xs"
+                    data-toggle="tooltip"
+                    title="Delete"
+                  >
+                    <i aria-hidden="true" class="fa fa-trash"></i></button
+                  ><span data-toggle="tooltip" title="Commands"
+                    ><button
+                      class="btn btn-primary btn-xs"
+                      data-backdrop="static"
+                      data-keyboard="false"
+                      data-target="#commands-modal"
+                      data-toggle="modal"
+                      disabled
+                    >
+                      <i aria-hidden="true" class="fa fa-list-alt"></i></button
+                  ></span>
+
+                  <button
+                    class="btn btn-primary btn-xs"
+                    data-toggle="tooltip"
+                    title="Collapse"
+                  >
+                    <i
+                      aria-hidden="true"
+                      class="fa fa-angle-double-down"
+                    ></i></button></span
+                ><span class="type" tourAnchor="unmapped"
+                  ><select>
+                    <option value="0: Object" data-index="0"></option>
+                    <option value="0: Object" data-index="0"
+                      >Cloud Services</option
+                    ><option value="1: Object" data-index="1"
+                      >Ethernet Switch</option
+                    ><option value="2: Object" data-index="2">FC Switch</option
+                    ><option value="3: Object" data-index="3">Host</option
+                    ><option value="4: Object" data-index="4"
+                      >Hybrid Switch</option
+                    ><option value="5: Object" data-index="5">Hypervisor</option
+                    ><option value="6: Object" data-index="6">MAX Data</option
+                    ><option value="7: Object" data-index="7"
+                      >Other Storage Controller</option
+                    ><option value="8: Object" data-index="8"
+                      >Storage Controller</option
+                    ></select
+                  ></span
+                ><span class="subtype"
+                  ><select disabled>
+                    <option value="0: Object">Cloud Volumes ONTAP</option
+                    ><option value="1: Object">NetApp Cloud Backup</option
+                    ><option value="2: Object"
+                      >StorageGRID Webscale</option
+                    ></select
+                  ></span
+                ><span class="persona"
+                  ><select disabled>
+                    <option value="0: Object">General</option
+                    ><option value="1: Object">Diagnostic</option></select
+                  ></span
+                >
+
+                <span class="hostname">
+                  <input value="10.195.66.51" type="text" /> </span
+                ><span class="username">
+                  <input value="admin" type="text" /> </span
+                ><span class="password"> <input type="password" /> </span
+                ><span class="privatekey">
+                  <button
+                    class="btn btn-xs btn-primary"
+                    data-toggle="tooltip"
+                    title="Private Key"
+                  >
+                    <i aria-hidden="true" class="fa fa-key"></i></button
+                  ><input hidden="" type="file" id="key-6" /><span
+                    class="filename"
+                  >
+                  </span
+                  ><span class="filename">
+                    <i aria-hidden="true" class="fa fa-fw"></i
+                  ></span> </span
+                ><span class="port"> <input value="22" type="text" /> </span
+                ><span class="privileged_password" hidden="">
+                  <input disabled type="password" /> </span
+                ><span class="enable_sudo" hidden=""
+                  ><div class="custom-checkbox">
+                    <input
+                      type="checkbox"
+                      disabled
+                    /><label></label></div></span
+                ><span class="sudo_password" hidden=""
+                  ><input autocomplete="off" type="password" disabled/></span
+                ><span class="enable_mfa"
+                  ><div class="custom-checkbox">
+                    <input
+                      type="checkbox"
+                      disabled
+                    /><label></label></div></span
+                ><span class="mfa_key"><input type="text" disabled/></span
+                ><span class="enable_autodiscover" hidden=""
+                  ><div class="custom-checkbox">
+                    <input
+                      type="checkbox"
+                      disabled
+                    /><label></label></div></span
+                ><span class="sid_list" hidden=""><input type="text"/></span
+                ><span class="perf_start" hidden=""> </span
+                ><span class="perf_end" hidden=""> </span>
+              </div>
+              <div>
+                <div class="tbl-result-wrap clearfix">
+                  <div class="tbl-result">
+                    <span class="fail">SNMP request timed out</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tbl-row-wrap show-row">
+              <div class="tbl-row">
+                <span class="tools"
+                  ><div class="custom-checkbox">
+                    <input type="checkbox" checked /><label></label>
+                  </div>
+                  <button
+                    class="btn btn-primary btn-xs"
+                    data-toggle="tooltip"
+                    title="Delete"
+                  >
+                    <i aria-hidden="true" class="fa fa-trash"></i></button
+                  ><span data-toggle="tooltip" title="Commands"
+                    ><button
+                      class="btn btn-primary btn-xs"
+                      data-backdrop="static"
+                      data-keyboard="false"
+                      data-target="#commands-modal"
+                      data-toggle="modal"
+                      disabled
+                    >
+                      <i aria-hidden="true" class="fa fa-list-alt"></i></button
+                  ></span>
+
+                  <button
+                    class="btn btn-primary btn-xs"
+                    data-toggle="tooltip"
+                    title="Collapse"
+                  >
+                    <i
+                      aria-hidden="true"
+                      class="fa fa-angle-double-down"
+                    ></i></button></span
+                ><span class="type"
+                  ><select>
+                    <option value="0: Object" data-index="0"></option>
+                    <option value="0: Object" data-index="0"
+                      >Cloud Services</option
+                    ><option value="1: Object" data-index="1"
+                      >Ethernet Switch</option
+                    ><option value="2: Object" data-index="2">FC Switch</option
+                    ><option value="3: Object" data-index="3">Host</option
+                    ><option value="4: Object" data-index="4"
+                      >Hybrid Switch</option
+                    ><option value="5: Object" data-index="5">Hypervisor</option
+                    ><option value="6: Object" data-index="6">MAX Data</option
+                    ><option value="7: Object" data-index="7"
+                      >Other Storage Controller</option
+                    ><option value="8: Object" data-index="8"
+                      >Storage Controller</option
+                    ></select
+                  ></span
+                ><span class="subtype"
+                  ><select disabled>
+                    <option value="0: Object">Cloud Volumes ONTAP</option
+                    ><option value="1: Object">NetApp Cloud Backup</option
+                    ><option value="2: Object"
+                      >StorageGRID Webscale</option
+                    ></select
+                  ></span
+                ><span class="persona"
+                  ><select disabled>
+                    <option value="0: Object">General</option
+                    ><option value="1: Object">Diagnostic</option></select
+                  ></span
+                >
+
+                <span class="hostname">
+                  <input value="10.195.66.60" type="text" /> </span
+                ><span class="username">
+                  <input value="admin" type="text" /> </span
+                ><span class="password"> <input type="password" /> </span
+                ><span class="privatekey">
+                  <button
+                    class="btn btn-xs btn-primary"
+                    data-toggle="tooltip"
+                    title="Private Key"
+                  >
+                    <i aria-hidden="true" class="fa fa-key"></i></button
+                  ><input hidden="" type="file" id="key-15" /><span
+                    class="filename"
+                  >
+                  </span
+                  ><span class="filename">
+                    <i aria-hidden="true" class="fa fa-fw"></i
+                  ></span> </span
+                ><span class="port"> <input value="22" type="text" /> </span
+                ><span class="privileged_password" hidden="">
+                  <input disabled type="password" /> </span
+                ><span class="enable_sudo" hidden=""
+                  ><div class="custom-checkbox">
+                    <input
+                      type="checkbox"
+                      disabled
+                    /><label></label></div></span
+                ><span class="sudo_password" hidden=""
+                  ><input autocomplete="off" type="password" disabled/></span
+                ><span class="enable_mfa"
+                  ><div class="custom-checkbox">
+                    <input
+                      type="checkbox"
+                      disabled
+                    /><label></label></div></span
+                ><span class="mfa_key"><input type="text" disabled/></span
+                ><span class="enable_autodiscover" hidden=""
+                  ><div class="custom-checkbox">
+                    <input
+                      type="checkbox"
+                      disabled
+                    /><label></label></div></span
+                ><span class="sid_list" hidden=""><input type="text"/></span
+                ><span class="perf_start" hidden=""> </span
+                ><span class="perf_end" hidden=""> </span>
+              </div>
+              <div>
+                <div class="tbl-result-wrap clearfix">
+                  <div class="tbl-result">
+                    <span class="fail" tourAnchor="offline"
+                      >Device is offline or not reachable</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="hide-scroll">&nbsp;</div>
+    </div>
+  </div>
+</div>

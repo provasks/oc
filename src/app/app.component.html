@@ -1,0 +1,46 @@
+<div class="tour-screen" [hidden]="!tourStarted">
+  <div class="tour-controls">
+    <button class="btn btn-danger" (click)="tourClose()">Close</button>
+  </div>
+  <img [src]="tourImageUrl" />
+</div>
+
+<div class="tour-screen" [hidden]="!tourInstructionStarted">
+  <div class="tour-controls">
+    <button class="btn btn-danger" (click)="tourInstructionClose()">
+      Close
+    </button>
+  </div>
+  <img [src]="tourInstructionUrl" />
+</div>
+
+<div id="loader" [hidden]="!loader.show"></div>
+
+<oc-modal-settings></oc-modal-settings>
+
+<oc-modal-notification
+  [id]="'app-wide-notification'"
+  [notification]="notification"
+></oc-modal-notification>
+
+<oc-modal-shutdown></oc-modal-shutdown>
+
+<!--oc-modal-eula></oc-modal-eula-->
+
+<tour-step-template></tour-step-template>
+
+<div id="main-wrapper">
+  <div class="luci-site-page-shell">
+    <!-- Header -->
+    <oc-main-header></oc-main-header>
+
+    <!-- Content -->
+    <div id="main-content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <oc-main-footer></oc-main-footer>
+</div>
+<!-- end #main-wrapper -->

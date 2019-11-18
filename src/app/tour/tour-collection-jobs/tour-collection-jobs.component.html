@@ -1,0 +1,148 @@
+<div class="tab-content-wrap">
+  <div class="new-collection">
+    <a tourAnchor="new-collection">
+      <i class="fa fa-plus" aria-hidden="true"></i>
+      New Collection
+    </a>
+    <div class="view-by">
+      <span><strong>View By</strong>&nbsp;</span>
+      <select>
+        <option value="projects">
+          Jobs Grouped by Project
+        </option>
+        <option value="jobs">
+          Latest Jobs Across Projects
+        </option>
+      </select>
+      <div class="tour-meta" tourAnchor="view-by"></div>
+    </div>
+  </div>
+
+  <div class="tab-content">
+    <div class="grid-wrap">
+      <div id="{{ grid.meta.tableId }}-test" class="smart-grid">
+        <table
+          class="table"
+          [ngClass]="{
+            'table-bordered': grid.meta.tableBordered,
+            'table-striped': grid.meta.tableStriped
+          }"
+        >
+          <tbody>
+            <!--Headers-->
+            <tr class="headers">
+              <th
+                class="actions"
+                *ngIf="grid.meta.actions"
+                [style.min-width]="grid.meta.actionsWidth"
+                [style.width]="grid.meta.actionsWidth"
+              >
+                <a tourAnchor="filter"
+                  ><i class="fa fa-filter" aria-hidden="true"></i
+                ></a>
+                {{ grid.meta.actionsTitle }}
+              </th>
+              <ng-container *ngFor="let header of grid.headers; let i = index">
+                <th
+                  [tourAnchor]="header.key"
+                  class="sortable"
+                  [style.min-width]="header.width || grid.meta.minCellWidth"
+                  [style.width]="header.width || grid.meta.minCellWidth"
+                >
+                  {{ header.title }}
+                  <i class="fa fa-sort" aria-hidden="true"></i>
+                </th>
+              </ng-container>
+              <th class="blank-column"></th>
+            </tr>
+
+            <!--Data Rows-->
+            <tr>
+              <td class="actions">
+                <div class="tools">
+                  <button
+                    tourAnchor="more-actions"
+                    id="{{ grid.meta.tableId }}-btn-tools-0"
+                    class="btn btn-primary btn-xs btn-tools"
+                    data-toggle="tooltip"
+                    title="More Actions"
+                  >
+                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                  </button>
+                  <button
+                    tourAnchor="expand"
+                    class="btn btn-primary btn-xs"
+                    data-toggle="tooltip"
+                    title="Expand"
+                  >
+                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                  </button>
+                  <button
+                    tourAnchor="data-view"
+                    class="btn btn-primary btn-xs"
+                    data-toggle="tooltip"
+                    title="Data View"
+                  >
+                    <i class="fa fa-binoculars" aria-hidden="true"></i>
+                  </button>
+                </div>
+                <span id="tools-dropdown-test" class="tools-dropdown">
+                  <ul>
+                    <!--Re-run-->
+                    <li tourAnchor="re-run">
+                      <i class="fa fa-repeat" aria-hidden="true"></i>Re-run
+                    </li>
+                    <!--Remove Job-->
+                    <li tourAnchor="trash">
+                      <i class="fa fa-trash" aria-hidden="true"></i>Delete
+                    </li>
+                    <!--IMT Advise-->
+                    <li tourAnchor="imt">
+                      <i class="fa fa-check-circle-o" aria-hidden="true"></i>IMT
+                      Advise
+                    </li>
+                  </ul>
+                </span>
+              </td>
+
+              <td>Sample_Group</td>
+
+              <td>My_Sample_Project</td>
+
+              <td>SampleJob_20180213095030</td>
+
+              <td>Component Based</td>
+
+              <td>
+                <div class="progress">
+                  <div
+                    class="progress-bar complete"
+                    role="progressbar"
+                    aria-valuenow="100"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    style="width:100%"
+                  >
+                    100%
+                  </div>
+                </div>
+              </td>
+
+              <td>Feb 13, 2018, 3:20:30 PM</td>
+
+              <td>Feb 13, 2018, 3:20:30 PM</td>
+
+              <td>Complete</td>
+
+              <td class="blank-column"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!--END .smart-grid-->
+    </div>
+    <!--END .grid-wrap-->
+  </div>
+  <!--END .tab-content-->
+</div>
+<!--END .tab-content-wrap-->

@@ -1,0 +1,625 @@
+<oc-modal-notification
+  [id]="'remove-job'"
+  [notification]="notification"
+  (onConfirmed)="confirmRemoveJob($event)"
+></oc-modal-notification>
+
+<oc-modal-sso
+  (onValidated)="playJob(setIdx)"
+  (onCancel)="playJob(setIdx)"
+></oc-modal-sso>
+
+<oc-tour-collection-jobs
+  [hidden]="!tourStarted"
+  [grid]="grid"
+  (toggleTour)="toggleTour($event)"
+></oc-tour-collection-jobs>
+
+<!--When no jobs are available-->
+<ng-container *ngIf="jobsLoaded">
+  <div [hidden]="tourStarted">
+    <div class="tab-content-wrap" *ngIf="!jobs.length">
+      <div class="tab-content-empty">
+        {{ 'Jobspage_nojobs' | translate }}
+        <a
+          [routerLink]="
+            client.features.purposeBasedCollection
+              ? '/main/purposes'
+              : '/main/new-collection'
+          "
+          >{{ 'CreateNewCollection' | translate }}</a
+        >
+      </div>
+    </div>
+    <!--END .tab-content-wrap-->
+
+    <!-- Grid view of Jobs-->
+    <div class="grid-wrap" *ngIf="jobs.length">
+      <div
+        id="{{ grid.meta.tableId }}-right-scroll"
+        class="right-scroll"
+        (click)="grid.rightScroll()"
+        [hidden]="!grid.showRightScroll"
+        data-spy="affix"
+      >
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </div>
+      <div
+        id="{{ grid.meta.tableId }}-left-scroll"
+        class="left-scroll"
+        (click)="grid.leftScroll()"
+        [hidden]="!grid.showLeftScroll"
+        data-spy="affix"
+      >
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+      </div>
+
+      <div id="{{ grid.meta.tableId }}" class="smart-grid">
+        <table
+          class="table"
+          [ngClass]="{
+            'table-bordered': grid.meta.tableBordered,
+            'table-striped': grid.meta.tableStriped
+          }"
+        >
+          <tbody>
+            <!--Headers-->
+            <tr class="headers">
+              <th class="row-select" *ngIf="grid.meta.selectAll">
+                <div class="custom-checkbox">
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="checkAll"
+                    (click)="toggleChecked()"
+                    [disabled]="disableCheckAll"
+                  />
+                  <label></label>
+                </div>
+              </th>
+              <th
+                class="actions"
+                *ngIf="grid.meta.actions"
+                [style.min-width]="grid.meta.actionsWidth"
+                [style.width]="grid.meta.actionsWidth"
+              >
+                <a (click)="gridDo('toggleFilters')"
+                  ><i class="fa fa-filter" aria-hidden="true"></i
+                ></a>
+                {{ 'Jobspage_table_col1' | translate }}
+              </th>
+              <ng-container *ngFor="let header of grid.headers; let i = index">
+                <ng-container *ngIf="header.sort !== false && !header.hidden">
+                  <th
+                    class="sortable"
+                    [style.min-width]="header.width || grid.meta.minCellWidth"
+                    [style.width]="header.width || grid.meta.minCellWidth"
+                    (click)="gridDo('sort', i)"
+                  >
+                    {{ header.title }}
+                    <i class="fa fa-sort" aria-hidden="true"></i>
+                  </th>
+                </ng-container>
+                <ng-container *ngIf="header.sort === false && !header.hidden">
+                  <th
+                    [style.min-width]="header.width || grid.meta.minCellWidth"
+                    [style.width]="header.width || grid.meta.minCellWidth"
+                  >
+                    {{ header.title }}
+                  </th>
+                </ng-container>
+              </ng-container>
+              <th class="blank-column"></th>
+            </tr>
+
+            <!--Filters Row-->
+            <tr class="filters" *ngIf="grid.showFilters">
+              <td class="row-select" *ngIf="grid.meta.selectAll"></td>
+              <td class="actions" *ngIf="grid.meta.actions">&nbsp;</td>
+              <ng-container *ngFor="let header of grid.headers; let i = index">
+                <td *ngIf="!header.hidden">
+                  <ng-container *ngIf="header.filter !== false">
+                    <input
+                      id="{{ grid.meta.tableId }}-filter-{{ i }}"
+                      type="text"
+                      (input)="gridDo('filter', i, $event.target.value)"
+                    /><!--
+               -->
+                    <div
+                      class="close-filter"
+                      (click)="gridDo('clearFilter', i)"
+                    >
+                      <i class="fa fa-close" aria-hidden="true"></i>
+                    </div>
+                  </ng-container>
+                </td>
+              </ng-container>
+              <td class="blank-column"></td>
+            </tr>
+
+            <!--Data Rows-->
+            <ng-container *ngFor="let job of jobs; let i = index">
+              <ng-container *ngIf="job.showRow">
+                <tr>
+                  <td class="row-select" *ngIf="grid.meta.selectAll">
+                    <div class="custom-checkbox">
+                      <input
+                        type="checkbox"
+                        [(ngModel)]="job.selected"
+                        [disabled]="job.disabled"
+                      />
+                      <label></label>
+                    </div>
+                  </td>
+
+                  <td class="actions" *ngIf="grid.meta.actions">
+                    <div class="tools">
+                      <input
+                        *ngIf="caLaunch"
+                        type="checkbox"
+                        [(ngModel)]="job.checked"
+                        [(checked)]="job.checked"
+                        (click)="setJob(job)"
+                        [name]="job.name"
+                        class="n-form__checkbox-text ca-select-button-class"
+                        data-toggle="tooltip"
+                        [title]="job.name"
+                        [disabled]="
+                          job.status == 'Failed' ||
+                          job.profile == 'Component Based' ||
+                          job.profile == 'FlexPod' ||
+                          job.status == 'In progress' ||
+                          job.status == 'Terminated'
+                        "
+                      />
+                      <button
+                        *ngIf="!isMoreActions(i)"
+                        class="btn btn-empty"
+                      ></button>
+                      <button
+                        *ngIf="isMoreActions(i)"
+                        id="{{ grid.meta.tableId }}-btn-tools-{{ i }}"
+                        class="btn btn-primary btn-xs btn-tools"
+                        (click)="grid.viewActions(i)"
+                        data-toggle="tooltip"
+                        title="{{ 'Jobspage_moreactions' | translate }}"
+                      >
+                        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                      </button>
+                      <button
+                        *ngIf="!job.showMessage"
+                        class="btn btn-primary btn-xs"
+                        (click)="viewMessage(i)"
+                        data-toggle="tooltip"
+                        title="{{ 'Jobspage_expand' | translate }}"
+                      >
+                        <i
+                          class="fa fa-angle-double-right"
+                          aria-hidden="true"
+                        ></i>
+                      </button>
+                      <button
+                        *ngIf="job.showMessage"
+                        class="btn btn-primary btn-xs btn-collapse"
+                        (click)="hideMessage(i)"
+                        data-toggle="tooltip"
+                        title="{{ 'Jobspage_collapse' | translate }}"
+                      >
+                        <i
+                          class="fa fa-angle-double-down"
+                          aria-hidden="true"
+                        ></i>
+                      </button>
+                      <button
+                        class="btn btn-primary btn-xs"
+                        (click)="viewData(job)"
+                        data-toggle="tooltip"
+                        title="{{ 'Jobspage_dataview' | translate }}"
+                        *ngIf="
+                          job.status != 'In progress' &&
+                          job.status != 'Terminated'
+                        "
+                      >
+                        <i class="fa fa-binoculars" aria-hidden="true"></i>
+                      </button>
+                      <button
+                        *ngIf="caLaunch"
+                        class="btn btn-primary btn-xs"
+                        (click)="viewAnalyze(job)"
+                        data-toggle="tooltip"
+                        title="{{ 'Jobspage_viewanalyze' | translate }}"
+                        [disabled]="
+                          job.status == 'Failed' ||
+                          job.profile == 'Component Based' ||
+                          job.profile == 'FlexPod' ||
+                          job.status == 'In progress' ||
+                          job.status == 'Terminated'
+                        "
+                      >
+                        <i class="fa fa-line-chart" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                    <span
+                      id="{{ grid.meta.tableId }}-tools-dropdown-{{ i }}"
+                      class="tools-dropdown"
+                      *ngIf="isMoreActions(i)"
+                    >
+                      <ul>
+                        <!--Re-run-->
+                        <li
+                          *ngIf="
+                            job.saved &&
+                            job.status != 'In progress' &&
+                            job.profile != 'Performance'
+                          "
+                          (click)="checkLiveStatus(playJob, i)"
+                        >
+                          <i class="fa fa-repeat" aria-hidden="true"></i
+                          >{{ 'Jobspage_rerun' | translate }}
+                        </li>
+                        <!--Remove Job-->
+                        <li
+                          *ngIf="
+                            job.status != 'In progress' &&
+                            job.profile != 'Performance'
+                          "
+                          (click)="removeJob(i)"
+                        >
+                          <i class="fa fa-trash" aria-hidden="true"></i
+                          >{{ 'Jobspage_delete' | translate }}
+                        </li>
+                        <!--Terminate Job-->
+                        <li
+                          *ngIf="
+                            job.status == 'In progress' &&
+                            job.profile != 'Performance' &&
+                            job.progress >= 1
+                          "
+                          (click)="stopCollecting(i)"
+                        >
+                          <i class="fa fa-stop-circle" aria-hidden="true"></i
+                          >{{ 'Jobspage_terminatejob' | translate }}
+                        </li>
+                        <!--IMT Advise-->
+                        <li
+                          *ngIf="
+                            !job.isPerfArchive &&
+                            job.status != 'Failed' &&
+                            job.status != 'In progress' &&
+                            job.status != 'Terminated' &&
+                            (job.profile == 'AutoSupport' ||
+                              job.profile == 'Component Based') &&
+                            client.features.imtAdvise
+                          "
+                          (click)="navigatetoImtAdvise(i)"
+                        >
+                          <i class="fa fa-check-circle-o" aria-hidden="true"></i
+                          >{{ 'Jobspage_imt' | translate }}
+                        </li>
+                        <!--Clusterviewer-->
+                        <li
+                          *ngIf="
+                            job.asup_status == 'Uploaded' ||
+                            job.asup_status == 'Completed'
+                          "
+                        >
+                          <a
+                            *ngIf="caLaunch && client.features.asupCollection"
+                            href="https://mysupport.netapp.com/myautosupport/dist/index.html#/configadvisor/asup/{{
+                              job.name
+                            }}?source=aiqca"
+                            target="_blank"
+                            title="{{ 'Jobspage_cvv' | translate }}"
+                          >
+                            <i class="fa fa-desktop" aria-hidden="true"></i
+                            >{{ 'Jobspage_cvv' | translate }}
+                          </a>
+                          <a
+                            *ngIf="!caLaunch"
+                            href="https://mysupport.netapp.com/myautosupport/dist/index.html#/onecollect/asup/{{
+                              job.name
+                            }}?source=aiqoc"
+                            target="_blank"
+                            title="{{ 'Jobspage_cvv' | translate }}"
+                          >
+                            <i class="fa fa-desktop" aria-hidden="true"></i
+                            >{{ 'Jobspage_cvv' | translate }}
+                          </a>
+                          <sup *ngIf="!client.isOEM">{{
+                            'New' | translate
+                          }}</sup>
+                        </li>
+                      </ul>
+                    </span>
+                  </td>
+
+                  <td *ngIf="hosted && activeUser.is_superuser">
+                    {{ job.user }}
+                  </td>
+
+                  <td>{{ job.group }}</td>
+
+                  <td>{{ job.project_id }}</td>
+
+                  <td *ngIf="!caLaunch">
+                    <i
+                      title="{{ job.trigger | translate }}"
+                      class="trigger fa"
+                      [ngClass]="{
+                        'fa-clock-o': job.trigger == 'Scheduler',
+                        'fa-download': job.trigger == 'Import',
+                        'fa-cloud-download': job.trigger == 'AutoSupport'
+                      }"
+                      aria-hidden="true"
+                    ></i
+                    >&nbsp;{{ job.name }}
+                  </td>
+                  <td
+                    *ngIf="
+                      caLaunch &&
+                      (job.profile != 'Component Based' &&
+                        job.profile != 'FlexPod' &&
+                        job.status != 'Failed' &&
+                        job.status != 'In progress' &&
+                        job.status != 'Terminated')
+                    "
+                  >
+                    <i
+                      title="{{ job.trigger | translate }}"
+                      class="trigger fa"
+                      [ngClass]="{
+                        'fa-clock-o': job.trigger == 'Scheduler',
+                        'fa-sign-out': job.trigger == 'Import',
+                        'fa-cloud-download': job.trigger == 'AutoSupport'
+                      }"
+                      aria-hidden="true"
+                    ></i
+                    >&nbsp;<a
+                      (click)="viewAnalyze(job)"
+                      class="ca-hyperlink"
+                      style="color: #0067C5;"
+                    >
+                      {{ job.name }}
+                    </a>
+                  </td>
+                  <td
+                    *ngIf="
+                      caLaunch &&
+                      (job.profile == 'Component Based' ||
+                        job.profile == 'FlexPod' ||
+                        job.status == 'Failed' ||
+                        job.status == 'In progress' ||
+                        job.status == 'Terminated')
+                    "
+                  >
+                    <i
+                      title="{{ job.trigger | translate }}"
+                      class="trigger fa"
+                      [ngClass]="{
+                        'fa-clock-o': job.trigger == 'Scheduler',
+                        'fa-sign-out': job.trigger == 'Import',
+                        'fa-cloud-download': job.trigger == 'AutoSupport'
+                      }"
+                      aria-hidden="true"
+                    ></i
+                    >&nbsp;{{ job.name }}
+                  </td>
+
+                  <td>{{ job.profile }}</td>
+
+                  <td>
+                    <div class="progress">
+                      <div
+                        class="progress-bar"
+                        [ngClass]="{
+                          terminated: job.status == 'Terminated',
+                          failed: job.status == 'Failed',
+                          partial:
+                            job.status == 'Partial' ||
+                            job.status == 'In progress',
+                          complete:
+                            job.status == 'Complete' || job.status == 'Pass'
+                        }"
+                        role="progressbar"
+                        [attr.aria-valuenow]="job.progress"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                        [style.width]="job.progress + '%'"
+                      >
+                        {{ job.progress }}%
+                      </div>
+                    </div>
+                  </td>
+
+                  <td>{{ job.start_time | date: 'medium' }}</td>
+
+                  <td *ngIf="job.status == 'In progress'">&nbsp;</td>
+                  <td *ngIf="job.status != 'In progress'">
+                    {{ job.end_time | date: 'medium' }}
+                  </td>
+                  <td>
+                    {{
+                      job.status == 'Partial'
+                        ? ('Jobspage_complete' | translate)
+                        : (job.status | translate)
+                    }}
+                  </td>
+
+                  <td *ngIf="caLaunch && not_user">{{ job.owner }}</td>
+                  <td class="blank-column"></td>
+                </tr>
+
+                <!--Component Data For Each Job-->
+                <tr
+                  class="messages"
+                  *ngFor="let component of job.components"
+                  [hidden]="!job.showMessage"
+                >
+                  <td class="row-select" *ngIf="grid.meta.selectAll"></td>
+
+                  <td class="actions" *ngIf="grid.meta.actions">
+                    <button class="btn btn-empty"></button>
+                    <button class="btn btn-empty"></button>
+                    <button
+                      class="btn btn-primary btn-xs"
+                      (click)="viewData(job, component)"
+                      data-toggle="tooltip"
+                      title="{{ 'Jobspage_dataview' | translate }}"
+                      [disabled]="
+                        job.status == 'In progress' ||
+                        job.status == 'Terminated'
+                      "
+                    >
+                      <i class="fa fa-binoculars" aria-hidden="true"></i>
+                    </button>
+                  </td>
+
+                  <td *ngIf="hosted"></td>
+
+                  <td></td>
+
+                  <td></td>
+
+                  <td>{{ component.host }}</td>
+
+                  <td>{{ component.component_category }}</td>
+
+                  <td>
+                    <div class="progress">
+                      <div
+                        class="progress-bar"
+                        [ngClass]="{
+                          terminated: job.status == 'Terminated',
+                          failed: component.status == 'Fail',
+                          partial:
+                            component.status == 'Partial' ||
+                            component.status == 'In progress',
+                          complete:
+                            component.status == 'Pass' ||
+                            component.status == 'Complete'
+                        }"
+                        role="progressbar"
+                        [attr.aria-valuenow]="component.progress"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                        [style.width]="component.progress + '%'"
+                      >
+                        {{ component.progress }}%
+                      </div>
+                    </div>
+                  </td>
+
+                  <td></td>
+
+                  <td></td>
+                  <td *ngIf="job.status == 'Terminated'">
+                    {{ 'Jobspage_terminated' | translate }}
+                  </td>
+                  <ng-container *ngIf="job.status != 'Terminated'">
+                    <td *ngIf="component.progress < 100">
+                      {{ 'Jobspage_inprogress' | translate }}
+                    </td>
+                    <td
+                      *ngIf="
+                        component.progress == 100 &&
+                        component.status == 'Partial'
+                      "
+                    >
+                      {{ 'Jobspage_complete' | translate }}
+                    </td>
+                    <td
+                      *ngIf="
+                        component.progress == 100 &&
+                        component.status != 'Partial'
+                      "
+                    >
+                      {{ component.status }}
+                    </td>
+                  </ng-container>
+
+                  <td class="blank-column"></td>
+                </tr>
+
+                <!--Job Log View-->
+                <tr class="messages log-view" [hidden]="!job.showMessage">
+                  <td [attr.colspan]="colSpanPagination">
+                    <div
+                      class="textarea"
+                      readonly
+                      *ngIf="job.log"
+                      [innerHTML]="job.log | safeHtml"
+                    ></div>
+                    <span *ngIf="!job.log">{{
+                      'Jobspage_nolog' | translate
+                    }}</span>
+                    <span *ngIf="job.log" class="log-note">{{
+                      'Jobspage_logmsg' | translate
+                    }}</span>
+                  </td>
+                </tr>
+              </ng-container>
+            </ng-container>
+
+            <!--Pagination Row-->
+            <tr class="pagination-row">
+              <td [attr.colspan]="colSpanPagination">
+                <div class="paginate-wrap">
+                  <div class="paginate">
+                    <div class="paginate-text">
+                      {{ 'Jobspage_paginate1' | translate }} {{ start + 1 }}
+                      {{ 'Jobspage_paginate2' | translate }}
+                      {{ start + jobsInPage }}
+                      {{ 'Jobspage_paginate3' | translate }} {{ totalJobs }}
+                      {{ 'Jobspage_paginate4' | translate }}
+                    </div>
+                    <span *ngIf="start == 0" class="prev disabled">{{
+                      'Jobspage_prev' | translate
+                    }}</span
+                    ><!--
+               --><span
+                      *ngIf="start != 0"
+                      class="prev"
+                      (click)="getJobs(start - interval, interval)"
+                      >{{ 'Jobspage_prev' | translate }}</span
+                    ><!--
+
+               --><span
+                      *ngFor="let page of pages"
+                      [ngClass]="{ 'page-selected': page == currentPage }"
+                      (click)="getJobs((page - 1) * interval, interval)"
+                    >
+                      {{ page }} </span
+                    ><!--
+
+               --><span *ngIf="!next" class="next disabled">{{
+                      'Jobspage_next' | translate
+                    }}</span
+                    ><!--
+               --><span
+                      *ngIf="next"
+                      class="next"
+                      (click)="getJobs(start + interval, interval)"
+                      >{{ 'Jobspage_next' | translate }}</span
+                    >
+                  </div>
+                </div>
+                <!--END .paginate-wrap-->
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div
+          class="hide-scroll"
+          *ngIf="
+            !grid.meta.showBottomScroll &&
+            (grid.showRightScroll || grid.showLeftScroll)
+          "
+        >
+          &nbsp;
+        </div>
+      </div>
+      <!--END .smart-grid-->
+    </div>
+    <!--END .grid-wrap-->
+  </div>
+</ng-container>

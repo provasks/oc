@@ -1,0 +1,512 @@
+<oc-modal-commands
+  [title]="modalItem.title"
+  [commands]="modalCommands"
+></oc-modal-commands>
+
+<oc-modal-notification
+  [id]="'notification-modal'"
+  [notification]="notification"
+></oc-modal-notification>
+
+<oc-modal-collect [modalData]="modalData"></oc-modal-collect>
+
+<oc-modal-sso
+  (onValidated)="doSaveCollect()"
+  (onCancel)="doSaveCollect()"
+></oc-modal-sso>
+
+<oc-modal-update-credentials
+  [collectType]="'solution-based'"
+  [headers]="headers"
+  [distinctRows]="distinctRows"
+  (onUpdate)="doUpdate($event)"
+></oc-modal-update-credentials>
+
+<div class="tab-content">
+  <!-- Tools Menu -->
+  <div class="actions">
+    <div class="left">
+      <div *ngIf="client.features.purposeBasedCollection">
+        <a routerLink="/main/new-collection/solution-based"
+          ><i class="fa fa-lightbulb-o" aria-hidden="true"></i
+          >{{ 'Collectiontype_solution' | translate }}</a
+        ><a routerLink="/main/new-collection/asup-based"
+          ><i aria-hidden="true" class="fa fa-phone"></i
+          >{{ 'Collectontype_asup' | translate }}</a
+        >
+      </div>
+    </div>
+    <div class="right">
+      <a (click)="getDistinctRows()"
+        ><i class="fa fa-edit" aria-hidden="true"></i
+        >{{ 'Update_credentials' | translate }}</a
+      >
+      <a (click)="reset()"
+        ><i class="fa fa-refresh" aria-hidden="true"></i
+        >{{ 'Reset' | translate }}</a
+      >
+
+      <a class="validate" (click)="validate()"
+        ><i aria-hidden="true" class="fa fa-check validate"></i
+        >{{ 'Validate' | translate }}</a
+      ><a class="collect" (click)="checkLiveStatus(doSaveCollect)"
+        ><i aria-hidden="true" class="fa fa-floppy-o"></i
+        >{{ 'Save_collect' | translate }}</a
+      >
+    </div>
+  </div>
+  <div class="basic-options">
+    <div class="basic-option">
+      <span
+        ><strong>{{ 'Profile' | translate }}</strong
+        >&nbsp;</span
+      >
+      <select [(ngModel)]="outProfile" (ngModelChange)="changeProfile($event)">
+        <option *ngFor="let profile of inProfiles" [ngValue]="profile">{{
+          profile.title | translate
+        }}</option>
+      </select>
+    </div>
+    <div class="basic-option">
+      <span
+        ><strong>{{ 'Sub Profile' | translate }}</strong
+        >&nbsp;</span
+      >
+      <select [(ngModel)]="outSubProfile" (ngModelChange)="changeSubProfile()">
+        <option
+          *ngFor="let subProfile of inSubProfiles"
+          [ngValue]="subProfile"
+          >{{ subProfile.title | translate }}</option
+        >
+      </select>
+    </div>
+    <div class="basic-option">
+      <span
+        ><strong>{{ 'Persona' | translate }}</strong
+        >&nbsp;</span
+      >
+      <select [(ngModel)]="outPersona" (ngModelChange)="setCommands(true)">
+        <option *ngFor="let persona of inPersonas" [ngValue]="persona">{{
+          persona.title | translate
+        }}</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="extra-options">
+    <ng-container
+      *ngFor="let extraField of inExtraFields; let i = index; let even = even"
+    >
+      <div class="row-wrap" *ngIf="even">
+        <!--BEGIN .row-->
+        <div class="extra-option">
+          <span
+            ><strong>{{ inExtraFields[i].title | translate }}</strong
+            >&nbsp;</span
+          >
+          <select
+            [(ngModel)]="outExtraFields[i]"
+            (change)="changeExtraField($event, i)"
+          >
+            <option
+              *ngFor="let option of inExtraFields[i].Item_list"
+              [ngValue]="option"
+              >{{ option.name | translate }}</option
+            >
+          </select>
+        </div>
+        <div class="extra-option" *ngIf="i + 1 < inExtraFields.length">
+          <span
+            ><strong>{{ inExtraFields[i + 1].title | translate }}</strong
+            >&nbsp;</span
+          >
+          <select
+            [(ngModel)]="outExtraFields[i + 1]"
+            (change)="changeExtraField($event, i + 1)"
+          >
+            <option
+              *ngFor="let option of inExtraFields[i + 1].Item_list"
+              [ngValue]="option"
+              >{{ option.name | translate }}</option
+            >
+          </select>
+        </div>
+      </div>
+      <!--END .row-->
+    </ng-container>
+  </div>
+
+  <div class="table-content">
+    <!-- Table Header -->
+    <div class="row">
+      <div class="input-table col-xs-12">
+        <div class="tbl-header">
+          <span class="tools">
+            <a *ngIf="!showAll" (click)="viewMessages()"
+              ><i class="fa fa-angle-double-right" aria-hidden="true"></i
+            ></a>
+            <a *ngIf="showAll" (click)="hideMessages()"
+              ><i class="fa fa-angle-double-down" aria-hidden="true"></i
+            ></a>
+            {{ 'Actions' | translate }} </span
+          ><!--
+       --><span class="type">{{ 'Type' | translate }}</span
+          ><!--
+       --><span [ngClass]="[header.key]" *ngFor="let header of headers">{{
+            header.tooltip | translate
+          }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table body for components-->
+  <div class="row">
+    <div class="input-table col-xs-12">
+      <ng-container *ngFor="let componentKey of autoKeys; let keyIdx = index">
+        <!--Empty when there is NO selection-->
+        <div
+          class="tbl-row-wrap"
+          *ngIf="!autoComponents[componentKey].length && autoGenerate"
+        >
+          <div class="tbl-row">
+            <span class="tools">
+              <select
+                [(ngModel)]="components[keyIdx].dropdown_value"
+                (change)="generateComponents(componentKey)"
+              >
+                <option
+                  *ngFor="let option of components[keyIdx].dropdown_arr"
+                  [value]="option"
+                  >{{ option }}</option
+                >
+              </select>
+
+              <!-- Commands modal button -->
+              <span data-toggle="tooltip" title="{{ 'Commands' | translate }}">
+                <button class="btn btn-primary btn-xs" disabled>
+                  <i class="fa fa-list-alt" aria-hidden="true"></i>
+                </button>
+              </span>
+
+              <!-- Validation button -->
+              <button
+                class="btn btn-primary btn-xs btn-validation"
+                data-toggle="tooltip"
+                title="{{ 'Validation' | translate }}"
+                disabled
+              >
+                <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+              </button> </span
+            ><!--
+
+         --><span class="type">
+              <span>{{ components[keyIdx].category | translate }}</span> </span
+            ><!--
+
+         --><span [ngClass]="[header.key]" *ngFor="let header of headers">
+              <ng-container
+                *ngIf="
+                  header.key != 'privatekey' &&
+                  components[keyIdx].fields[header.key].type != 'checkbox'
+                "
+              >
+                <input
+                  [type]="components[keyIdx].fields[header.key].type"
+                  disabled
+                />
+              </ng-container>
+              <ng-container
+                *ngIf="
+                  header.key != 'privatekey' &&
+                  components[keyIdx].fields[header.key].type == 'checkbox'
+                "
+              >
+                <div class="custom-checkbox">
+                  <input
+                    [type]="components[keyIdx].fields[header.key].type"
+                    disabled
+                  />
+                  <label></label>
+                </div>
+              </ng-container>
+
+              <ng-container
+                *ngIf="
+                  header.key == 'privatekey' &&
+                  !components[keyIdx].fields.privatekey.disabled
+                "
+                ><!--
+             --><button
+                  class="btn btn-xs btn-primary"
+                  data-toggle="tooltip"
+                  title="{{ 'Private_key' | translate }}"
+                  disabled
+                >
+                  <i class="fa fa-key" aria-hidden="true"></i>
+                </button>
+              </ng-container>
+            </span>
+          </div>
+        </div>
+        <!--END .tbl-row-wrap for Empty row-->
+
+        <!--Dynamic rows when there is a selection-->
+        <ng-container *ngIf="autoComponents[componentKey].length">
+          <div
+            class="tbl-row-wrap"
+            *ngFor="
+              let component of autoComponents[componentKey];
+              let i = index
+            "
+          >
+            <div class="tbl-row">
+              <span class="tools">
+                <ng-container *ngIf="autoGenerate">
+                  <select
+                    [(ngModel)]="components[keyIdx].dropdown_value"
+                    (change)="generateComponents(componentKey)"
+                    *ngIf="i == 0"
+                  >
+                    <option
+                      *ngFor="let option of components[keyIdx].dropdown_arr"
+                      [value]="option"
+                      >{{ option }}</option
+                    >
+                  </select>
+                  <div class="blank-select" *ngIf="i != 0"></div>
+                </ng-container>
+
+                <!-- Commands modal button -->
+                <span data-toggle="tooltip" title="Commands">
+                  <button
+                    class="btn btn-primary btn-xs"
+                    data-toggle="modal"
+                    data-target="#commands-modal"
+                    data-backdrop="static"
+                    data-keyboard="false"
+                    (click)="setCommandsModal(componentKey, i)"
+                  >
+                    <i class="fa fa-list-alt" aria-hidden="true"></i>
+                  </button>
+                </span>
+
+                <!-- Validation button -->
+                <button
+                  *ngIf="!component.validation.show"
+                  class="btn btn-primary btn-xs btn-validation"
+                  (click)="viewMessage(componentKey, i)"
+                  data-toggle="tooltip"
+                  title="{{ 'Validation' | translate }}"
+                >
+                  <i
+                    class="fa fa-angle-double-right"
+                    aria-hidden="true"
+                    *ngIf="component.validation.loading == 'initial'"
+                  ></i>
+                  <div
+                    class="validation-loader"
+                    *ngIf="component.validation.loading == 'process'"
+                  ></div>
+                  <i
+                    class="fa fa-check green"
+                    aria-hidden="true"
+                    *ngIf="
+                      component.validation.loading == 'done' &&
+                      component.validation.status == 'success'
+                    "
+                  ></i>
+                  <i
+                    class="fa fa-close red"
+                    aria-hidden="true"
+                    *ngIf="
+                      component.validation.loading == 'done' &&
+                      component.validation.status == 'fail'
+                    "
+                  ></i>
+                  <i
+                    class="fa fa-exclamation red"
+                    aria-hidden="true"
+                    *ngIf="
+                      component.validation.loading == 'done' &&
+                      component.validation.status == 'error'
+                    "
+                  ></i>
+                </button>
+                <button
+                  *ngIf="component.validation.show"
+                  class="btn btn-primary btn-xs"
+                  (click)="hideMessage(componentKey, i)"
+                  data-toggle="tooltip"
+                  title="{{ 'Collapse' | translate }}"
+                >
+                  <i class="fa fa-angle-double-down" aria-hidden="true"></i>
+                </button> </span
+              ><!--
+
+           --><span *ngIf="!autoGenerate" class="type">
+                <span>{{ component.title | translate }}</span> </span
+              ><!--
+
+           --><span *ngIf="autoGenerate" class="type">
+                <span
+                  >{{ component.category | translate }} - {{ i + 1 }}</span
+                > </span
+              ><!--
+
+           --><span
+                [ngClass]="[header.key]"
+                *ngFor="let header of headers; let headerIdx = index"
+              >
+                <input
+                  *ngIf="
+                    header.key != 'privatekey' &&
+                    header.tooltip != 'Serial Port' &&
+                    header.type != 'checkbox' &&
+                    header.key != 'mfa_key'
+                  "
+                  [type]="component.fields[header.key].type"
+                  [(ngModel)]="component.fields[header.key].value"
+                  [disabled]="component.fields[header.key].disabled"
+                  (focus)="changeInput($event, componentKey, i)"
+                />
+                <ng-container *ngIf="header.key == 'username'">
+                  <span
+                    class="validation"
+                    *ngIf="component.validation.username"
+                    >{{ notification.message }}</span
+                  >
+                </ng-container>
+
+                <ng-container
+                  *ngIf="
+                    header.key != 'privatekey' &&
+                    header.tooltip != 'Serial Port' &&
+                    header.type == 'checkbox'
+                  "
+                >
+                  <div class="custom-checkbox">
+                    <input
+                      type="checkbox"
+                      [checked]="component.fields[header.key].value"
+                      [disabled]="component.fields[header.key].disabled"
+                      (focus)="changeInput($event, componentKey, i)"
+                      (change)="
+                        component.fields[header.key].value = !component.fields[
+                          header.key
+                        ].value
+                      "
+                    />
+                    <label></label>
+                  </div>
+                </ng-container>
+
+                <input
+                  *ngIf="
+                    header.key != 'privatekey' &&
+                    header.tooltip != 'Serial Port' &&
+                    header.key == 'mfa_key'
+                  "
+                  type="text"
+                  [(ngModel)]="component.fields[header.key].value"
+                  [disabled]="!component.fields.enable_mfa.value"
+                  (focus)="changeInput($event, componentKey, i)"
+                />
+
+                <!--Show drop down when serial port is selected for sub profile-->
+                <select
+                  class="serial-port"
+                  *ngIf="
+                    header.key != 'privatekey' &&
+                    header.tooltip == 'Serial Port'
+                  "
+                  [(ngModel)]="component.fields[header.key].value"
+                  (focus)="changeInput($event, componentKey, i)"
+                >
+                  <option value="">{{ 'Select Port' | translate }}</option>
+                  <option
+                    *ngFor="let serialPort of serialPorts"
+                    [value]="serialPort"
+                    >{{ serialPort | translate }}</option
+                  >
+                </select>
+
+                <ng-container
+                  *ngIf="
+                    header.key == 'privatekey' &&
+                    !component.fields.privatekey.disabled
+                  "
+                  ><!--
+               --><button
+                    class="btn btn-xs btn-primary"
+                    [ngClass]="{
+                      'btn-key-set': component.fields.privatekey.value
+                    }"
+                    (click)="addPKFile(componentKey, i)"
+                    data-toggle="tooltip"
+                    title="{{ 'Private_key' | translate }}"
+                  >
+                    <i class="fa fa-key" aria-hidden="true"></i>
+                  </button>
+                  <input
+                    id="key-{{ componentKey }}-{{ i }}"
+                    type="file"
+                    hidden
+                  />
+                  <span class="filename"
+                    ><i
+                      class="fa fa-times"
+                      aria-hidden="true"
+                      *ngIf="component.fields.privatekey.value"
+                      (click)="removePKFile(componentKey, i)"
+                    ></i
+                  ></span>
+                  <span class="filename"
+                    ><i
+                      class="fa fa-fw"
+                      aria-hidden="true"
+                      *ngIf="!component.fields.privatekey.value"
+                    ></i
+                  ></span>
+                  <span
+                    class="validation"
+                    *ngIf="component.fields.privatekeyError"
+                    >{{ 'Invalid_rsa' | translate }}</span
+                  >
+                </ng-container>
+              </span>
+            </div>
+
+            <div [hidden]="!component.validation.show">
+              <div class="tbl-result-wrap">
+                <div class="tbl-result">
+                  <p>
+                    <span class="title">{{ 'Model' | translate }}&nbsp;</span
+                    >{{ component.validation.model }}
+                  </p>
+                  <p>
+                    <span class="title">{{ 'OS' | translate }}&nbsp;</span
+                    >{{ component.validation.os }}
+                  </p>
+                  <p>
+                    <span class="title"
+                      >{{ 'Validate_msg' | translate }}&nbsp;</span
+                    >
+                    <span
+                      [ngClass]="{
+                        fail: component.validation.status == 'fail',
+                        success: component.validation.status == 'success'
+                      }"
+                    >
+                      {{ component.validation.report }}
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div> </ng-container
+        ><!--END ngIf-->
+      </ng-container>
+    </div>
+  </div>
+</div>

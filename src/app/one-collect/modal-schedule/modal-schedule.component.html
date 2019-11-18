@@ -1,0 +1,279 @@
+<div id="schedule-modal" class="modal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+        <h4 class="modal-title">{{ 'Modal_Scheduler' | translate }}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xs-12 col-schedule">
+            <!-- <div class="item">
+              <label
+                ><input
+                  class="inline"
+                  type="checkbox"
+                  [(ngModel)]="scheduleOptions.scheduleProject"
+                /><strong class="section-head">{{
+                  'Modal_Schedule' | translate
+                }}</strong></label
+              >
+            </div> -->
+            <div class="item">
+              <span
+                ><strong>{{
+                  'Collection_modal_recurr' | translate
+                }}</strong></span
+              >
+              <select
+                [(ngModel)]="scheduleOptions.rec_pattern"
+                [disabled]="!scheduleOptions.scheduleProject"
+              >
+                <option value="hourly">{{
+                  'Collection_modal_interval' | translate
+                }}</option>
+                <option value="daily">{{
+                  'Collection_modal_daily' | translate
+                }}</option>
+                <option value="weekly">{{
+                  'Collection_modal_weekly' | translate
+                }}</option>
+              </select>
+            </div>
+
+            <div
+              class="schedule-block"
+              *ngIf="scheduleOptions.rec_pattern == 'hourly'"
+            >
+              <div class="item">
+                <span
+                  ><strong>{{
+                    'Collection_modal_trigger' | translate
+                  }}</strong></span
+                >
+                <!--span><small>(Both hours &amp; minutes cannot be zero)</small></span-->
+                <div class="start-time">
+                  <p>{{ 'Collection_modal_hours' | translate }}</p>
+                  <select
+                    [(ngModel)]="scheduleOptions.skip_hours"
+                    [disabled]="!scheduleOptions.scheduleProject"
+                    (change)="alterMinutes()"
+                  >
+                    <option *ngFor="let hour of hours" [value]="hour">{{
+                      hour
+                    }}</option>
+                  </select>
+                </div>
+                <div class="start-time">
+                  <p>{{ 'Collection_modal_min' | translate }}</p>
+                  <select
+                    [(ngModel)]="scheduleOptions.skip_minutes"
+                    [disabled]="!scheduleOptions.scheduleProject"
+                  >
+                    <option
+                      *ngFor="let minute of triggerMinutes"
+                      [value]="minute"
+                      >{{ minute }}</option
+                    >
+                  </select>
+                </div>
+              </div>
+              <div class="item">
+                <span
+                  ><strong>{{
+                    'Collection_modal_occur' | translate
+                  }}</strong></span
+                >
+                <input
+                  class="time"
+                  type="text"
+                  [(ngModel)]="scheduleOptions.occur"
+                  [disabled]="!scheduleOptions.scheduleProject"
+                  OnlyNumber="true"
+                  maxlength="2"
+                />
+                <span
+                  class="validation"
+                  *ngIf="scheduleValidation.occurPattern"
+                  >{{ 'Collection_modal_occurmsg' | translate }}</span
+                >
+              </div>
+            </div>
+
+            <div
+              class="schedule-block"
+              *ngIf="scheduleOptions.rec_pattern == 'daily'"
+            >
+              <div class="item">
+                <span
+                  ><strong>{{
+                    'Collection_modal_starttime' | translate
+                  }}</strong></span
+                >
+                <div class="start-time">
+                  <p>{{ 'Collection_modal_hours' | translate }}</p>
+                  <select
+                    [(ngModel)]="scheduleOptions.startTimeHours"
+                    [disabled]="!scheduleOptions.scheduleProject"
+                  >
+                    <option *ngFor="let hour of hours" [value]="hour">{{
+                      hour
+                    }}</option>
+                  </select>
+                </div>
+                <div class="start-time">
+                  <p>{{ 'Collection_modal_min' | translate }}</p>
+                  <select
+                    [(ngModel)]="scheduleOptions.startTimeMinutes"
+                    [disabled]="!scheduleOptions.scheduleProject"
+                  >
+                    <option *ngFor="let minute of minutes" [value]="minute">{{
+                      minute
+                    }}</option>
+                  </select>
+                </div>
+                <!--div class="start-time">
+                  <p>Seconds</p>
+                  <select [(ngModel)]="scheduleOptions.startTimeSeconds" [disabled]="!scheduleOptions.scheduleProject">
+                    <option *ngFor="let second of seconds" [value]="second">{{ second }}</option>
+                  </select>
+                </div-->
+              </div>
+              <div class="item">
+                <span
+                  ><strong>{{
+                    'Collection_modal_recurr_every' | translate
+                  }}</strong></span
+                >
+                <input
+                  class="time"
+                  type="text"
+                  [(ngModel)]="scheduleOptions.day_skip"
+                  [disabled]="!scheduleOptions.scheduleProject"
+                  OnlyNumber="true"
+                />&nbsp;{{ 'Collection_modal_days' | translate }}
+              </div>
+              <div class="item">
+                <span
+                  ><strong>{{
+                    'Collection_modal_occur' | translate
+                  }}</strong></span
+                >
+                <input
+                  class="time"
+                  type="text"
+                  [(ngModel)]="scheduleOptions.occur"
+                  [disabled]="!scheduleOptions.scheduleProject"
+                  OnlyNumber="true"
+                  maxlength="2"
+                />
+                <span
+                  class="validation"
+                  *ngIf="scheduleValidation.occurPattern"
+                  >{{ 'Collection_modal_occurmsg' | translate }}</span
+                >
+              </div>
+            </div>
+
+            <div
+              class="schedule-block"
+              *ngIf="scheduleOptions.rec_pattern == 'weekly'"
+            >
+              <div class="item">
+                <span
+                  ><strong>{{
+                    'Collection_modal_starttime' | translate
+                  }}</strong></span
+                >
+                <div class="start-time">
+                  <p>{{ 'Collection_modal_hours' | translate }}</p>
+                  <select
+                    [(ngModel)]="scheduleOptions.startTimeHours"
+                    [disabled]="!scheduleOptions.scheduleProject"
+                  >
+                    <option *ngFor="let hour of hours" [value]="hour">{{
+                      hour
+                    }}</option>
+                  </select>
+                </div>
+                <div class="start-time">
+                  <p>{{ 'Collection_modal_min' | translate }}</p>
+                  <select
+                    [(ngModel)]="scheduleOptions.startTimeMinutes"
+                    [disabled]="!scheduleOptions.scheduleProject"
+                  >
+                    <option *ngFor="let minute of minutes" [value]="minute">{{
+                      minute
+                    }}</option>
+                  </select>
+                </div>
+                <!--div class="start-time">
+                  <p>Seconds</p>
+                  <select [(ngModel)]="scheduleOptions.startTimeSeconds" [disabled]="!scheduleOptions.scheduleProject">
+                    <option *ngFor="let second of seconds" [value]="second">{{ second }}</option>
+                  </select>
+                </div-->
+              </div>
+              <div class="item days">
+                <span
+                  ><strong>{{
+                    'Collection_modal_selectdays' | translate
+                  }}</strong></span
+                >
+                <div class="days-wrap">
+                  <label *ngFor="let day of scheduleOptions.weekDays">
+                    <input
+                      class="inline"
+                      type="checkbox"
+                      [(ngModel)]="day.checked"
+                      [disabled]="!scheduleOptions.scheduleProject"
+                    />{{ day.title | translate | capitalize }}
+                  </label>
+                </div>
+              </div>
+              <div class="item">
+                <span
+                  ><strong>{{
+                    'Collection_modal_occur' | translate
+                  }}</strong></span
+                >
+                <input
+                  class="time"
+                  type="text"
+                  [(ngModel)]="scheduleOptions.occur"
+                  [disabled]="!scheduleOptions.scheduleProject"
+                  OnlyNumber="true"
+                  maxlength="2"
+                />
+                <span
+                  class="validation"
+                  *ngIf="scheduleValidation.occurPattern"
+                  >{{ 'Collection_modal_occurmsg' | translate }}</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <span
+          [ngClass]="{
+            green: messages.type == 'success',
+            red: messages.type == 'error'
+          }"
+          >{{ messages.status }}</span
+        >
+        <button
+          class="btn btn-primary"
+          (click)="schedule()"
+          [disabled]="!scheduleOptions.scheduleProject"
+        >
+          {{ 'Modal_Schedulebutton' | translate }}
+        </button>
+        <!--button class="btn btn-primary" data-dismiss="modal">Close</button-->
+      </div>
+    </div>
+  </div>
+</div>

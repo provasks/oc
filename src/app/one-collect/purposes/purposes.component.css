@@ -1,0 +1,9 @@
+.oc-container {
+  width: 320px;
+  margin: 0 auto;
+}
+.oc-container .title {
+  font-size: 25px;
+  color: #2c2988;
+  text-align: center;
+}

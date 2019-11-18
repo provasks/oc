@@ -1,0 +1,322 @@
+<oc-modal-notification
+  [id]="'asup-upload-status'"
+  [notification]="notification"
+></oc-modal-notification>
+
+<oc-modal-sso (onValidated)="processRequest($event)"></oc-modal-sso>
+
+<oc-modal-upload-asup
+  [metaData]="metaData"
+  (onUploadConfirmed)="initiateAsupUpload($event)"
+></oc-modal-upload-asup>
+
+<oc-modal-token
+  [tokenData]="tokenData"
+  (onTokenConfirmed)="initiateAsupUploadWithoutCheck($event)"
+></oc-modal-token>
+
+<oc-tour-upload-asup
+  [hidden]="!tourStarted"
+  [grid]="grid"
+  (toggleTour)="toggleTour($event)"
+></oc-tour-upload-asup>
+<div class="tab-content" *ngIf="!client.features.asupUpload">
+  <div class="not-available">{{ 'feature_not_available' | translate }}</div>
+</div>
+<ng-container *ngIf="client.features.asupUpload">
+  <div *ngIf="jobsLoaded" [hidden]="tourStarted">
+    <div class="tab-content-wrap" *ngIf="!jobs.length">
+      <div class="tab-content-empty">
+        {{ 'Manual_Upload_asup_nojobs' | translate }}
+        <a
+          [routerLink]="
+            client.features.purposeBasedCollection
+              ? '/main/purposes'
+              : '/main/new-collection'
+          "
+          >{{ 'CreateNewCollection' | translate }}</a
+        >
+      </div>
+    </div>
+    <!--END .tab-content-wrap-->
+
+    <div class="tab-content-wrap" *ngIf="jobs.length">
+      <div class="tab-content">
+        <div class="basic-options">
+          <div class="basic-option">
+            <span
+              ><strong>{{
+                'Manual_Upload_asup_fromjobs' | translate
+              }}</strong></span
+            >
+            <button
+              class="btn btn-primary"
+              (click)="showMetaDataModal()"
+              [disabled]="!countSelected"
+            >
+              {{ 'Upload' | translate }}
+            </button>
+            <span
+              id="asup-upload-note"
+              class="asup-margin"
+              [innerHTML]="'Collection_modal_link' | translate"
+            ></span>
+          </div>
+        </div>
+        <p class="performance-note" *ngIf="selected == 'performance'">
+          <span>{{ 'Manual_upload_asup_note' | translate }}&nbsp;</span
+          >{{ 'Manual_upload_asup_msg' | translate }}
+        </p>
+
+        <!-- Grid view of Jobs-->
+        <div class="grid-wrap" *ngIf="jobs.length">
+          <div
+            id="{{ grid.meta.tableId }}-right-scroll"
+            class="right-scroll"
+            (click)="grid.rightScroll()"
+            [hidden]="!grid.showRightScroll"
+            data-spy="affix"
+          >
+            <i class="fa fa-chevron-right" aria-hidden="true"></i>
+          </div>
+          <div
+            id="{{ grid.meta.tableId }}-left-scroll"
+            class="left-scroll"
+            (click)="grid.leftScroll()"
+            [hidden]="!grid.showLeftScroll"
+            data-spy="affix"
+          >
+            <i class="fa fa-chevron-left" aria-hidden="true"></i>
+          </div>
+
+          <div id="{{ grid.meta.tableId }}" class="smart-grid">
+            <table
+              class="table"
+              [ngClass]="{
+                'table-bordered': grid.meta.tableBordered,
+                'table-striped': grid.meta.tableStriped
+              }"
+            >
+              <tbody>
+                <!--Headers-->
+                <tr class="headers">
+                  <th class="row-select" *ngIf="grid.meta.selectAll">
+                    <div class="custom-checkbox">
+                      <input
+                        type="checkbox"
+                        [(ngModel)]="checkAll"
+                        (click)="toggleChecked()"
+                        [disabled]="disableCheckAll"
+                      />
+                      <label></label>
+                    </div>
+                  </th>
+                  <th
+                    class="actions"
+                    *ngIf="grid.meta.actions"
+                    [style.min-width]="grid.meta.actionsWidth"
+                    [style.width]="grid.meta.actionsWidth"
+                  >
+                    <a (click)="gridDo('toggleFilters')"
+                      ><i class="fa fa-filter" aria-hidden="true"></i
+                    ></a>
+                    {{ grid.meta.actionsTitle | translate }}
+                  </th>
+                  <ng-container
+                    *ngFor="let header of grid.headers; let i = index"
+                  >
+                    <ng-container *ngIf="header.sort !== false">
+                      <th
+                        class="sortable"
+                        [style.min-width]="
+                          header.width || grid.meta.minCellWidth
+                        "
+                        [style.width]="header.width || grid.meta.minCellWidth"
+                        (click)="gridDo('sort', i)"
+                      >
+                        {{ header.title | translate }}
+                        <i class="fa fa-sort" aria-hidden="true"></i>
+                      </th>
+                    </ng-container>
+                    <ng-container *ngIf="header.sort === false">
+                      <th
+                        [style.min-width]="
+                          header.width || grid.meta.minCellWidth
+                        "
+                        [style.width]="header.width || grid.meta.minCellWidth"
+                      >
+                        {{ header.title | translate }}
+                      </th>
+                    </ng-container>
+                  </ng-container>
+                  <th class="blank-column"></th>
+                </tr>
+
+                <!--Filters Row-->
+                <tr class="filters" *ngIf="grid.showFilters">
+                  <td class="row-select" *ngIf="grid.meta.selectAll"></td>
+                  <td class="actions" *ngIf="grid.meta.actions">&nbsp;</td>
+                  <td *ngFor="let header of grid.headers; let i = index">
+                    <ng-container *ngIf="header.filter !== false">
+                      <input
+                        id="{{ grid.meta.tableId }}-filter-{{ i }}"
+                        type="text"
+                        (input)="gridDo('filter', i, $event.target.value)"
+                      /><!--
+               -->
+                      <div
+                        class="close-filter"
+                        (click)="gridDo('clearFilter', i)"
+                      >
+                        <i class="fa fa-close" aria-hidden="true"></i>
+                      </div>
+                    </ng-container>
+                  </td>
+                  <td class="blank-column"></td>
+                </tr>
+
+                <!--Data Rows-->
+                <ng-container *ngFor="let job of jobs; let i = index">
+                  <ng-container *ngIf="job.showRow">
+                    <tr>
+                      <td class="row-select" *ngIf="grid.meta.selectAll">
+                        <div class="custom-checkbox">
+                          <input
+                            type="checkbox"
+                            [(ngModel)]="job.selected"
+                            [disabled]="job.disabled"
+                            (change)="checkProfileType(i)"
+                          />
+                          <label></label>
+                        </div>
+                      </td>
+
+                      <td class="actions" *ngIf="grid.meta.actions">
+                        <div class="tools">
+                          <span
+                            *ngIf="
+                              job.asup_status == 'Uploaded' ||
+                              job.asup_status == 'Completed'
+                            "
+                          >
+                            <a
+                              class="tools-link"
+                              *ngIf="caLaunch"
+                              href="https://mysupport.netapp.com/myautosupport/dist/index.html#/configadvisor/asup/{{
+                                job.name
+                              }}?source=aiqca"
+                              target="_blank"
+                              aria-hidden="true"
+                              data-toggle="tooltip"
+                              tooltip-append-to-body="true"
+                              data-placement="right"
+                            >
+                              <i class="fa fa-desktop" aria-hidden="true"></i>
+                              <div class="luci-tooltip__text">
+                                {{ 'Cvv_tooltiptext' | translate }}
+                              </div>
+                            </a>
+                            <a
+                              class="tools-link"
+                              *ngIf="!caLaunch"
+                              href="https://mysupport.netapp.com/myautosupport/dist/index.html#/onecollect/asup/{{
+                                job.name
+                              }}?source=aiqoc"
+                              target="_blank"
+                              aria-hidden="true"
+                              data-toggle="tooltip"
+                              tooltip-append-to-body="true"
+                              data-placement="right"
+                            >
+                              <i class="fa fa-desktop" aria-hidden="true"></i>
+                              <div class="luci-tooltip__text">
+                                {{ 'Cvv_tooltiptext' | translate }}
+                              </div>
+                            </a>
+                            <sup>{{ 'New' | translate }}</sup>
+                          </span>
+                        </div>
+                      </td>
+
+                      <td>{{ job.name }}</td>
+
+                      <td>{{ job.spm_project_id }}</td>
+
+                      <td>{{ job.profile }}</td>
+
+                      <td>{{ job.start_time | date: 'medium' }}</td>
+
+                      <td>{{ job.end_time | date: 'medium' }}</td>
+
+                      <td>{{ job.status | translate }}</td>
+
+                      <td>
+                        <span
+                          [ngClass]="{
+                            green:
+                              job.asup_status == 'Uploaded' ||
+                              job.asup_status == 'Completed',
+                            red: job.asup_status == 'Failed',
+                            orange: job.asup_status == 'In progress'
+                          }"
+                        >
+                          {{ job.asup_status }}
+                        </span>
+                      </td>
+
+                      <td class="blank-column"></td>
+                    </tr>
+                  </ng-container>
+                </ng-container>
+
+                <tr class="pagination-row">
+                  <td [attr.colspan]="grid.meta.msgColSpan">
+                    <div class="paginate-wrap">
+                      <div class="paginate">
+                        <span *ngIf="start == 0" class="prev disabled">{{
+                          'Jobspage_prev' | translate
+                        }}</span
+                        ><!--
+                 --><span
+                          *ngIf="start != 0"
+                          class="prev"
+                          (click)="getJobs(start - interval, interval)"
+                          >{{ 'Jobspage_prev' | translate }}</span
+                        ><!--
+
+                 --><span *ngIf="!next" class="next disabled">{{
+                          'Jobspage_next' | translate
+                        }}</span
+                        ><!--
+                 --><span
+                          *ngIf="next"
+                          class="next"
+                          (click)="getJobs(start + interval, interval)"
+                          >{{ 'Jobspage_next' | translate }}</span
+                        >
+                      </div>
+                    </div>
+                    <!--END .paginate-wrap-->
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div
+              class="hide-scroll"
+              *ngIf="
+                !grid.meta.showBottomScroll &&
+                (grid.showRightScroll || grid.showLeftScroll)
+              "
+            >
+              &nbsp;
+            </div>
+          </div>
+          <!--END .smart-grid-->
+        </div>
+        <!--END .grid-wrap-->
+      </div>
+    </div>
+    <!--END .tab-content-wrap-->
+  </div>
+</ng-container>

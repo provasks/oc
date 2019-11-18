@@ -1,0 +1,133 @@
+/* Modal Header*/
+.modal-dialog {
+  width: 250px;
+}
+.modal .modal-header {
+  background: #173e77;
+  padding: 10px 15px;
+}
+.modal .modal-header button,
+.modal .modal-header h4 {
+  color: #fff;
+}
+.modal .modal-header button {
+  opacity: 0.75;
+}
+.modal .modal-header h4 {
+  background-color: none;
+  font-size: 15px;
+}
+strong {
+  font-weight: 500;
+}
+strong.section-head {
+  font-weight: 600;
+}
+span.red {
+  font-size: 16px;
+  font-weight: 600;
+  color: red;
+}
+/* Modal Body */
+.modal-body {
+  font-size: 14px;
+}
+.modal-body .row {
+  align-items: flex-start;
+}
+.modal-body .row .col-xs-6:last-child {
+  border-left: 1px #e5e5e5 solid;
+}
+
+.modal-body select[disabled] {
+  background-color: rgb(238, 238, 238);
+}
+.modal-body .item .time {
+  width: 50px;
+}
+.modal-body .item.collect-now {
+  margin-top: 30px;
+}
+.modal-body .item.collect-now p,
+.modal-body .item.collect-now p small {
+  font-size: 14px;
+  line-height: 12px;
+}
+.modal-body .item input {
+  padding: 3px;
+}
+.modal-body .start-time {
+  display: inline-block;
+  width: 50px;
+}
+.modal-body .start-time p {
+  font-size: 14px;
+}
+.modal-body .start-time select {
+  width: 50px;
+}
+.modal-body label {
+  cursor: pointer;
+}
+.modal-body .item {
+  margin-bottom: 15px;
+}
+.modal-body .item > span {
+  display: block;
+  text-align: left;
+}
+.modal-body .item .group-input-wrap {
+  display: inline-block;
+  margin: 0;
+  margin-top: 5px;
+}
+.modal-body .item .group-input-wrap input,
+.modal-body .item .group-input-wrap .dropdown-wrap {
+  margin: 0;
+}
+.modal-body .item .dropdown-wrap i {
+  margin: 0;
+  color: #fff;
+}
+.modal-body .item .inline {
+  display: inline-block;
+}
+.modal-body .item.days .days-wrap {
+  margin-top: 5px;
+}
+.modal-body .item.days label {
+  display: inline-block;
+  margin-right: 10px;
+  font-weight: 300;
+}
+
+/* Modal Footer */
+.modal-footer {
+  padding: 10px 15px;
+}
+.modal-footer span {
+  display: block;
+  margin-bottom: 10px;
+  text-align: left;
+}
+.modal-footer button {
+  float: left;
+}
+span.red {
+  color: red;
+  margin-right: 10px;
+}
+span.green {
+  color: #228b22;
+  margin-right: 10px;
+  font-weight: 600;
+}
+span.red,
+span.validation {
+  font-size: 14px;
+  font-weight: 600;
+  color: red;
+}
+span.validation {
+  display: block;
+}

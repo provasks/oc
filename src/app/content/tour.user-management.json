@@ -1,0 +1,34 @@
+{
+  "data": [
+    {
+      "anchorId": "create-user",
+      "placement": "right",
+      "title": "Tour_UserManagement_CreateUser_Title",
+      "content": "Tour_UserManagement_CreateUser_Content"
+    },
+    {
+      "anchorId": "more-actions",
+      "placement": "right",
+      "title": "Tour_UserManagement_MoreActions_Title",
+      "content": "Tour_UserManagement_MoreActions_Content"
+    },
+    {
+      "anchorId": "edit-user",
+      "placement": "right",
+      "title": "Tour_UserManagement_EditUser_Title",
+      "content": "Tour_UserManagement_EditUser_Content"
+    },
+    {
+      "anchorId": "delete-user",
+      "placement": "right",
+      "title": "Tour_UserManagement_DeleteUser_Title",
+      "content": "Tour_UserManagement_DeleteUser_Content"
+    },
+    {
+      "anchorId": "change-password",
+      "placement": "right",
+      "title": "Tour_UserManagement_ChangePassword_Title",
+      "content": "Tour_UserManagement_ChangePassword_Content"
+    }
+  ]
+}

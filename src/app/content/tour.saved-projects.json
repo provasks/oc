@@ -1,0 +1,52 @@
+{
+  "data": [
+    {
+      "anchorId": "filter",
+      "placement": "right",
+      "title": "Tour_SavedProject_Filter_Title",
+      "content": "Tour_SavedProject_Filter_Content"
+    },
+    {
+      "anchorId": "name",
+      "placement": "bottom",
+      "title": "Tour_SavedProject_Name_Title",
+      "content": "Tour_SavedProject_Name_Content"
+    },
+    {
+      "anchorId": "more-actions",
+      "placement": "right",
+      "title": "Tour_SavedProject_MoreActions_Title",
+      "content": "Tour_SavedProject_MoreActions_Content"
+    },
+    {
+      "anchorId": "replay",
+      "placement": "right",
+      "title": "Tour_SavedProject_Replay_Title",
+      "content": "Tour_SavedProject_Replay_Content"
+    },
+    {
+      "anchorId": "clone",
+      "placement": "right",
+      "title": "Tour_SavedProject_Clone_Title",
+      "content": "Tour_SavedProject_Clone_Content"
+    },
+    {
+      "anchorId": "schedule",
+      "placement": "right",
+      "title": "Tour_SavedProject_Schedule_Title",
+      "content": "Tour_SavedProject_Schedule_Content"
+    },
+    {
+      "anchorId": "edit",
+      "placement": "right",
+      "title": "Tour_SavedProject_Edit_Title",
+      "content": "Tour_SavedProject_Edit_Content"
+    },
+    {
+      "anchorId": "delete",
+      "placement": "right",
+      "title": "Tour_SavedProject_Delete_Title",
+      "content": "Tour_SavedProject_Delete_Content"
+    }
+  ]
+}

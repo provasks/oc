@@ -1,0 +1,27 @@
+.new-collection-wrap {
+  padding: 10px;
+  padding-top: 0;
+}
+.configure-new-collection {
+  font-size: 14px;
+  padding: 10px;
+  padding-top: 0;
+}
+h5 {
+  background: #fff none repeat scroll 0 0;
+  width: -webkit-fit-content;
+  font-size: 14px;
+  margin-top: -9px;
+  margin-bottom: 10px;
+}
+label {
+  cursor: pointer;
+}
+input[type='radio'] {
+  margin-top: 2px;
+  cursor: pointer;
+}
+select {
+  /*width: 120px;*/
+  height: 25px;
+}

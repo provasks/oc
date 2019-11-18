@@ -1,0 +1,22 @@
+{
+  "data": [
+    {
+      "anchorId": "select-jobs",
+      "placement": "right",
+      "title": "Tour_UploadAsap_SelectJobs_Title",
+      "content": "Tour_UploadAsap_SelectJobs_Content"
+    },
+    {
+      "anchorId": "filter",
+      "placement": "right",
+      "title": "Tour_UploadAsap_Filter_Title",
+      "content": "Tour_UploadAsap_Filter_Content"
+    },
+    {
+      "anchorId": "name",
+      "placement": "bottom",
+      "title": "Tour_UploadAsap_Name_Title",
+      "content": "Tour_UploadAsap_Name_Content"
+    }
+  ]
+}

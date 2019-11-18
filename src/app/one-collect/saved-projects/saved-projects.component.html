@@ -1,0 +1,278 @@
+<oc-modal-notification
+  [id]="'remove-job'"
+  [notification]="notification"
+  (onConfirmed)="confirmRemoveJob($event)"
+></oc-modal-notification>
+
+<oc-modal-schedule (onSaved)="refreshJobs()"></oc-modal-schedule>
+
+<oc-modal-sso
+  (onValidated)="playJob(setIdx)"
+  (onCancel)="playJob(setIdx)"
+></oc-modal-sso>
+
+<oc-modal-clone-job
+  [projectName]="cloneProjectName"
+  (cloneCompleted)="refreshJobs()"
+></oc-modal-clone-job>
+
+<oc-tour-saved-projects
+  [hidden]="!tourStarted"
+  [grid]="grid"
+  (toggleTour)="toggleTour($event)"
+></oc-tour-saved-projects>
+
+<div *ngIf="jobsLoaded" [hidden]="tourStarted">
+  <div class="tab-content-wrap" *ngIf="!jobs.length">
+    <div *ngIf="!caLaunch" class="tab-content-empty">
+      {{ 'Savedproj_nojob' | translate }}
+      <a routerLink="/new-collection">{{ 'Savedproj_create' | translate }}</a>
+    </div>
+    <div *ngIf="caLaunch" class="tab-content-empty">
+      {{ 'Savedproj_nojob' | translate }}
+      <a routerLink="/main/new-collection/solution-based">{{
+        'Savedproj_create' | translate
+      }}</a>
+    </div>
+  </div>
+  <!--END .tab-content-wrap-->
+
+  <div class="tab-content-wrap" *ngIf="jobs.length">
+    <div class="tab-content">
+      <!-- Grid view of Jobs-->
+      <div class="grid-wrap" *ngIf="jobs.length">
+        <div
+          id="{{ grid.meta.tableId }}-right-scroll"
+          class="right-scroll"
+          (click)="grid.rightScroll()"
+          [hidden]="!grid.showRightScroll"
+          data-spy="affix"
+        >
+          <i class="fa fa-chevron-right" aria-hidden="true"></i>
+        </div>
+        <div
+          id="{{ grid.meta.tableId }}-left-scroll"
+          class="left-scroll"
+          (click)="grid.leftScroll()"
+          [hidden]="!grid.showLeftScroll"
+          data-spy="affix"
+        >
+          <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        </div>
+
+        <div id="{{ grid.meta.tableId }}" class="smart-grid">
+          <table
+            class="table"
+            [ngClass]="{
+              'table-bordered': grid.meta.tableBordered,
+              'table-striped': grid.meta.tableStriped
+            }"
+          >
+            <tbody>
+              <!--Headers-->
+              <tr class="headers">
+                <th class="row-select" *ngIf="grid.meta.selectAll">
+                  <div class="custom-checkbox">
+                    <input
+                      type="checkbox"
+                      [(ngModel)]="checkAll"
+                      (click)="toggleChecked()"
+                      [disabled]="disableCheckAll"
+                    />
+                    <label></label>
+                  </div>
+                </th>
+                <th
+                  class="actions"
+                  *ngIf="grid.meta.actions"
+                  [style.min-width]="grid.meta.actionsWidth"
+                  [style.width]="grid.meta.actionsWidth"
+                >
+                  <a (click)="gridDo('toggleFilters')"
+                    ><i class="fa fa-filter" aria-hidden="true"></i
+                  ></a>
+                  {{ 'Savedproj_table_col1' | translate }}
+                </th>
+                <ng-container
+                  *ngFor="let header of grid.headers; let i = index"
+                >
+                  <ng-container *ngIf="header.sort !== false && !header.hidden">
+                    <th
+                      class="sortable"
+                      [style.min-width]="header.width || grid.meta.minCellWidth"
+                      [style.width]="header.width || grid.meta.minCellWidth"
+                      (click)="gridDo('sort', i)"
+                    >
+                      {{ header.title }}
+                      <i class="fa fa-sort" aria-hidden="true"></i>
+                    </th>
+                  </ng-container>
+                  <ng-container *ngIf="header.sort === false && !header.hidden">
+                    <th
+                      [style.min-width]="header.width || grid.meta.minCellWidth"
+                      [style.width]="header.width || grid.meta.minCellWidth"
+                    >
+                      {{ header.title }}
+                    </th>
+                  </ng-container>
+                </ng-container>
+                <th class="blank-column"></th>
+              </tr>
+
+              <!--Filters Row-->
+              <tr class="filters" *ngIf="grid.showFilters">
+                <td class="row-select" *ngIf="grid.meta.selectAll"></td>
+                <td class="actions" *ngIf="grid.meta.actions">&nbsp;</td>
+                <ng-container
+                  *ngFor="let header of grid.headers; let i = index"
+                >
+                  <td *ngIf="!header.hidden">
+                    <ng-container *ngIf="header.filter !== false">
+                      <input
+                        id="{{ grid.meta.tableId }}-filter-{{ i }}"
+                        type="text"
+                        (input)="gridDo('filter', i, $event.target.value)"
+                      />
+                      <div
+                        class="close-filter"
+                        (click)="gridDo('clearFilter', i)"
+                      >
+                        <i class="fa fa-close" aria-hidden="true"></i>
+                      </div>
+                    </ng-container>
+                  </td>
+                </ng-container>
+                <td class="blank-column"></td>
+              </tr>
+
+              <!--Data Rows-->
+              <ng-container *ngFor="let job of jobs; let i = index">
+                <ng-container *ngIf="job.showRow">
+                  <tr>
+                    <td class="row-select" *ngIf="grid.meta.selectAll">
+                      <div class="custom-checkbox">
+                        <input
+                          type="checkbox"
+                          [(ngModel)]="job.selected"
+                          [disabled]="job.disabled"
+                        />
+                        <label></label>
+                      </div>
+                    </td>
+
+                    <td class="actions" *ngIf="grid.meta.actions">
+                      <div class="tools">
+                        <button
+                          id="{{ grid.meta.tableId }}-btn-tools-{{ i }}"
+                          class="btn btn-primary btn-xs btn-tools"
+                          (click)="grid.viewActions(i)"
+                          data-toggle="tooltip"
+                          title="{{ 'Jobspage_moreactions' | translate }}"
+                        >
+                          <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                        </button>
+                      </div>
+                      <span
+                        id="{{ grid.meta.tableId }}-tools-dropdown-{{ i }}"
+                        class="tools-dropdown"
+                      >
+                        <ul>
+                          <!--Replay-->
+                          <ng-container
+                            *ngIf="
+                              !hosted ||
+                              (hosted && activeUser.username == job.user)
+                            "
+                          >
+                            <li
+                              *ngIf="job.profile != 'Performance'"
+                              (click)="checkLiveStatus(playJob, i)"
+                            >
+                              <i class="fa fa-play" aria-hidden="true"></i
+                              >{{ 'Savedproj_replay' | translate }}
+                            </li>
+                          </ng-container>
+                          <!--Clone Project-->
+                          <li
+                            *ngIf="job.profile != 'Performance'"
+                            (click)="initCloneJob(i)"
+                          >
+                            <i class="fa fa-copy" aria-hidden="true"></i
+                            >{{ 'Savedproj_clone' | translate }}
+                          </li>
+                          <!--Schedule-->
+                          <ng-container
+                            *ngIf="
+                              !hosted ||
+                              (hosted && activeUser.username == job.user)
+                            "
+                          >
+                            <li
+                              *ngIf="
+                                !job.isPerfArchive &&
+                                !job.scheduled &&
+                                job.profile != 'Performance'
+                              "
+                              (click)="scheduleJob(i)"
+                            >
+                              <i class="fa fa-clock-o" aria-hidden="true"></i
+                              >{{ 'Savedproj_addschedule' | translate }}
+                            </li>
+                          </ng-container>
+                          <!--Edit Project-->
+                          <ng-container
+                            *ngIf="
+                              !hosted ||
+                              (hosted && activeUser.username == job.user)
+                            "
+                          >
+                            <li *ngIf="!job.scheduled" (click)="editJob(i)">
+                              <i class="fa fa-pencil" aria-hidden="true"></i
+                              >{{ 'Savedproj_edit' | translate }}
+                            </li>
+                          </ng-container>
+                          <!--Delete Project-->
+                          <li (click)="removeJob(i)">
+                            <i class="fa fa-trash" aria-hidden="true"></i
+                            >{{ 'Savedproj_delete' | translate }}
+                          </li>
+                        </ul>
+                      </span>
+                    </td>
+
+                    <td *ngIf="hosted && activeUser.is_superuser">
+                      {{ job.user }}
+                    </td>
+
+                    <td>{{ job.name }}</td>
+
+                    <td>{{ job.group }}</td>
+
+                    <td>{{ job.profileName }}</td>
+
+                    <td>{{ job.update_time | date: 'medium' }}</td>
+
+                    <td class="blank-column"></td>
+                  </tr>
+                </ng-container>
+              </ng-container>
+            </tbody>
+          </table>
+
+          <div
+            class="hide-scroll"
+            *ngIf="
+              !grid.meta.showBottomScroll &&
+              (grid.showRightScroll || grid.showLeftScroll)
+            "
+          >
+            &nbsp;
+          </div>
+        </div>
+        <!--END .smart-grid-->
+      </div>
+      <!--END .grid-wrap-->
+    </div>
+  </div>
+  <!--END .tab-content-wrap-->
+</div>

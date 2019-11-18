@@ -1,0 +1,338 @@
+<oc-tour-data-view
+  [hidden]="!tourStarted"
+  (toggleTour)="toggleTour($event)"
+></oc-tour-data-view>
+
+<div [hidden]="tourStarted" class="data-view-flex">
+  <div class="tab-content-wrap" *ngIf="!job">
+    <div class="tab-content-empty">
+      {{ 'Jobspage_nojobs' | translate }}
+      <a
+        [routerLink]="
+          client.features.purposeBasedCollection
+            ? '/main/purposes'
+            : '/main/new-collection'
+        "
+        >{{ 'CreateNewCollection' | translate }}</a
+      >
+    </div>
+  </div>
+  <!--END .tab-content-wrap-->
+
+  <div id="data-view-tree" class="tab-content data-view-flex" *ngIf="job">
+    <div id="top-block">
+      <!-- Slider to choose view mode -->
+      <ng-container
+        *ngIf="
+          !caLaunch || (enableOneCollect == true && job.profile != 'SnapCenter')
+        "
+      >
+        <div
+          class="slide-container pull-right"
+          *ngIf="client.features.advanceViewer"
+        >
+          <div class="span-container">
+            <span class="right">{{ 'Dataview_advanced' | translate }}</span>
+          </div>
+          <div class="slide-input" (click)="toggleSlider()">
+            <div class="slide-track"></div>
+            <div
+              [ngClass]="{
+                'slide-button': true,
+                'command-view': slider == 'command',
+                'advanced-view': slider == 'advanced'
+              }"
+            ></div>
+          </div>
+          <div class="span-container">
+            <span>{{ 'Dataview_command' | translate }}</span>
+          </div>
+        </div>
+      </ng-container>
+
+      <div
+        class="pull-right"
+        *ngIf="!caLaunch || (job && enableOneCollect && slider == 'advanced')"
+      >
+        <button
+          class="luci-button luci-button--primary luci-button--small"
+          (click)="downloadView(folder)"
+          [disabled]="noAdvancedView"
+        >
+          <i class="fa fa-download"></i>{{ 'Dataview_export' | translate }}
+        </button>
+      </div>
+
+      <p class="job-name" *ngIf="job">
+        <strong>{{ 'Dataview_jobname' | translate }}&nbsp;</strong
+        >{{ job.name }}
+      </p>
+      <!-- Navigate to View&Analyze -->
+      <span
+        *ngIf="
+          caLaunch &&
+          (job['profile'] != 'Component Based' && job['profile'] != 'FlexPod')
+        "
+        class="view-link pull-right"
+      >
+        <a (click)="navigateToViewTab(job.name)" style="color: #0067C5;">
+          <span class="n-dropdown-menu__trigger-text">{{
+            'Dataview_analyze' | translate
+          }}</span>
+        </a>
+      </span>
+      <ng-container *ngIf="!client.isOEM">
+        <span
+          *ngIf="
+            job.asup_status == 'Uploaded' || job.asup_status == 'Completed'
+          "
+          class="cvv-link pull-right"
+        >
+          <a
+            class="cvv-button"
+            *ngIf="caLaunch"
+            href="https://mysupport.netapp.com/myautosupport/dist/index.html#/configadvisor/asup/{{
+              job.name
+            }}"
+            target="_blank"
+            aria-hidden="true"
+            data-toggle="tooltip"
+            tooltip-append-to-body="true"
+            >{{ 'Jobspage_cvv' | translate }}
+            <sup>{{ 'New' | translate }}</sup>
+            <div class="luci-tooltip__text">
+              {{ 'Cvv_tooltiptext' | translate }}
+            </div>
+          </a>
+        </span>
+      </ng-container>
+
+      <p class="file-location" *ngIf="job">
+        <strong>{{ 'Dataview_files' | translate }}&nbsp;</strong>{{ folder }}
+      </p>
+    </div>
+    <!--END #top-block-->
+
+    <!-- View for Advanced-->
+    <div class="content-wrap" *ngIf="slider == 'advanced'">
+      <div class="left-content-wrap">
+        <ng-container
+          *ngFor="let component of components; let componentIdx = index"
+        >
+          <div class="component-wrap">
+            <strong>
+              <span
+                class="component"
+                [ngClass]="{ highlight: component.show }"
+                (click)="setAdvancedData(componentIdx)"
+              >
+                <!--i class="fa fa-angle-double-right" aria-hidden="true"></i-->
+                {{ component.component_category }} - {{ component.host }}
+              </span>
+            </strong>
+          </div>
+        </ng-container>
+      </div>
+
+      <div class="middle-divider"></div>
+
+      <div class="right-content-wrap">
+        <div class="advanced-log">
+          <div class="parse-error" *ngIf="!types.length">
+            {{ parseError }}
+          </div>
+          <div
+            class="table-wrap"
+            *ngFor="let type of types; let tableIdx = index"
+          >
+            <div class="table-type-wrap">
+              <table class="table table-bordered">
+                <tbody>
+                  <tr class="type" (click)="toggleTable(tableIdx)">
+                    <th [attr.colspan]="headers[tableIdx].length">
+                      <i
+                        *ngIf="!type.show"
+                        class="fa fa-angle-double-right"
+                        aria-hidden="true"
+                      ></i>
+                      <i
+                        *ngIf="type.show"
+                        class="fa fa-angle-double-down"
+                        aria-hidden="true"
+                      ></i>
+                      {{ type.title }}
+                    </th>
+
+                    <th></th>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="table-content-wrap">
+              <table class="table table-bordered">
+                <tbody>
+                  <tr class="headers" *ngIf="type.dataAvailable && type.show">
+                    <th *ngFor="let header of headers[tableIdx]">
+                      {{ header }}
+                    </th>
+                  </tr>
+                  <ng-container *ngIf="type.dataAvailable && type.show">
+                    <tr *ngFor="let row of rows[tableIdx]">
+                      <td *ngFor="let val of row">{{ val }}</td>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--END .content-wrap-->
+
+    <!-- View for Command-->
+    <div class="content-wrap" *ngIf="slider == 'command'">
+      <div id="command-wrapper" class="left-content-wrap">
+        <ng-container
+          *ngFor="let component of components; let componentIdx = index"
+        >
+          <div class="component-wrap">
+            <span
+              [id]="'component-id-' + componentIdx"
+              class="component"
+              (click)="toggleComponent(componentIdx)"
+            >
+              <strong>
+                <i
+                  *ngIf="!component.show"
+                  class="fa fa-angle-double-right"
+                  aria-hidden="true"
+                ></i>
+                <i
+                  *ngIf="component.show"
+                  class="fa fa-angle-double-down"
+                  aria-hidden="true"
+                ></i>
+                {{ component.component_category }} - {{ component.host }}
+              </strong>
+            </span>
+
+            <ng-container
+              *ngFor="
+                let command of commands[componentIdx];
+                let commandIdx = index
+              "
+            >
+              <div class="command-wrap" *ngIf="component.show">
+                <div
+                  class="command"
+                  [ngClass]="{
+                    highlight: command.show && command.targets.length <= 1
+                  }"
+                  (click)="toggleCommand(componentIdx, commandIdx)"
+                >
+                  <i
+                    *ngIf="command.targets.length > 1 && !command.show"
+                    class="fa fa-angle-double-right"
+                    aria-hidden="true"
+                  ></i>
+                  <i
+                    *ngIf="command.targets.length > 1 && command.show"
+                    class="fa fa-angle-double-down"
+                    aria-hidden="true"
+                  ></i>
+                  <img
+                    *ngIf="
+                      command.targets.length == 1 &&
+                      command.targets[0].result == 'Pass'
+                    "
+                    src="assets/img/icon_terminal.png"
+                  />
+                  <span
+                    *ngIf="
+                      command.targets.length == 1 &&
+                      command.targets[0].result == 'Fail'
+                    "
+                    class="glyphicon glyphicon-exclamation-sign"
+                  ></span>
+                  {{ command.command }}
+                </div>
+
+                <ng-container
+                  *ngIf="command.targets.length > 1 && command.show"
+                >
+                  <div
+                    class="target"
+                    [ngClass]="{ highlight: target.show }"
+                    *ngFor="
+                      let target of command.targets;
+                      let targetIdx = index
+                    "
+                    (click)="
+                      setCommandData(componentIdx, commandIdx, targetIdx)
+                    "
+                  >
+                    <img
+                      *ngIf="target.result == 'Pass'"
+                      src="assets/img/icon_terminal.png"
+                    />
+                    <span
+                      *ngIf="target.result == 'Fail'"
+                      class="glyphicon glyphicon-exclamation-sign"
+                    ></span>
+                    {{ target.target }}
+                  </div>
+                </ng-container>
+              </div>
+            </ng-container>
+          </div>
+        </ng-container>
+      </div>
+
+      <div class="middle-divider"></div>
+
+      <div class="right-content-wrap">
+        <div class="command-log" *ngIf="slider == 'command'">
+          <div class="command-search-wrap">
+            <span class="title">{{ 'Dataview_search' | translate }}</span>
+            <input
+              id="search-command-input"
+              [(ngModel)]="searchQuery"
+              (keyup)="search($event)"
+              [disabled]="isSearching"
+            /><!--
+         --><button
+              id="search-command-up"
+              class="btn btn-primary btn-xs"
+              (click)="searchUp()"
+              [disabled]="!totalMatches"
+            >
+              <i class="fa fa-arrow-up" aria-hidden="true"></i></button
+            ><!--
+         --><button
+              id="search-command-down"
+              class="btn btn-primary btn-xs"
+              (click)="searchDown()"
+              [disabled]="!totalMatches"
+            >
+              <i class="fa fa-arrow-down" aria-hidden="true"></i></button
+            ><!--
+         --><span class="search-count"
+              >{{ totalMatches }} {{ 'Dataview_match' | translate }}</span
+            >
+          </div>
+          <pre
+            *ngIf="!caLaunch || searchCommandPre"
+            class="command-content"
+            [innerHTML]="commandLog | safeHtml"
+          ></pre>
+          <pre *ngIf="caLaunch && requestCommandPre" class="command-content">{{
+            commandLog
+          }}</pre>
+        </div>
+      </div>
+    </div>
+    <!--END .content-wrap-->
+  </div>
+</div>

@@ -1,0 +1,32 @@
+<div class="tab-content">
+  <div class="basic-options">
+    <div class="basic-option">
+      <span
+        ><strong
+          >{{ 'Importfile_uploadtxt' | translate }}&nbsp;<small
+            >(.tar.gz / .tgz / .zip / .xml.gz)</small
+          ></strong
+        >&nbsp;</span
+      >
+      <label class="btn btn-primary btn-xs"
+        >{{ 'Importfile_choosefile' | translate }}
+        <input
+          type="file"
+          class="upload"
+          style="display:none"
+          (change)="uploadFile($event)"
+          (click)="resetFileUpload($event)"
+          multiple
+        />
+      </label>
+      <label id="fileLabel" style="padding-left: 10px;font-weight: 100;">{{
+        fileLabel
+      }}</label>
+      <span
+        class="upload-msg"
+        [ngClass]="{ pass: typeCheck == 'pass', fail: typeCheck == 'fail' }"
+        ><strong>{{ uploadMsg }}</strong></span
+      >
+    </div>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+footer a {
+  color: #fff;
+}
+footer.footer {
+  border-top: solid 10px #dfdfdf;
+}
+.n-footer__copyright {
+  border-right: 0;
+}

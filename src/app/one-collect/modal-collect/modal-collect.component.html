@@ -1,0 +1,458 @@
+<div id="collect-modal" class="modal" role="dialog">
+  <div
+    [ngClass]="
+      collectOptions.isPerfArchive || !client.features.asupUpload
+        ? 'modal-dialog width-500'
+        : 'modal-dialog'
+    "
+  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+        <h4 class="modal-title">{{ 'Collect_modal_title' | translate }}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div
+            *ngIf="!caLaunch && client.features.asupUpload"
+            [ngClass]="collectOptions.isPerfArchive ? 'col-xs-6' : 'col-xs-4'"
+          >
+            <div class="item">
+              <label
+                ><strong class="section-head">{{
+                  'Collect_modal_proj_details' | translate
+                }}</strong></label
+              >
+            </div>
+            <div class="item">
+              <span>
+                <strong>{{ 'Collect_modal_purpose' | translate }}</strong>
+                <span class="red">&nbsp;*</span>
+              </span>
+              <select
+                [(ngModel)]="collectOptions.purpose"
+                (change)="checkPurpose()"
+              >
+                <option
+                  *ngFor="let purpose of collectOptions.purposes"
+                  [ngValue]="purpose"
+                  [selected]="purpose.title == selectedPurpose"
+                  >{{ purpose.title | translate }}</option
+                >
+              </select>
+
+              <span class="purpose-note" *ngIf="showPurposeNote">{{
+                'Collection_modal_purposenote' | translate
+              }}</span>
+            </div>
+            <div class="item" *ngIf="collectOptions.purpose.code == 5">
+              <span
+                ><strong>{{
+                  'Collection_modal_opportunity' | translate
+                }}</strong></span
+              >
+              <input type="text" [(ngModel)]="collectOptions.opportunityId" />
+            </div>
+            <div class="item" *ngIf="collectOptions.purpose.code == 3">
+              <span
+                ><strong>{{
+                  'Collection_modal_case' | translate
+                }}</strong></span
+              >
+              <input type="text" [(ngModel)]="collectOptions.caseId" />
+            </div>
+            <div class="item">
+              <span
+                ><strong>{{
+                  'Collection_modal_comments' | translate
+                }}</strong></span
+              >
+              <textarea [(ngModel)]="collectOptions.comments"></textarea>
+            </div>
+          </div>
+
+          <div
+            [ngClass]="
+              collectOptions.isPerfArchive || !client.features.asupUpload
+                ? 'col-xs-6'
+                : 'col-xs-4'
+            "
+          >
+            <div class="item">
+              <label
+                ><strong class="section-head">{{
+                  'Collectiom_modal_save' | translate
+                }}</strong></label
+              >
+            </div>
+            <div class="item">
+              <span>
+                <strong>{{ 'Collection_modal_purpose' | translate }}</strong>
+                <span class="red">&nbsp;*</span>
+              </span>
+              <input
+                type="text"
+                [(ngModel)]="collectOptions.projectName"
+                [disabled]="!collectOptions.saveProject || projectLoaded"
+              />
+              <span class="validation" *ngIf="validation.projectName">{{
+                errorMsg
+              }}</span>
+            </div>
+            <div class="item">
+              <span
+                ><strong>{{
+                  'Collection_modal_group' | translate
+                }}</strong></span
+              >
+              <div class="group-input-wrap">
+                <input
+                  type="text"
+                  [(ngModel)]="collectOptions.group"
+                  [disabled]="!collectOptions.saveProject"
+                />
+                <div
+                  class="dropdown-wrap"
+                  (click)="showDropdown = !showDropdown"
+                  (blur)="showDropdown = false"
+                  tabindex="0"
+                >
+                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+                </div>
+                <span class="validation" *ngIf="validation.groupName">{{
+                  'Collection_modal_grouperr' | translate
+                }}</span>
+                <div class="groups-dropdown" *ngIf="showDropdown">
+                  <div
+                    class="group-option"
+                    *ngFor="let group of groups"
+                    (mousedown)="setGroup(group)"
+                  >
+                    {{ group }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="item" *ngIf="!settingsPassPhrase">
+              <span
+                ><strong>{{ 'Pass Phrase' | translate }}</strong></span
+              >
+              <div class="passphrase-note">
+                {{ 'Collection_modal_passphasemsg' | translate }}
+              </div>
+              <input
+                autocomplete="off"
+                type="password"
+                [(ngModel)]="collectOptions.passPhrase"
+                [disabled]="!collectOptions.saveProject"
+              />
+            </div>
+            <div class="item" *ngIf="!settingsPassPhrase">
+              <span
+                ><strong>{{ 'Confirm Pass Phrase' | translate }}</strong></span
+              >
+              <input
+                autocomplete="off"
+                type="password"
+                [(ngModel)]="collectOptions.confirmPassPhrase"
+                [disabled]="!collectOptions.saveProject"
+              />
+            </div>
+            <span class="validation" *ngIf="validation.passPhrase">{{
+              validation['errMessage'] | translate
+            }}</span>
+            <!-- <div class="item" *ngIf="client.features.asupUpload">
+              <span
+                id="asup-upload-note"
+                [innerHTML]="'Collection_modal_link' | translate"
+              >
+              </span>
+            </div> -->
+          </div>
+
+          <div
+            class="col-xs-4 col-schedule"
+            *ngIf="!collectOptions.isPerfArchive"
+          >
+            <div class="item">
+              <div class="custom-checkbox">
+                <input
+                  class="inline"
+                  type="checkbox"
+                  [(ngModel)]="collectOptions.scheduleProject"
+                  (change)="changeInSchedule()"
+                  [disabled]="projectLoaded"
+                />
+                <label></label>
+              </div>
+              <label
+                ><strong class="section-head"
+                  >&nbsp;{{ 'Collection_modal_schedule' | translate }}</strong
+                ></label
+              >
+            </div>
+            <div class="item" *ngIf="projectLoaded">
+              <span class="scheduler-note">{{
+                'Collection_modal_schedule_note' | translate
+              }}</span>
+            </div>
+            <div class="item">
+              <span
+                ><strong>{{
+                  'Collection_modal_recurr' | translate
+                }}</strong></span
+              >
+              <select
+                [(ngModel)]="collectOptions.rec_pattern"
+                [disabled]="!collectOptions.scheduleProject || projectLoaded"
+              >
+                <option value="hourly">{{
+                  'Collection_modal_interval' | translate
+                }}</option>
+                <option value="daily">{{
+                  'Collection_modal_daily' | translate
+                }}</option>
+                <option value="weekly">{{
+                  'Collection_modal_weekly' | translate
+                }}</option>
+              </select>
+            </div>
+
+            <div
+              class="schedule-block"
+              *ngIf="collectOptions.rec_pattern == 'hourly'"
+            >
+              <div class="item">
+                <span
+                  ><strong>{{
+                    'Collection_modal_trigger' | translate
+                  }}</strong></span
+                >
+                <!--span><small>(Both hours &amp; minutes cannot be zero)</small></span-->
+                <div class="start-time">
+                  <div>{{ 'Collection_modal_hours' | translate }}</div>
+                  <select
+                    [(ngModel)]="collectOptions.skip_hours"
+                    (change)="alterMinutes()"
+                    [disabled]="
+                      !collectOptions.scheduleProject || projectLoaded
+                    "
+                  >
+                    <option *ngFor="let hour of hours" [value]="hour">{{
+                      hour
+                    }}</option>
+                  </select>
+                </div>
+                <div class="start-time">
+                  <div>{{ 'Collection_modal_min' | translate }}</div>
+                  <select
+                    [(ngModel)]="collectOptions.skip_minutes"
+                    [disabled]="
+                      !collectOptions.scheduleProject || projectLoaded
+                    "
+                  >
+                    <option
+                      *ngFor="let minute of triggerMinutes"
+                      [value]="minute"
+                      >{{ minute }}</option
+                    >
+                  </select>
+                </div>
+              </div>
+              <div class="item">
+                <span
+                  ><strong>{{
+                    'Collection_modal_occur' | translate
+                  }}</strong></span
+                >
+                <input
+                  class="time"
+                  type="text"
+                  [(ngModel)]="collectOptions.occur"
+                  [disabled]="!collectOptions.scheduleProject || projectLoaded"
+                  OnlyNumber="true"
+                  maxlength="2"
+                />
+                <span class="validation" *ngIf="validation.occurPattern">{{
+                  'Collection_modal_occurmsg' | translate
+                }}</span>
+              </div>
+            </div>
+
+            <div
+              class="schedule-block"
+              *ngIf="collectOptions.rec_pattern == 'daily'"
+            >
+              <div class="item">
+                <span
+                  ><strong>{{
+                    'Collection_modal_starttime' | translate
+                  }}</strong></span
+                >
+                <div class="start-time">
+                  <p>{{ 'Collection_modal_hours' | translate }}</p>
+                  <select
+                    [(ngModel)]="collectOptions.startTimeHours"
+                    [disabled]="
+                      !collectOptions.scheduleProject || projectLoaded
+                    "
+                  >
+                    <option *ngFor="let hour of hours" [value]="hour">{{
+                      hour
+                    }}</option>
+                  </select>
+                </div>
+                <div class="start-time">
+                  <p>{{ 'Collection_modal_min' | translate }}</p>
+                  <select
+                    [(ngModel)]="collectOptions.startTimeMinutes"
+                    [disabled]="
+                      !collectOptions.scheduleProject || projectLoaded
+                    "
+                  >
+                    <option *ngFor="let minute of minutes" [value]="minute">{{
+                      minute
+                    }}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="item">
+                <span
+                  ><strong>{{
+                    'Collection_modal_recurr_every' | translate
+                  }}</strong></span
+                >
+                <input
+                  class="time"
+                  type="text"
+                  [(ngModel)]="collectOptions.day_skip"
+                  [disabled]="!collectOptions.scheduleProject || projectLoaded"
+                  OnlyNumber="true"
+                />&nbsp;{{ 'Collection_modal_days' | translate }}
+              </div>
+              <div class="item">
+                <span
+                  ><strong>{{
+                    'Collection_modal_occur' | translate
+                  }}</strong></span
+                >
+                <input
+                  class="time"
+                  type="text"
+                  [(ngModel)]="collectOptions.occur"
+                  [disabled]="!collectOptions.scheduleProject || projectLoaded"
+                  OnlyNumber="true"
+                  maxlength="2"
+                />
+                <span class="validation" *ngIf="validation.occurPattern">{{
+                  'Collection_modal_occurmsg' | translate
+                }}</span>
+              </div>
+            </div>
+
+            <div
+              class="schedule-block"
+              *ngIf="collectOptions.rec_pattern == 'weekly'"
+            >
+              <div class="item">
+                <span
+                  ><strong>{{
+                    'Collection_modal_starttime' | translate
+                  }}</strong></span
+                >
+                <div class="start-time">
+                  <p>{{ 'Collection_modal_hours' | translate }}</p>
+                  <select
+                    [(ngModel)]="collectOptions.startTimeHours"
+                    [disabled]="
+                      !collectOptions.scheduleProject || projectLoaded
+                    "
+                  >
+                    <option *ngFor="let hour of hours" [value]="hour">{{
+                      hour
+                    }}</option>
+                  </select>
+                </div>
+                <div class="start-time">
+                  <p>{{ 'Collection_modal_min' | translate }}</p>
+                  <select
+                    [(ngModel)]="collectOptions.startTimeMinutes"
+                    [disabled]="
+                      !collectOptions.scheduleProject || projectLoaded
+                    "
+                  >
+                    <option *ngFor="let minute of minutes" [value]="minute">{{
+                      minute
+                    }}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="item days">
+                <span
+                  ><strong>{{
+                    'Collection_modal_selectdays' | translate
+                  }}</strong></span
+                >
+                <div class="days-wrap">
+                  <label *ngFor="let day of collectOptions.weekDays">
+                    <input
+                      class="inline"
+                      type="checkbox"
+                      [(ngModel)]="day.checked"
+                      [disabled]="
+                        !collectOptions.scheduleProject || projectLoaded
+                      "
+                    />{{ day.title | translate | capitalize }}
+                  </label>
+                </div>
+              </div>
+              <div class="item">
+                <span
+                  ><strong>{{
+                    'Collection_modal_occur' | translate
+                  }}</strong></span
+                >
+                <input
+                  class="time"
+                  type="text"
+                  [(ngModel)]="collectOptions.occur"
+                  [disabled]="!collectOptions.scheduleProject || projectLoaded"
+                  OnlyNumber="true"
+                  maxlength="2"
+                />
+                <span class="validation" *ngIf="validation.occurPattern">{{
+                  'Collection_modal_occurmsg' | translate
+                }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <span
+          [ngClass]="{
+            green: messages.type == 'success',
+            red: messages.type == 'error'
+          }"
+          >{{ messages.status }}</span
+        >
+        <button
+          class="btn btn-primary"
+          (click)="saveAndSchedule()"
+          [disabled]="disableSaveAndCollect()"
+        >
+          {{ 'Save' | translate }}
+        </button>
+        <button
+          class="btn btn-primary"
+          (click)="saveAndSchedule(true)"
+          [disabled]="disableSaveAndCollect()"
+        >
+          {{ 'Save' | translate }} &amp; {{ 'Collect' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

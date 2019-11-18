@@ -1,0 +1,147 @@
+<div class="tab-content">
+  <!-- Tools Menu -->
+  <div class="actions">
+    <a tourAnchor="update-credentials"
+      ><i class="fa fa-edit" aria-hidden="true"></i>Update Credentials</a
+    >
+    <a tourAnchor="reset"
+      ><i class="fa fa-refresh" aria-hidden="true"></i>Reset</a
+    >
+    <button class="btn btn-primary btn-xs" tourAnchor="validate">
+      Validate
+    </button>
+    <button class="btn btn-primary btn-xs" tourAnchor="save-collect">
+      Save/Collect
+    </button>
+  </div>
+
+  <div class="table-data-wrap">
+    <div class="table-data">
+      <!-- Table Headers -->
+      <div class="row">
+        <div class="input-table col-xs-12">
+          <div class="tbl-header">
+            <span class="tools">
+              <a tourAnchor="expand-all"
+                ><i class="fa fa-angle-double-right" aria-hidden="true"></i
+              ></a>
+              <a tourAnchor="filter"
+                ><i class="fa fa-filter" aria-hidden="true"></i
+              ></a>
+              Actions </span
+            ><!--
+         --><span class="type sortable" tourAnchor="type"> <p>Type</p> </span
+            ><!--
+         --><span class="subtype sortable"> <p>Sub Type</p> </span
+            ><!--
+         --><span class="persona sortable"> <p>Persona</p> </span
+            ><!--
+         --><span class="hostname sortable"> <p>Hostname or IP</p> </span
+            ><!--
+            --><span class="username sortable"> <p>Username</p> </span
+            ><!--
+         --><span class="password">
+              Password
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table Body -->
+      <div class="row">
+        <div class="input-table col-xs-12">
+          <div class="tbl-row-wrap show-row">
+            <div class="tbl-row">
+              <span class="tools">
+                <button
+                  tourAnchor="clone"
+                  class="btn btn-primary btn-xs"
+                  data-toggle="tooltip"
+                  title="Clone"
+                >
+                  <i class="fa fa-plus" aria-hidden="true"></i>
+                </button>
+
+                <button
+                  tourAnchor="trash"
+                  class="btn btn-primary btn-xs"
+                  data-toggle="tooltip"
+                  title="Delete"
+                >
+                  <i class="fa fa-trash" aria-hidden="true"></i>
+                </button>
+
+                <span
+                  tourAnchor="command"
+                  data-toggle="tooltip"
+                  title="Commands"
+                >
+                  <button
+                    class="btn btn-primary btn-xs"
+                    data-toggle="modal"
+                    data-target="#commands-modal"
+                    data-backdrop="static"
+                    data-keyboard="false"
+                  >
+                    <i class="fa fa-list-alt" aria-hidden="true"></i>
+                  </button>
+                </span>
+
+                <button
+                  tourAnchor="expand-row"
+                  class="btn btn-primary btn-xs btn-validation"
+                  data-toggle="tooltip"
+                  title="Validation"
+                >
+                  <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                </button> </span
+              ><!--
+
+           --><span class="type">
+                <select>
+                  <option>Ethernet Switch</option>
+                  <option>FC Switch</option>
+                  <option>Host</option>
+                  <option>Hybrid Switch</option>
+                  <option>Other Storage Controller</option>
+                  <option>SnapCenter</option>
+                  <option>Storage Controller</option>
+                </select> </span
+              ><!--
+
+           --><span class="subtype">
+                <select>
+                  <option>Brocade</option>
+                  <option>Cisco</option>
+                  <option>Cisco Catalyst</option>
+                  <option>NetApp</option>
+                </select> </span
+              ><!--
+
+           --><span class="persona">
+                <select>
+                  <option>General</option>
+                  <option>Diagnostic</option>
+                </select> </span
+              ><!--
+
+           --><span class="hostname"> <input type="text" /> </span
+              ><!--
+
+           --><span class="username"> <input type="text" /> </span
+              ><!--
+
+           --><span class="password">
+                <input autocomplete="off" type="password" />
+              </span>
+            </div>
+          </div>
+        </div>
+        <!--END .row-->
+      </div>
+      <!--END .table-data-->
+    </div>
+    <!--END .table-data-wrap-->
+  </div>
+  <!--END .tab-content-->
+</div>

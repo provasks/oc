@@ -1,0 +1,101 @@
+<div class="tab-content-wrap">
+  <div class="tab-content">
+    <!-- Grid view of Jobs-->
+    <div class="grid-wrap">
+      <div id="{{ grid.meta.tableId }}" class="smart-grid">
+        <table
+          class="table"
+          [ngClass]="{
+            'table-bordered': grid.meta.tableBordered,
+            'table-striped': grid.meta.tableStriped
+          }"
+        >
+          <tbody>
+            <!--Headers-->
+            <tr class="headers">
+              <th
+                class="actions"
+                *ngIf="grid.meta.actions"
+                [style.min-width]="grid.meta.actionsWidth"
+                [style.width]="grid.meta.actionsWidth"
+              >
+                <a tourAnchor="filter"
+                  ><i class="fa fa-filter" aria-hidden="true"></i
+                ></a>
+                {{ grid.meta.actionsTitle }}
+              </th>
+              <ng-container *ngFor="let header of grid.headers; let i = index">
+                <ng-container *ngIf="header.sort !== false">
+                  <th
+                    class="sortable"
+                    [tourAnchor]="header.key"
+                    [style.min-width]="header.width || grid.meta.minCellWidth"
+                    [style.width]="header.width || grid.meta.minCellWidth"
+                  >
+                    {{ header.title }}
+                    <i class="fa fa-sort" aria-hidden="true"></i>
+                  </th>
+                </ng-container>
+                <ng-container *ngIf="header.sort === false">
+                  <th
+                    [style.min-width]="header.width || grid.meta.minCellWidth"
+                    [style.width]="header.width || grid.meta.minCellWidth"
+                  >
+                    {{ header.title }}
+                  </th>
+                </ng-container>
+              </ng-container>
+              <th class="blank-column"></th>
+            </tr>
+
+            <!--Data Rows-->
+            <tr>
+              <td class="actions">
+                <div class="tools">
+                  <button
+                    tourAnchor="more-actions"
+                    id="{{ grid.meta.tableId }}-btn-tools"
+                    class="btn btn-primary btn-xs btn-tools"
+                    data-toggle="tooltip"
+                    title="More Actions"
+                  >
+                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                  </button>
+                </div>
+                <span id="tools-dropdown-test" class="tools-dropdown">
+                  <ul>
+                    <!--Edit Schedule-->
+                    <li tourAnchor="schedule">
+                      <i class="fa fa-clock-o" aria-hidden="true"></i>Edit
+                      Schedule
+                    </li>
+                    <!--Delete Schedule-->
+                    <li tourAnchor="delete">
+                      <i class="fa fa-trash" aria-hidden="true"></i>Delete
+                      Schedule
+                    </li>
+                  </ul>
+                </span>
+              </td>
+
+              <td>My_Project_1</td>
+
+              <td>Test_Group_1</td>
+
+              <td>hourly</td>
+
+              <td></td>
+
+              <td>Occurs once and triggers every 23 hours 1 minute</td>
+
+              <td class="blank-column"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!--END .smart-grid-->
+    </div>
+    <!--END .grid-wrap-->
+  </div>
+</div>
+<!--END .tab-content-wrap-->

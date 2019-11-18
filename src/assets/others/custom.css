@@ -1,0 +1,147 @@
+.n-top-hat {
+  background-color: #1e4a93;
+}
+.n-top-hat a:focus {
+  color: #fff;
+  outline: none;
+  text-decoration: none;
+}
+.n-top-hat__link.n-property-navigation-bar__nav-link--is-active {
+  background: #686868;
+  background-image: linear-gradient(to top, #0067c5, #0067c5 4px, #686868 4px);
+}
+.top-hat.n-menu {
+  min-width: 0;
+}
+.top-hat.n-menu
+  .n-menu__list-item:not(.n-menu__list-item--level-1)
+  .n-menu__link {
+  margin: 0;
+}
+.n-property-navigation-bar__utils-link:before {
+  height: auto;
+}
+.n-property-bar__inner-wrap {
+  margin: 0;
+}
+.n-property-bar__inner-wrap,
+.n-property-navigation-bar__inner-wrap {
+  max-width: inherit;
+}
+
+.beta-off-canvas {
+  color: orange;
+  font-size: 17px;
+}
+span.small {
+  font-size: 17px;
+  font-family: 'Source Sans Pro', Arial, 'Helvetica Neue', Helvetica, sans-serif;
+  font-weight: 300;
+  color: #0067c5;
+}
+.glyphicon.glyphicon-info-sign {
+  margin-left: 0px;
+  color: #0067c5;
+  cursor: pointer;
+  font-size: small;
+}
+.glyphicon {
+  position: relative;
+  top: 8px;
+  display: inline-block;
+  font-family: 'Glyphicons Halflings';
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+#password-info {
+  position: relative;
+}
+#beta-info .tooltiptext,
+#password-info .tooltiptext {
+  position: absolute;
+  z-index: -10;
+  left: 20px;
+  top: -15px;
+  visibility: hidden;
+  width: 290px;
+  height: auto;
+  overflow: visible;
+  background-color: #686868;
+  color: #fff;
+  text-align: center;
+  padding: 5px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: 'Source Sans Pro', Arial, 'Helvetica Neue', Helvetica, sans-serif;
+  font-style: normal;
+  font-weight: 300;
+  margin-left: 440px;
+  margin-top: 30px;
+  box-shadow: 2px 2px 2px #999;
+}
+#password-info .tooltiptext {
+  z-index: -10;
+}
+#password-info .tooltiptext-email {
+  margin-left: 0;
+  margin-top: 0;
+}
+#beta-info:hover .tooltiptext,
+#password-info:hover .tooltiptext {
+  visibility: visible;
+  z-index: 10;
+}
+
+#login-page .panel {
+  width: 500px;
+  margin: 0 auto;
+}
+#login-page label {
+  padding-top: 5px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: 'Source Sans Pro', Arial, 'Helvetica Neue', Helvetica, sans-serif;
+}
+
+#login-title {
+  font-size: 20px;
+  color: #fff;
+  padding: 5px 0 5px 30px;
+}
+
+#login-page .submit {
+  color: #fff;
+  width: 100px;
+  height: 30px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Source Sans Pro', Arial, 'Helvetica Neue', Helvetica, sans-serif;
+  background: linear-gradient(#0067c5, #002855);
+  border-radius: 4px;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+
+#eula-page .eula-footer {
+  margin-top: 20px;
+  background: #e5e5e5;
+}
+.read-wrap {
+  float: left;
+  margin: 0;
+  padding: 10px;
+}
+.point {
+  margin-top: 20px;
+}
+.point:first-child {
+  margin-top: 0;
+}
+.sub-point {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 20px;
+}

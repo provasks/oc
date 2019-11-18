@@ -1,0 +1,50 @@
+.actions {
+  background-color: white;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.actions .validate {
+  margin-left: 20px;
+}
+.actions a {
+  color: #337ab7;
+  padding: 6px;
+}
+.actions a.validate, .actions a.collect {
+  font-weight: bold;
+}
+.actions a i {
+  margin-right: 2px;
+}
+.actions a:hover {
+  color: #23527c;
+  cursor: pointer;
+}
+.actions button {
+  margin: 5px;
+}
+.actions button.back {
+  position: absolute;
+  right: 13px;
+}
+.actions .basic-option {
+  display: inline-block;
+}
+.actions .basic-option label {
+  margin-right: 3px;
+}
+.actions .basic-option i {
+  color: #1e4a93;
+}
+.actions .basic-option .custom-checkbox {
+  display: inline-block;
+}
+.actions .basic-option .custom-checkbox input {
+  width: 16px;
+  height: 16px;
+  position: relative;
+  top: 3px;
+}

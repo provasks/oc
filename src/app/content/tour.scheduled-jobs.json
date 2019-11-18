@@ -1,0 +1,34 @@
+{
+  "data": [
+    {
+      "anchorId": "filter",
+      "placement": "right",
+      "title": "Tour_ScheduledJobs_Filter_Title",
+      "content": "Tour_ScheduledJobs_Filter_Content"
+    },
+    {
+      "anchorId": "schedule.project_id",
+      "placement": "bottom",
+      "title": "Tour_ScheduledJobs_ProjectID_Title",
+      "content": "Tour_ScheduledJobs_ProjectID_Content"
+    },
+    {
+      "anchorId": "more-actions",
+      "placement": "right",
+      "title": "Tour_ScheduledJobs_MoreActions_Title",
+      "content": "Tour_ScheduledJobs_MoreActions_Content"
+    },
+    {
+      "anchorId": "schedule",
+      "placement": "right",
+      "title": "Tour_ScheduledJobs_Schedule_Title",
+      "content": "Tour_ScheduledJobs_Schedule_Content"
+    },
+    {
+      "anchorId": "delete",
+      "placement": "right",
+      "title": "Tour_ScheduledJobs_Delete_Title",
+      "content": "Tour_ScheduledJobs_Delete_Content"
+    }
+  ]
+}

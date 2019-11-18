@@ -1,0 +1,417 @@
+<div class="tab-content" *ngIf="!client.features.imtAdvise">
+  <div class="not-available">{{ 'feature_not_available' | translate }}</div>
+</div>
+<div class="tab-content" id="parent-menu" *ngIf="client.features.imtAdvise">
+  <div [hidden]="hideImtAdviseScreen1">
+    <div class="row">
+      <div class="advisorTitle">
+        <span class="titleMsg">{{ 'IMT Advisor' | translate }}</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="jobName">
+        <h4 class="jobTitle">
+          {{ 'Dataview_jobname' | translate }}&nbsp;<span
+            ><b>{{ jobName }}</b></span
+          >
+        </h4>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12 errorMsg">
+        <span *ngIf="excelValue" class="errorMsg1"
+          >{{ 'IMT_error' | translate }}<br />{{ 'IMT_step1' | translate
+          }}<a
+            style="text-decoration:underline;cursor:pointer"
+            uib-tooltip="Click to follow link  https://mysupport.netapp.com/matrix/"
+            tooltip-placement="bottom"
+            tooltip-append-to-body="true"
+            href="https://mysupport.netapp.com/matrix/"
+            target="_blank"
+            >{{ 'IMT' | translate }}</a
+          >.<br />{{ 'IMT_step2' | translate }}<br />{{ 'IMT_step3' | translate
+          }}<br />{{ 'IMT_step4' | translate }}<br />{{
+            'IMT_step5' | translate
+          }}</span
+        >
+        <span
+          *ngIf="ImtError != oldexcel &amp;&amp; ImtError != noexcel"
+          class="errorMsg2"
+          >{{ ImtError }}</span
+        >
+        <span *ngIf="ImtError == oldexcel" class="errorMsg3"
+          >{{ 'IMT_error_30' | translate }} <br />
+          {{ 'IMT_step1' | translate
+          }}<a
+            style="text-decoration:underline;cursor:pointer"
+            uib-tooltip="Click to follow link  https://mysupport.netapp.com/matrix/"
+            tooltip-placement="bottom"
+            tooltip-append-to-body="true"
+            href="https://mysupport.netapp.com/matrix/"
+            target="_blank"
+          >
+            {{ 'IMT' | translate }}</a
+          >. <br />{{ 'IMT_step2' | translate }} <br />
+          {{ 'IMT_step3' | translate }} <br />
+          {{ 'IMT_step4_30' | translate }} <br />
+          {{ 'IMT_step5' | translate }}</span
+        >
+        <span *ngIf="ImtError == noexcel" class="errorMsg4"
+          >{{ 'IMT_error_offline' | translate }} <br />
+          {{ 'IMT_step1' | translate }}
+          <a
+            style="text-decoration:underline;cursor:pointer"
+            uib-tooltip="Click to follow link  https://mysupport.netapp.com/matrix/"
+            tooltip-placement="bottom"
+            tooltip-append-to-body="true"
+            href="https://mysupport.netapp.com/matrix/"
+            target="_blank"
+          >
+            {{ 'IMT' | translate }}</a
+          >. <br />{{ 'IMT_step2' | translate }}<br />{{
+            'IMT_step3' | translate
+          }}<br />
+          {{ 'IMT_step4_offline' | translate }} <br />
+          {{ 'IMT_step5' | translate }}</span
+        >
+      </div>
+    </div>
+
+    <div id="imtadvise" class="n-row center-row" *ngIf="ImtError == ''">
+      <div class="row" [hidden]="noOntapFound">
+        <div class="col-sm-12 ontap-wrap">
+          <label class="control-label">{{
+            'No ONTAP found' | translate
+          }}</label>
+        </div>
+      </div>
+
+      <div class="imtSelectionContainer n-col-sm-14">
+        <h5 class="infoText">{{ multipleRecordsMessage }}</h5>
+        <br />
+        <div class="row" id="ontap-div">
+          <div>
+            <div class="row">
+              <div class="form-group">
+                <div [hidden]="hidelatestOntapDiv">
+                  <label class="col-sm-3 control-label ontapLabel">{{
+                    'Select version of ONTAP' | translate
+                  }}</label>
+                  <div class="col-sm-2">
+                    <select
+                      name="latestOntapSel"
+                      [(ngModel)]="latestOutputOntap"
+                      (ngModelChange)="getSelectedLatestOntapValues($event)"
+                    >
+                      <option
+                        *ngFor="let ontap of latestInputOntap; let idx = index"
+                        [ngValue]="ontap"
+                        >{{ ontap.ComponentName }}</option
+                      >
+                    </select>
+                  </div>
+                </div>
+                <div *ngIf="inputOntaps?.length > 0">
+                  <label class="col-sm-3 control-label ontapLabel1"
+                    >{{ 'Select version of' | translate }} {{ firstTitle }} -
+                    <br />{{ outputOntap.CollectionTarget }}</label
+                  >
+                  <div class="col-sm-2">
+                    <select
+                      name="ontapSel"
+                      [(ngModel)]="outputOntap"
+                      (ngModelChange)="getSelectedOntapValues($event)"
+                    >
+                      <option
+                        *ngFor="let ontap of inputOntaps; let idx = index"
+                        [ngValue]="ontap"
+                        >{{ ontap.ComponentName }}</option
+                      >
+                    </select>
+                  </div>
+                </div>
+                <div *ngIf="inputSwitchData?.length > 0">
+                  <label class="col-sm-3 control-label switchLabel"
+                    >{{ 'Select version of' | translate }} {{ secondTitle }} -
+                    <br />{{ outputSwitch.CollectionTarget }}</label
+                  >
+                  <div class="col-sm-2">
+                    <select
+                      name="switchSel"
+                      [(ngModel)]="outputSwitch"
+                      (ngModelChange)="getSelectedSwitchValues($event)"
+                    >
+                      <option
+                        *ngFor="let switch of inputSwitchData"
+                        [ngValue]="switch"
+                        >{{ switch.ComponentName }}</option
+                      >
+                    </select>
+                  </div>
+                  <div class="row switchType">
+                    <label class="control-label"
+                      >{{ outputSwitch.SubComponentType }} :
+                      {{ outputSwitch.SubComponentName }}</label
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row-error-div" id="noHostErr" *ngIf="noHostsFound">
+          <span class="errorMessage" id="hosterrorspan"
+            ><b>{{ noHostsFoundErrormessage }}</b></span
+          >
+        </div>
+        <hr />
+
+        <div
+          class="select-all"
+          *ngIf="inputHosts.length && inputHosts.length > 1"
+        >
+          <label
+            ><input
+              type="checkbox"
+              [(ngModel)]="selectAll"
+              (change)="changeInSelectAll()"
+            />{{ 'Select All' | translate }}</label
+          >
+        </div>
+
+        <div
+          class="row"
+          id="host-div"
+          *ngFor="let multipleHosts of inputHosts; let i = index"
+        >
+          <div class="col-xs-12">
+            <div class="collectionTarget" *ngFor="let host of multipleHosts">
+              <p *ngIf="host.ComponentType == 'Host OS'">
+                <label class="host-heading"
+                  >{{ 'Host:' | translate }}&nbsp;{{
+                    host.CollectionTarget
+                  }}</label
+                >
+              </p>
+            </div>
+            <table class="table table-bordered">
+              <thead>
+                <tr class="heading-row">
+                  <td class="text-center tbl-checkbox">
+                    <input
+                      type="checkbox"
+                      name="checkbox1"
+                      [(ngModel)]="checkedHostsData[i]"
+                      [checked]="checkedHostsData[i]"
+                      (click)="
+                        validateHostDataCheckBoxes(i, $event.target.checked)
+                      "
+                    />
+                  </td>
+                  <td class="componentType">
+                    {{ 'Component Type' | translate }}
+                  </td>
+                  <td class="parsedValue">{{ 'Parsed Data' | translate }}</td>
+                  <td class="componentName">
+                    {{ 'Component Name in IMT' | translate }}
+                  </td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let host of multipleHosts; let j = index">
+                  <td class="tb1-checkbox"></td>
+                  <td class="componentType">{{ host.ComponentType }}</td>
+                  <td class="single-option">
+                    <pre>{{ host.ParsedValue }}</pre>
+                  </td>
+                  <td
+                    class="componentName"
+                    *ngIf="host.ComponentName?.length > 1"
+                  >
+                    <div class="select-wrap">
+                      <div
+                        class="host-selected-item"
+                        (click)="showSelectionOptions(i, j)"
+                      >
+                        <span class="host-selected-item-content">
+                          {{
+                            hostDataState[i][j]['ComponentName'][0]
+                              .ComponentName | newline
+                          }}
+                        </span>
+                        <span
+                          class="glyphicon glyphicon-chevron-down pull-right"
+                        ></span>
+                      </div>
+                      <div
+                        class="select-options"
+                        id="select-options-{{ i }}-{{ j }}"
+                      >
+                        <ul>
+                          <li
+                            *ngFor="
+                              let compName of host.ComponentName;
+                              let k = index
+                            "
+                            (click)="changeSelection(i, j, k)"
+                          >
+                            <pre>{{ compName.ComponentName | newline }}</pre>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </td>
+                  <td
+                    class="single-option"
+                    *ngIf="host.ComponentName?.length == 1"
+                  >
+                    <pre style="text-align:left">{{
+                      hostDataState[i][j]['ComponentName'][0].ComponentName
+                        | newline
+                    }}</pre>
+                  </td>
+                  <td
+                    class="single-option"
+                    *ngIf="
+                      host.ComponentName?.length == 0 &&
+                      host.ParsedValue == 'Data not collected'
+                    "
+                  >
+                    <pre style="text-align:left"></pre>
+                  </td>
+                  <td
+                    class="single-option"
+                    *ngIf="
+                      host.ComponentName?.length == 0 &&
+                      host.ParsedValue != 'Data not collected'
+                    "
+                  >
+                    <pre style="text-align:left">{{
+                      'Data does not match with IMT' | translate
+                    }}</pre>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!--END .imtSelectionContainer-->
+
+      <div class="btn-container" *ngIf="inputHosts.length">
+        <span class="commonMessage"
+          >{{ modeCommonMessage }}<br />{{ HBAMsg }}</span
+        >
+        <button
+          id="nextBtn"
+          class="btn btn-primary pull-right btn-next"
+          (click)="getSelectedValues()"
+          [disabled]="!flag_selected"
+        >
+          {{ 'Next' | translate }}
+        </button>
+      </div>
+    </div>
+    <!--END #imtadvise-->
+  </div>
+  <!--END hideImtAdviseScreen1-->
+</div>
+<!--END .tab-content-->
+
+<div class="tab-content" id="parent-menu">
+  <div [hidden]="hideImtAdviseScreen2">
+    <div class="row">
+      <div class="advisorTitle">
+        <span class="titleMsg">{{ 'IMT Advisor' | translate }}</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="jobName">
+        <h4 class="jobTitle">
+          {{ 'Dataview_jobname' | translate }}&nbsp;<span
+            ><b>{{ jobName }}</b></span
+          >
+        </h4>
+        <!-- <h4 *ngIf="modeval == 'offline'" class="offlineMsg" >{{offlineMessage}}{{time}}<br>{{offlineMessageSso}} use <a class="offlineMsg" href='https://mysupport.netapp.com/interopadvisor' target='_blank'>InteropAdvisor</a></h4> -->
+      </div>
+    </div>
+    <div class="msgContainer">
+      <span class="commonMessage" [innerHTML]="'IMT_msg' | translate"></span>
+    </div>
+    <div class="row">
+      <div class="col-xs-12" id="result-block-1">
+        <button class="btn btn-primary pull-left" (click)="displayMainAddOn()">
+          <span class="glyphicon glyphicon-backward"></span>&nbsp;{{
+            'Back' | translate
+          }}
+        </button>
+        <button class="btn btn-primary pull-right" (click)="downloadView()">
+          <span class="glyphicon glyphicon-download-alt"></span>&nbsp;{{
+            'export_button' | translate
+          }}
+        </button>
+      </div>
+    </div>
+    <div
+      class="col-sm-12 col-lg-12 col-xl-12 col-md-12 col-xs-12"
+      class="recommendationContainer"
+    >
+      <div class="col-sm-12 col-lg-12 col-xl-12 col-md-12 col-xs-12 ">
+        <div *ngFor="let data of recommendationData" class="table-div">
+          <div class="selectedOsComp" style="margin-top:10px">
+            <b>{{ 'Host:' | translate }}</b> {{ data.CollectionTarget }}
+          </div>
+          <table class="table table-bordered recomendedTable">
+            <thead>
+              <tr>
+                <td>{{ 'Components' | translate }}</td>
+                <td>{{ 'Parsed Data' | translate }}</td>
+                <td>{{ 'Configuration' | translate }}</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="status">{{ 'Status' | translate }}</td>
+                <!-- <td class="status">{{ 'Existing' | translate }}</td> -->
+                <td class="status"></td>
+                <td class="supportedStatus" *ngIf="data.Actual == 'Supported'">
+                  {{ data.Actual }}
+                </td>
+                <td
+                  class="notSupportedStatus"
+                  *ngIf="data.Actual == 'Not Supported'"
+                >
+                  {{ data.Actual }}
+                </td>
+              </tr>
+              <tr *ngFor="let comp of data.componentsList">
+                <td class="componentTypeData">{{ comp.componentType }}</td>
+                <td class="parsedData">{{ comp.parsedData }}</td>
+                <td class="existingComp">{{ comp.ExistingComponent }}</td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td value="data">
+                  <a
+                    *ngIf="data.Actual == 'Supported'"
+                    href="javascript:void(0)"
+                    (click)="viewDetails(data.componentsList, 'Existing')"
+                  >
+                    <span
+                      ><b>{{ 'View Details' | translate }}</b></span
+                    >
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--END hideImtAdviseScreen2-->
+</div>
+<!--END .tab-content-->

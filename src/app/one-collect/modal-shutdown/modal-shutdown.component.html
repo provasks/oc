@@ -1,0 +1,16 @@
+<div id="modal-shutdown" class="modal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{ 'Shutdown_modal' | translate }}</h4>
+      </div>
+      <div class="modal-body" *ngIf="!caLaunch">
+        {{ 'OC_title' | translate }} has been shutdown. All collections have
+        been stopped. Please close this tab in your browser.
+      </div>
+      <div class="modal-body" *ngIf="caLaunch">
+        {{ 'Shutdown_modal_msg' | translate }}
+      </div>
+    </div>
+  </div>
+</div>

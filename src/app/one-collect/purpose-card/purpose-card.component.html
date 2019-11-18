@@ -1,0 +1,18 @@
+<!-- <div class="flip-card" routerLink="/generator"> -->
+<!-- <div class="flip-card" (click)="gotoGenerator(objective.collections)"> -->
+<div
+  class="flip-card"
+  routerLink="/main/new-collection/{{ objective.purposes[0]['component'] }}/{{
+    objective.purposes[0]['keyword']
+  }}"
+>
+  <div class="flip-card-inner">
+    <div class="flip-card-front">
+      <img src="assets/custom/images/{{ objective.image }}" alt="Avatar" />
+      <div>{{ objective.name | translate }}</div>
+    </div>
+    <div class="flip-card-back">
+      <div>{{ objective.description | translate }}</div>
+    </div>
+  </div>
+</div>

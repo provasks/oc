@@ -1,0 +1,67 @@
+.basic-option span.upload-msg {
+  display: inline-block;
+  margin-left: 10px;
+}
+.basic-option span.upload-msg.pass,
+.asup-wrap .basic-option span.upload-msg.pass {
+  color: green;
+}
+
+//CA CODE
+.pulldata-red {
+  font-size: 12px;
+  font-weight: 600;
+  color: red;
+}
+
+my-date-range-picker {
+  display: inline-block;
+  vertical-align: middle;
+  height: 25px;
+}
+.mydrp button span {
+  color: #337ab7;
+}
+
+/* Text alignment */
+.input-table .tbl-header span,
+.input-table .tbl-row span {
+  text-align: left;
+}
+
+/* Additional Width Specifications for ASUP Based Collection */
+.input-table .tbl-header span.type,
+.input-table .tbl-row span.type,
+.input-table .tbl-filters span.type {
+  width: 110px;
+}
+.input-table .tbl-header span.asup-id,
+.input-table .tbl-row span.asup-id,
+.input-table .tbl-filters span.asup-id {
+  width: 135px;
+}
+.input-table .tbl-header span.job-id,
+.input-table .tbl-row span.job-id,
+.input-table .tbl-filters span.job-id {
+  width: 135px;
+}
+.input-table .tbl-header span.title,
+.input-table .tbl-row span.title,
+.input-table .tbl-filters span.title {
+  width: 190px;
+}
+.input-table .tbl-header span.model,
+.input-table .tbl-row span.model,
+.input-table .tbl-filters span.model {
+  width: 110px;
+}
+.input-table .tbl-header span.hostname,
+.input-table .tbl-row span.hostname,
+.input-table .tbl-filters span.hostname {
+  width: 110px;
+}
+.input-table .tbl-header span.release,
+.input-table .tbl-row span.release,
+.input-table .tbl-filters span.release {
+  width: 110px;
+}

@@ -1,0 +1,9 @@
+.config-compare-placement {
+  display: inline-block;
+  margin-top: -3px;
+  margin-bottom: 8px;
+  /* margin-left: 864px;
+    padding-bottom: 5px; */
+  float: right;
+  margin-right: 16px;
+}

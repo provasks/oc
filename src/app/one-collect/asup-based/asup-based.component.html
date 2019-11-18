@@ -1,0 +1,358 @@
+<oc-modal-collect-asup [modalData]="modalData"></oc-modal-collect-asup>
+
+<oc-modal-asup
+  [id]="'serial-modal'"
+  [fields]="fields"
+  [modalRows]="inSerialRows"
+  (onSelectedRows)="setNewRows($event, 'serial')"
+></oc-modal-asup>
+
+<oc-modal-asup
+  [id]="'hostname-modal'"
+  [fields]="fields"
+  [modalRows]="inHostnameRows"
+  (onSelectedRows)="setNewRows($event, 'hostname')"
+></oc-modal-asup>
+
+<oc-modal-asup
+  [id]="'onecollect-modal'"
+  [fields]="fields"
+  [modalRows]="inOnecollectRows"
+  (onSelectedRows)="setNewRows($event, 'onecollect')"
+></oc-modal-asup>
+
+<oc-modal-sso (onValidated)="processRequest($event)"></oc-modal-sso>
+
+<oc-modal-notification
+  [id]="'notification-modal'"
+  [notification]="notification"
+></oc-modal-notification>
+<div class="tab-content" *ngIf="!client.features.asupCollection">
+  <div class="not-available">{{ 'feature_not_available' | translate }}</div>
+</div>
+<div class="tab-content" *ngIf="client.features.asupCollection">
+  <div class="basic-options">
+    <div class="basic-option">
+      <span
+        ><strong
+          >{{ 'ASUP_file' | translate }}&nbsp;<small
+            >(.tgz / .txt)</small
+          ></strong
+        >&nbsp;</span
+      >
+      <span>
+        <label class="btn btn-primary btn-xs"
+          >{{ 'Importfile_choosefile' | translate }}
+          <input
+            type="file"
+            style="display:none"
+            class="upload"
+            (click)="resetUploadAsup($event)"
+            (change)="setFileUploadAsup($event)"
+          />
+        </label>
+        <label id="fileLabel" style="padding-left: 10px;font-weight: 100;">{{
+          fileLabel
+        }}</label>
+      </span>
+      <span
+        class="upload-msg"
+        [ngClass]="{
+          pass: typeCheckTgzTxt == 'pass',
+          fail: typeCheckTgzTxt == 'fail'
+        }"
+        ><strong>{{ uploadMsgTgzTxt }}</strong></span
+      >
+    </div>
+  </div>
+
+  <div class="asup-wrap" *ngIf="showForm">
+    <div class="basic-options">
+      <div class="basic-option">
+        <span
+          ><strong>{{ 'ASUP_daterange' | translate }}&nbsp;</strong></span
+        >
+        <my-date-range-picker
+          [(ngModel)]="dateRange"
+          [options]="myDateRangePickerOptions"
+          (dateRangeChanged)="onDateRangeChanged($event)"
+        ></my-date-range-picker>
+      </div>
+      <div class="basic-option">
+        <span
+          ><strong
+            >{{ 'ASUP_ids_file' | translate }}&nbsp;<small
+              >(.txt / .csv)</small
+            ></strong
+          >&nbsp;</span
+        >
+        <span>
+          <label class="btn btn-primary btn-xs"
+            >{{ 'Importfile_choosefile' | translate }}
+            <input
+              type="file"
+              style="display:none"
+              class="upload"
+              (click)="resetUploadAsupIds($event)"
+              (change)="setFileUploadAsupIds($event)"
+            />
+          </label>
+          <label id="fileLabel" style="padding-left: 10px;font-weight: 100;">{{
+            fileidLabel
+          }}</label>
+        </span>
+        <span
+          class="upload-msg"
+          [ngClass]="{
+            pass: typeCheckTxtCSv == 'pass',
+            fail: typeCheckTxtCsv == 'fail'
+          }"
+          ><strong>{{ uploadMsgTxtCsv }}</strong></span
+        >
+      </div>
+    </div>
+
+    <div class="basic-options">
+      <div class="basic-option">
+        <span
+          ><strong>{{ 'ASUP_serial' | translate }}</strong></span
+        >
+        <input type="text" [(ngModel)]="serial" OnlyNumber="true" />
+        <button
+          class="btn btn-primary"
+          (click)="searchSerial()"
+          [disabled]="!serial"
+        >
+          {{ 'ASUP_search' | translate }}</button
+        ><!--
+     --><button
+          class="btn btn-primary btn-xs"
+          (click)="showSerialModal()"
+          [disabled]="!show.serial"
+        >
+          <i class="fa fa-expand" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="basic-option">
+        <span
+          ><strong>{{ 'ASUP_hostname' | translate }}</strong></span
+        >
+        <input type="text" [(ngModel)]="hostname" />
+        <button
+          class="btn btn-primary"
+          (click)="searchHostname()"
+          [disabled]="!hostname"
+        >
+          {{ 'ASUP_search' | translate }}</button
+        ><!--
+     --><button
+          class="btn btn-primary btn-xs"
+          (click)="showHostnameModal()"
+          [disabled]="!show.hostname"
+        >
+          <i class="fa fa-expand" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="basic-options">
+      <div class="basic-option">
+        <span
+          ><strong>{{ 'ASUP_id' | translate }}</strong></span
+        >
+        <input type="text" [(ngModel)]="asupId" OnlyNumber="true" />
+        <button
+          class="btn btn-primary"
+          (click)="searchAsupId()"
+          [disabled]="!asupId"
+        >
+          {{ 'ASUP_search' | translate }}
+        </button>
+      </div>
+      <div class="basic-option">
+        <span *ngIf="!caLaunch"
+          ><strong>{{ 'ASUP_OC' | translate }}</strong></span
+        >
+        <span *ngIf="caLaunch"
+          ><strong>{{ 'ASUP_CA_OC' | translate }}</strong></span
+        >
+        <input type="text" [(ngModel)]="onecollectId" />
+        <button
+          class="btn btn-primary"
+          (click)="searchOnecollectId()"
+          [disabled]="!onecollectId"
+        >
+          {{ 'ASUP_search' | translate }}</button
+        ><!--
+     --><button
+          class="btn btn-primary btn-xs"
+          (click)="showOnecollectModal()"
+          [disabled]="!show.onecollect"
+        >
+          <i class="fa fa-expand" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <!--END .asup-wrap-->
+
+  <div class="basic-options">
+    <div class="basic-options">
+      <div class="basic-option" *ngIf="showForm">
+        <div class="custom-checkbox">
+          <input type="checkbox" [(ngModel)]="fetchAllNodes" />
+          <label></label>
+        </div>
+        <label>&nbsp;{{ 'ASUP_fetch_nodes' | translate }}</label>
+      </div>
+      <div class="basic-option" *ngIf="caLaunch">
+        <label
+          ><input type="checkbox" [(ngModel)]="pullData" />{{
+            'ASUP_pulldata' | translate
+          }}<span class="pulldata-red">{{
+            'ASUP_brackets' | translate
+          }}</span></label
+        >
+      </div>
+    </div>
+  </div>
+
+  <div data-spy="affix" data-offset-top="220" *ngIf="showForm">
+    <!-- Tools Menu -->
+    <div class="actions">
+      <a (click)="reset()"
+        ><i class="fa fa-refresh" aria-hidden="true"></i
+        >{{ 'Reset' | translate }}</a
+      >
+      <button
+        class="btn btn-primary btn-xs"
+        (click)="doCollect()"
+        [disabled]="!totalRows() || !countSelected"
+      >
+        {{ 'Collect_now' | translate }}
+      </button>
+    </div>
+
+    <!-- Table Header -->
+    <div class="row">
+      <div class="input-table col-xs-12">
+        <div class="tbl-header">
+          <span class="tools">
+            <div class="custom-checkbox">
+              <input
+                type="checkbox"
+                [(ngModel)]="checkAll"
+                (click)="toggleChecked()"
+              />
+              <label></label>
+            </div>
+            <a (click)="toggleFilters(); deselectAll(); selectAll = false"
+              ><i class="fa fa-filter" aria-hidden="true"></i
+            ></a>
+            {{ 'Actions' | translate }} </span
+          ><!--
+       --><ng-container *ngFor="let field of fields"
+            ><!--
+         --><span
+              *ngIf="!field.excludeIn || field.excludeIn.indexOf('main') == -1"
+              [class]="field.class"
+              [ngClass]="{ sortable: '!field.sort || field.sort!=false' }"
+              (click)="sort(field.key)"
+            >
+              <p>{{ field.title }}</p>
+              <i
+                class="fa fa-sort-asc"
+                aria-hidden="true"
+                *ngIf="sortField == field.key && sortType == 'asc'"
+              ></i>
+              <i
+                class="fa fa-sort-desc"
+                aria-hidden="true"
+                *ngIf="sortField == field.key && sortType == 'desc'"
+              ></i> </span
+            ><!--
+      --></ng-container
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters row -->
+    <div class="row" [hidden]="!showFilters">
+      <div class="input-table col-xs-12">
+        <div class="tbl-filters">
+          <span class="tools">&nbsp;</span
+          ><!--
+       --><ng-container *ngFor="let field of fields"
+            ><!--
+         --><span
+              [class]="field.class"
+              *ngIf="!field.excludeIn || field.excludeIn.indexOf('main') == -1"
+            >
+              <input
+                id="filter-{{ dashed(field.key) }}"
+                type="text"
+                (input)="
+                  filter(field.key, $event.target.value);
+                  deselectAll();
+                  selectAll = false
+                "
+              /><!--
+           -->
+              <div
+                class="close-filter"
+                (click)="
+                  clearFilter(field.key); deselectAll(); selectAll = false
+                "
+              >
+                <i class="fa fa-close" aria-hidden="true"></i>
+              </div> </span
+            ><!--
+       --></ng-container
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table Body -->
+  <div class="row" *ngIf="showForm">
+    <div class="input-table col-xs-12">
+      <div
+        class="tbl-row-wrap"
+        [ngClass]="{ 'show-row': row.showRow, 'hide-row': !row.showRow }"
+        *ngFor="let row of rows; let i = index"
+      >
+        <div class="tbl-row" [ngClass]="{ even: i % 2 == 0 }">
+          <span class="tools">
+            <div class="custom-checkbox">
+              <input
+                type="checkbox"
+                [(ngModel)]="row.selected"
+                (change)="doCountSelected()"
+              />
+              <label></label>
+            </div> </span
+          ><!--
+       --><span class="asup-id">{{ row.asupId }}</span
+          ><!--
+       --><span class="job-id">{{ row.jobId }}</span
+          ><!--
+       --><span class="title">{{ row.title }}</span
+          ><!--
+       --><span class="model">{{ row.model }}</span
+          ><!--
+       --><span class="hostname">{{ row.hostname }}</span
+          ><!--
+       --><span class="release">{{ row.release }}</span
+          ><!--
+       --><span class="type">{{ row.type }}</span>
+        </div>
+      </div>
+      <!--END .tbl-row-wrap-->
+    </div>
+    <!--END .input-table-->
+  </div>
+  <!--END .row-->
+</div>
+<!--END .tab-content-->

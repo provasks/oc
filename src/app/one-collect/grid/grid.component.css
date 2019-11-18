@@ -1,0 +1,64 @@
+.smart-grid-container {
+  overflow-x: auto;
+}
+table {
+  border: 0;
+}
+th,
+td {
+  font-family: 'Source Sans Pro', Arial, 'Helvetica Neue', Helvetica, sans-serif;
+}
+th {
+  font-size: 14px;
+  border-top: 1px solid #ddd;
+}
+td {
+  font-size: 14px;
+}
+th.sortable,
+th.sortable i {
+  cursor: pointer;
+}
+.table-bordered th:first-child,
+.table-bordered td:first-child {
+  border-left: 1px solid #ddd;
+}
+.actions {
+  width: 100px;
+}
+.blank-column {
+  width: 0;
+  margin: 0;
+  padding: 0;
+  background-color: #fff;
+  border-top: 0;
+  border-bottom: 0;
+  border-right: 0;
+}
+.filters input[type='text'] {
+  width: calc(100% - 18px);
+  height: 23px;
+  margin: 0;
+  padding: 3px;
+  border: 1px solid rgb(169, 169, 169);
+}
+.filters .close-filter {
+  display: inline-block;
+  right: 10px;
+  width: auto;
+  height: 23px;
+  cursor: pointer;
+}
+.filters .close-filter i {
+  margin: 0;
+  padding: 3px;
+  height: 23px;
+  background-color: #1e4a93;
+  color: #fff;
+  line-height: 15px;
+  border: 1px solid rgb(169, 169, 169);
+  border-left: none;
+}
+.progress {
+  margin: 0;
+}

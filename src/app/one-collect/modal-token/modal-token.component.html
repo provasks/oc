@@ -1,0 +1,43 @@
+<div id="modal-token" class="modal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+        <h4 class="modal-title">{{ 'Token_modal_title' | translate }}</h4>
+      </div>
+      <div class="modal-body">
+        <p *ngIf="!caLaunch">
+          Token credentials are required to upload
+          {{ 'OC_title' | translate }} output files to NetApp AutoSupport.
+        </p>
+        <p *ngIf="caLaunch">{{ 'Token_modal_msg' | translate }}</p>
+        <p>{{ 'Token_modal_msg1' | translate }}</p>
+        <!--p>AutoSupport can be disabled from Settings</p-->
+        <div class="item token">
+          <textarea [(ngModel)]="tokenData.token"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <span
+          [ngClass]="{
+            green: tokenValid == 'true',
+            red: tokenValid == 'false'
+          }"
+          >{{ tokenMsg }}</span
+        >
+        <button
+          class="btn btn-primary"
+          (click)="validateToken()"
+          [disabled]="!tokenData.token"
+        >
+          {{ 'Validate' | translate }}
+        </button>
+        <button class="btn btn-primary" (click)="cancelValidation()">
+          {{ 'Skip' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

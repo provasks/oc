@@ -1,0 +1,107 @@
+@import url('./../../../assets/css/variables.css');
+
+a {
+  cursor: pointer;
+}
+.fa {
+  margin-right: 5px;
+}
+.beta-off-canvas {
+  color: orange;
+  font-size: 17px;
+}
+span.small {
+  font-size: 17px;
+  font-family: 'Source Sans Pro', Arial, 'Helvetica Neue', Helvetica, sans-serif;
+  font-weight: 300;
+  color: #0067c5;
+}
+.glyphicon.glyphicon-info-sign {
+  margin-left: 0px;
+  color: #0067c5;
+  cursor: pointer;
+  font-size: small;
+}
+.glyphicon {
+  position: relative;
+  top: 8px;
+  display: inline-block;
+  font-family: 'Glyphicons Halflings';
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+#beta-info .tooltiptext {
+  position: absolute;
+  z-index: 10;
+  left: 20px;
+  top: -15px;
+  visibility: hidden;
+  width: 290px;
+  height: auto;
+  overflow: visible;
+  background-color: #686868;
+  color: #fff;
+  text-align: center;
+  padding: 5px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: 'Source Sans Pro', Arial, 'Helvetica Neue', Helvetica, sans-serif;
+  font-style: normal;
+  font-weight: 300;
+  margin-left: 440px;
+  margin-top: 30px;
+  box-shadow: 2px 2px 2px #999;
+}
+#beta-info:hover .tooltiptext {
+  visibility: visible;
+}
+
+/* Modal */
+.modal .modal-header {
+  background: #173e77;
+}
+.modal .modal-header button,
+.modal .modal-header h4 {
+  color: #fff;
+}
+.modal .modal-header button {
+  opacity: 0.75;
+}
+.modal .modal-header h4 {
+  background-color: none;
+  font-size: 15px;
+}
+.notification-msg {
+  margin-left: 15px;
+}
+.new-notification {
+  color: red;
+}
+
+#alert-passwordreset {
+  width: 500px;
+  margin: 0 auto;
+  position: fixed;
+  top: 0;
+  left: 30%;
+  z-index: 1000;
+}
+.luci-site-top-hat__utils svg {
+  width: 18px;
+  height: 18px;
+}
+.luci-site-top-hat__utils span.logo-text {
+  font-size: 16px;
+  line-height: 16px;
+  /*text-transform: uppercase;
+  letter-spacing: 1px;*/
+}
+.luci-list-group__element--link {
+  width: auto;
+}
+.fa-info-circle {
+  color: var(--white);
+}

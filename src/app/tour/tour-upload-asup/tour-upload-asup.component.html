@@ -1,0 +1,139 @@
+<div class="tab-content-wrap">
+  <div class="tab-content">
+    <div class="basic-options">
+      <div class="basic-option">
+        <span><strong>Upload From Jobs</strong></span>
+        <button class="btn btn-primary" tourAnchor="select-jobs">Upload</button>
+      </div>
+    </div>
+
+    <!-- Grid view of Jobs-->
+    <div class="grid-wrap">
+      <div id="{{ grid.meta.tableId }}" class="smart-grid">
+        <table
+          class="table"
+          [ngClass]="{
+            'table-bordered': grid.meta.tableBordered,
+            'table-striped': grid.meta.tableStriped
+          }"
+        >
+          <tbody>
+            <!--Headers-->
+            <tr class="headers">
+              <th class="row-select" *ngIf="grid.meta.selectAll">
+                <div class="custom-checkbox">
+                  <input type="checkbox" />
+                  <label></label>
+                </div>
+              </th>
+              <th
+                class="actions"
+                *ngIf="grid.meta.actions"
+                [style.min-width]="grid.meta.actionsWidth"
+                [style.width]="grid.meta.actionsWidth"
+              >
+                <a tourAnchor="filter"
+                  ><i class="fa fa-filter" aria-hidden="true"></i
+                ></a>
+                {{ grid.meta.actionsTitle }}
+              </th>
+              <ng-container *ngFor="let header of grid.headers; let i = index">
+                <ng-container *ngIf="header.sort !== false">
+                  <th
+                    class="sortable"
+                    [tourAnchor]="header.key"
+                    [style.min-width]="header.width || grid.meta.minCellWidth"
+                    [style.width]="header.width || grid.meta.minCellWidth"
+                  >
+                    {{ header.title }}
+                    <i class="fa fa-sort" aria-hidden="true"></i>
+                  </th>
+                </ng-container>
+                <ng-container *ngIf="header.sort === false">
+                  <th
+                    [style.min-width]="header.width || grid.meta.minCellWidth"
+                    [style.width]="header.width || grid.meta.minCellWidth"
+                  >
+                    {{ header.title }}
+                  </th>
+                </ng-container>
+              </ng-container>
+              <th class="blank-column"></th>
+            </tr>
+
+            <!--Data Rows-->
+            <tr>
+              <td class="row-select" *ngIf="grid.meta.selectAll">
+                <div class="custom-checkbox">
+                  <input type="checkbox" />
+                  <label></label>
+                </div>
+              </td>
+
+              <td class="actions" *ngIf="grid.meta.actions"></td>
+
+              <td>Multi_large_20171109055812</td>
+
+              <td>Not applicable</td>
+
+              <td>Component Based</td>
+
+              <td>Apr 18, 2018, 2:46:22 PM</td>
+
+              <td>Apr 18, 2018, 2:46:22 PM</td>
+
+              <td>Complete</td>
+
+              <td>Not Triggered</td>
+
+              <td class="blank-column"></td>
+            </tr>
+
+            <tr>
+              <td class="row-select" *ngIf="grid.meta.selectAll">
+                <div class="custom-checkbox">
+                  <input type="checkbox" />
+                  <label></label>
+                </div>
+              </td>
+
+              <td class="actions" *ngIf="grid.meta.actions"></td>
+
+              <td>Mixture_107_20170719084620</td>
+
+              <td>Not applicable</td>
+
+              <td>Component Based</td>
+
+              <td>Mar 17, 2018, 6:00:31 PM</td>
+
+              <td>Mar 17, 2018, 6:00:31 PM</td>
+
+              <td>Complete</td>
+
+              <td><span class="green">Uploaded</span></td>
+
+              <td class="blank-column"></td>
+            </tr>
+
+            <tr class="pagination-row">
+              <td [attr.colspan]="grid.meta.msgColSpan">
+                <div class="paginate-wrap">
+                  <div class="paginate">
+                    <span class="prev disabled">Prev</span
+                    ><!--
+               --><span class="next disabled">Next</span>
+                  </div>
+                </div>
+                <!--END .paginate-wrap-->
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!--END .smart-grid-->
+    </div>
+    <!--END .grid-wrap-->
+  </div>
+</div>
+<!--END .tab-content-wrap-->

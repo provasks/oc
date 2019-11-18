@@ -1,0 +1,37 @@
+<div id="modal-clone-job" class="modal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+        <h4 class="modal-title">{{ 'Clone_modal' | translate }}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="item">
+              <span
+                ><strong>{{ 'Clone_modal_projname' | translate }}</strong></span
+              >
+              <input
+                id="clone-project-name"
+                type="text"
+                [(ngModel)]="newProjectName"
+                (input)="onTextChange()"
+              />
+            </div>
+            <span class="red" *ngIf="errorMessage != ''">{{
+              errorMessage
+            }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary confirm" (click)="clone()">
+          {{ 'Clone_modal_button' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

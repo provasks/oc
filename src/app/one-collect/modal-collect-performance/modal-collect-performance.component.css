@@ -1,0 +1,172 @@
+/* Modal Header*/
+.modal-dialog {
+  /* width: 750px; */
+}
+.modal .modal-header {
+  background: #173e77;
+  padding: 10px 15px;
+}
+.modal .modal-header button,
+.modal .modal-header h4 {
+  color: #fff;
+}
+.modal .modal-header button {
+  opacity: 0.75;
+}
+.modal .modal-header h4 {
+  background-color: none;
+  font-size: 15px;
+}
+strong {
+  font-weight: 600;
+}
+strong.section-head {
+  font-weight: 600;
+}
+span.red,
+span.validation {
+  font-size: 14px;
+  font-weight: 600;
+  color: red;
+}
+span.validation {
+  display: block;
+}
+span.validation.date {
+  margin-bottom: 15px;
+}
+
+/* Modal Body */
+.modal-body {
+  font-size: 14px;
+}
+.modal-body .row {
+  align-items: flex-start;
+}
+.modal-body .row .col-xs-6:last-child {
+  border-left: 1px #e5e5e5 solid;
+}
+.modal-body select[disabled] {
+  background-color: rgb(238, 238, 238);
+}
+.modal-body .item .time {
+  width: 50px;
+}
+.modal-body .item.collect-now {
+  margin-top: 30px;
+}
+.modal-body .item.collect-now p,
+.modal-body .item.collect-now p small {
+  font-size: 14px;
+  line-height: 12px;
+}
+.modal-body .item input {
+  padding: 3px;
+}
+.modal-body .start-time {
+  display: inline-block;
+  width: 50px;
+  margin-right: 10px;
+}
+.modal-body .start-time p {
+  font-size: 14px;
+}
+.modal-body .start-time select {
+  width: 50px;
+}
+.modal-body label {
+  cursor: pointer;
+}
+.modal-body .item {
+  margin-bottom: 15px;
+}
+.modal-body .item > span {
+  display: block;
+  text-align: left;
+}
+.modal-body .item > span.inline {
+  display: inline-block;
+}
+.modal-body .item .group-input-wrap {
+  display: inline-block;
+  margin: 0;
+  margin-top: 5px;
+}
+.groups-dropdown {
+  position: absolute;
+  width: 200px;
+  height: 100px;
+  overflow-y: auto;
+  border: 1px #0067c5 solid;
+  background: #f7f7f7;
+}
+.groups-dropdown .group-option {
+  padding: 3px 5px;
+  cursor: pointer;
+}
+.groups-dropdown .group-option:hover {
+  background: #1e4a93;
+  color: #fff;
+}
+.modal-body .item .group-input-wrap input,
+.modal-body .item .group-input-wrap {
+  margin: 0;
+}
+.modal-body .item .dropdown-wrap i {
+  color: #fff;
+}
+.modal-body .item .inline {
+  display: inline-block;
+}
+.modal-body .item.days .days-wrap {
+  margin-top: 5px;
+}
+.modal-body .item.days label {
+  display: inline-block;
+  margin-right: 10px;
+  font-weight: 300;
+}
+
+/* Modal Footer */
+.modal-footer {
+  padding: 10px 15px;
+}
+.modal-footer span {
+  width: 450px;
+  float: left;
+  text-align: left;
+}
+span.red {
+  color: red;
+  margin-right: 10px;
+}
+span.green {
+  color: #228b22;
+  margin-right: 10px;
+  font-weight: 600;
+}
+
+.token-note,
+.scheduler-note,
+.purpose-note {
+  font-size: 14px;
+  font-weight: 600;
+}
+.token-note {
+  color: #0067c5;
+}
+.scheduler-note,
+.purpose-note {
+  margin-top: 5px;
+  color: #0067c5;
+}
+
+textarea {
+  resize: none;
+  width: 200px;
+  height: 75px;
+}
+
+.start-time p {
+  margin: 0;
+}

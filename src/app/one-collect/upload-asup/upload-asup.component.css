@@ -1,0 +1,32 @@
+sup {
+  top: -0.5em;
+  color: #f44336;
+  display: inline-block;
+  text-decoration: none;
+  font-weight: bolder;
+}
+.tools-link .luci-tooltip__text {
+  visibility: hidden;
+  background-color: black;
+  color: #f2f2f2;
+  padding: 3.5% 5% 3% 5%;
+  font-family: 'Source Sans Pro', Arial, 'Helvetica Neue', Helvetica, sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1.5;
+  text-align: left;
+  text-indent: unset;
+  text-shadow: none;
+  text-transform: none;
+  display: -webkit-box;
+  max-width: 290px;
+  position: absolute;
+  width: 100vw;
+  z-index: 10;
+  margin-left: 18%;
+  margin-top: -2%;
+}
+.tools-link:hover .luci-tooltip__text {
+  visibility: visible;
+}

@@ -1,0 +1,64 @@
+{
+  "data": [
+    {
+      "anchorId": "new-collection",
+      "placement": "right",
+      "title": "Tour_CollectionJobs_NewCollection_Title",
+      "content": "Tour_CollectionJobs_NewCollection_Content"
+    },
+    {
+      "anchorId": "view-by",
+      "placement": "right",
+      "title": "Tour_CollectionJobs_ViewBy_Title",
+      "content": "Tour_CollectionJobs_ViewBy_Content"
+    },
+    {
+      "anchorId": "filter",
+      "placement": "right",
+      "title": "Tour_CollectionJobs_filter_Title",
+      "content": "Tour_CollectionJobs_filter_Content"
+    },
+    {
+      "anchorId": "name",
+      "placement": "bottom",
+      "title": "Tour_CollectionJobs_Name_Title",
+      "content": "Tour_CollectionJobs_Name_Content"
+    },
+    {
+      "anchorId": "data-view",
+      "placement": "right",
+      "title": "Tour_CollectionJobs_DataView_Title",
+      "content": "Tour_CollectionJobs_DataView_Content"
+    },
+    {
+      "anchorId": "expand",
+      "placement": "right",
+      "title": "Tour_CollectionJobs_expand_Title",
+      "content": "Tour_CollectionJobs_expand_Content"
+    },
+    {
+      "anchorId": "more-actions",
+      "placement": "right",
+      "title": "Tour_CollectionJobs_MoreActions_Title",
+      "content": "Tour_CollectionJobs_MoreActions_Content"
+    },
+    {
+      "anchorId": "re-run",
+      "placement": "right",
+      "title": "Tour_CollectionJobs_ReRun_Title",
+      "content": "Tour_CollectionJobs_ReRun_Content"
+    },
+    {
+      "anchorId": "trash",
+      "placement": "right",
+      "title": "Tour_CollectionJobs_trash_Title",
+      "content": "Tour_CollectionJobs_trash_Content"
+    },
+    {
+      "anchorId": "imt",
+      "placement": "right",
+      "title": "Tour_CollectionJobs_imt_Title",
+      "content": "Tour_CollectionJobs_imt_Content"
+    }
+  ]
+}

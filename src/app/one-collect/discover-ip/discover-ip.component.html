@@ -1,0 +1,675 @@
+<oc-modal-commands
+  [type]="modalItem.type.title"
+  [subtype]="modalItem.subtype.title"
+  [commands]="modalCommands"
+></oc-modal-commands>
+
+<oc-modal-collect [modalData]="modalData"></oc-modal-collect>
+
+<oc-modal-sso
+  (onValidated)="doSaveCollect()"
+  (onCancel)="doSaveCollect()"
+></oc-modal-sso>
+
+<oc-modal-notification
+  [id]="'notification-modal'"
+  [notification]="notification"
+></oc-modal-notification>
+
+<oc-modal-notification
+  [id]="'save-data'"
+  [notification]="notification"
+></oc-modal-notification>
+
+<oc-modal-update-credentials
+  [headers]="headers"
+  [headerState]="headerState"
+  [distinctRows]="distinctRows"
+  (onUpdate)="doUpdate($event)"
+></oc-modal-update-credentials>
+
+<oc-tour-discover-ip
+  [hidden]="!tourStarted"
+  (toggleTour)="toggleTour($event)"
+  [settings]="settings"
+></oc-tour-discover-ip>
+<div class="tab-content" *ngIf="!client.features.autoDiscovery">
+  <div class="not-available">{{ 'feature_not_available' | translate }}</div>
+</div>
+<div [hidden]="tourStarted" *ngIf="client.features.autoDiscovery">
+  <div class="tab-content" id="discover-ip">
+    <div class="transparent" [hidden]="!progressing"></div>
+    <div class="basic-options ip-range">
+      <div>
+        <div class="basic-option">
+          <span
+            ><strong>{{ 'Discover_ip' | translate }}</strong
+            >&nbsp;</span
+          >
+          <input
+            type="text"
+            [(ngModel)]="ipRange"
+            (input)="resetValidation()"
+            (focusout)="validateFields()"
+            placeholder="10.195.66.0/24"
+          />
+          <i
+            id="ip-validator"
+            class="fa {{
+              validation['badIpRange']
+                ? 'fa-times-circle invalid'
+                : 'fa-check-circle valid'
+            }}"
+            aria-hidden="true"
+          ></i>
+          <div class="basic-option gap-20">
+            <label>{{ 'IP_Discovery_CommunityString' | translate }}</label>
+            <input
+              type="text"
+              [(ngModel)]="communityString"
+              placeholder="private, public"
+            />
+          </div>
+          <button class="btn btn-primary" (click)="discover()">
+            {{ 'Discover_button' | translate }}
+          </button>
+          <div
+            class="basic-option gap-20"
+            *ngIf="client.features.credentialManager"
+          >
+            <div class="custom-checkbox">
+              <input
+                type="checkbox"
+                [(ngModel)]="useCredentials"
+                [disabled]="!hasCredentials"
+                (change)="toggleChecked()"
+                title="{{
+                  'Credential_management_save_enable_tooltip' | translate
+                }}"
+              />
+              <label></label>
+            </div>
+            <label>{{ 'Credential_management_use_save' | translate }}</label>
+            <i
+              aria-hidden="true"
+              class="fa fa-info-circle"
+              title="{{ 'Credential_management_use_save_tooltip' | translate }}"
+            ></i>
+          </div>
+          <div class="basic-option gap-20">
+            <label>Filter </label>
+            <select
+              [(ngModel)]="settings.selected"
+              (ngModelChange)="populateIpRangeComponents()"
+            >
+              <option *ngFor="let f of settings.filter" value="{{ f.value }}">
+                {{ f.text }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div
+        class="progress_bar"
+        [attr.data-label]="progressText"
+        [hidden]="!progressing"
+      >
+        <div class="progress" [style.width.%]="progressValue"></div>
+      </div>
+      <div [hidden]="progressing">
+        <button
+          class="luci-button luci-button--primary luci-button--small"
+          (click)="export()"
+          [disabled]="!filteredDevices.length"
+        >
+          <i class="fa fa-download"></i>{{ 'Dataview_export' | translate }}
+        </button>
+      </div>
+    </div>
+    <span class="validation" *ngIf="validation.badIpRange">
+      {{ validation.error | translate }}
+    </span>
+
+    <div class="table-outer-wrap" [hidden]="!showContent">
+      <!-- Tools Menu -->
+      <div class="actions">
+        <a (click)="getDistinctRows()"
+          ><i class="fa fa-edit" aria-hidden="true"></i
+          >{{ 'Update_credentials' | translate }}</a
+        >
+        <a (click)="reset()"
+          ><i class="fa fa-refresh" aria-hidden="true"></i
+          >{{ 'Reset' | translate }}</a
+        >
+        <button class="btn btn-primary btn-xs" (click)="validate()">
+          {{ 'Validate' | translate }}
+        </button>
+        <button class="btn btn-primary btn-xs" (click)="initSaveCollect()">
+          {{ 'Save_collect' | translate }}
+        </button>
+        <label class="pull-right"
+          >{{ 'IP_Discovery_Total_Records' | translate }}:
+          {{ filteredDevices.length }}</label
+        >
+        <span class="validation" *ngIf="validation.deviceSelected">{{
+          'Discover_validate_msg1' | translate
+        }}</span>
+        <span
+          class="validation"
+          *ngIf="fieldsValidation && !validation.deviceSelected"
+          >{{ 'Discover_validate_msg2' | translate }}</span
+        >
+      </div>
+
+      <div class="table-data-wrap">
+        <div
+          id="left-scroll"
+          class="left-scroll"
+          (click)="leftScroll()"
+          data-spy="affix"
+          data-offset-top="1"
+        >
+          <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        </div>
+        <div
+          id="right-scroll"
+          class="right-scroll"
+          (click)="rightScroll()"
+          data-spy="affix"
+          data-offset-top="1"
+        >
+          <i class="fa fa-chevron-right" aria-hidden="true"></i>
+        </div>
+        <div
+          id="table-data"
+          class="table-data"
+          [ngClass]="{ 'extra-padding': headerState.perf_start }"
+        >
+          <!-- Table Header -->
+          <div class="row">
+            <div class="input-table col-xs-12">
+              <div class="tbl-header">
+                <span class="tools">
+                  <div class="custom-checkbox">
+                    <input
+                      type="checkbox"
+                      [(ngModel)]="selectAll"
+                      (change)="changeInSelectAll()"
+                    />
+                    <label></label>
+                  </div>
+                  <a *ngIf="!showAll" (click)="viewMessages()"
+                    ><i class="fa fa-angle-double-right" aria-hidden="true"></i
+                  ></a>
+                  <a *ngIf="showAll" (click)="hideMessages()"
+                    ><i class="fa fa-angle-double-down" aria-hidden="true"></i
+                  ></a>
+                  <a (click)="toggleFilters()"
+                    ><i class="fa fa-filter" aria-hidden="true"></i
+                  ></a>
+                  {{ 'Actions' | translate }} </span
+                ><span class="type sortable" (click)="sort('type')">
+                  <p>{{ 'Type' | translate }}</p>
+                  <i
+                    class="fa fa-sort-asc"
+                    aria-hidden="true"
+                    *ngIf="sortField == 'type' && sortType == 'asc'"
+                  ></i>
+                  <i
+                    class="fa fa-sort-desc"
+                    aria-hidden="true"
+                    *ngIf="sortField == 'type' && sortType == 'desc'"
+                  ></i> </span
+                ><span class="subtype sortable" (click)="sort('subtype')">
+                  <p>{{ 'Sub Type' | translate }}</p>
+                  <i
+                    class="fa fa-sort-asc"
+                    aria-hidden="true"
+                    *ngIf="sortField == 'subtype' && sortType == 'asc'"
+                  ></i>
+                  <i
+                    class="fa fa-sort-desc"
+                    aria-hidden="true"
+                    *ngIf="sortField == 'subtype' && sortType == 'desc'"
+                  ></i> </span
+                ><span class="persona sortable" (click)="sort('persona')">
+                  <p>{{ 'Persona' | translate }}</p>
+                  <i
+                    class="fa fa-sort-asc"
+                    aria-hidden="true"
+                    *ngIf="sortField == 'persona' && sortType == 'asc'"
+                  ></i>
+                  <i
+                    class="fa fa-sort-desc"
+                    aria-hidden="true"
+                    *ngIf="sortField == 'persona' && sortType == 'desc'"
+                  ></i> </span
+                ><ng-container *ngFor="let header of headers"
+                  ><span
+                    *ngIf="
+                      header.key.includes('password') ||
+                      header.key.includes('private')
+                    "
+                    [class]="header.key"
+                    [hidden]="!headerState[header.key]"
+                  >
+                    {{ header.tooltip | translate }} </span
+                  ><span
+                    *ngIf="
+                      !header.key.includes('password') &&
+                      !header.key.includes('private')
+                    "
+                    [ngClass]="[header.key, 'sortable']"
+                    (click)="sort(header.key)"
+                    [hidden]="!headerState[header.key]"
+                  >
+                    <p>{{ header.tooltip | translate }}</p>
+                    <i
+                      class="fa fa-sort-asc"
+                      aria-hidden="true"
+                      *ngIf="sortField == header.key && sortType == 'asc'"
+                    ></i>
+                    <i
+                      class="fa fa-sort-desc"
+                      aria-hidden="true"
+                      *ngIf="sortField == header.key && sortType == 'desc'"
+                    ></i> </span></ng-container
+                ><span
+                  class="enable_sudo"
+                  [hidden]="!headerState['enable_sudo']"
+                  >{{ 'Enable Sudo' | translate }}</span
+                ><span
+                  class="sudo_password"
+                  [hidden]="!headerState['enable_sudo']"
+                  >{{ 'Sudo Password' | translate }}</span
+                ><span
+                  class="enable_mfa"
+                  [hidden]="!headerState['enable_mfa']"
+                  >{{ 'Enable MFA' | translate }}</span
+                ><span class="mfa_key" [hidden]="!headerState['enable_mfa']">{{
+                  'SSH MFA Key Path' | translate
+                }}</span
+                ><span
+                  class="enable_autodiscover"
+                  [hidden]="!headerState['enable_autodiscover']"
+                  >{{ 'Enable Auto-discovery' | translate }}</span
+                ><span
+                  class="sid_list"
+                  [hidden]="!headerState['enable_autodiscover']"
+                  >{{ 'SID List' | translate }}</span
+                ><span
+                  class="perf_start"
+                  [hidden]="!headerState['perf_start']"
+                  >{{ 'Start Date Time' | translate }}</span
+                ><span class="perf_end" [hidden]="!headerState['perf_end']">{{
+                  'End Date Time' | translate
+                }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filters row -->
+          <div class="row" [hidden]="!showFilters">
+            <div class="input-table col-xs-12">
+              <div class="tbl-filters">
+                <span class="tools">&nbsp;</span
+                ><ng-container *ngFor="let field of fields"
+                  ><span
+                    [class]="field.key"
+                    *ngIf="field.key.includes('password')"
+                    [hidden]="!headerState[field.key]"
+                  >
+                    &nbsp; </span
+                  ><span
+                    [class]="field.key"
+                    *ngIf="!field.key.includes('password')"
+                    [hidden]="!headerState[field.key]"
+                  >
+                    <input
+                      id="filter-{{ dashed(field.key) }}"
+                      type="text"
+                      (input)="filter(field.key, $event.target.value)"
+                    />
+                    <div class="close-filter" (click)="clearFilter(field.key)">
+                      <i class="fa fa-close" aria-hidden="true"></i>
+                    </div> </span
+                ></ng-container>
+              </div>
+            </div>
+          </div>
+
+          <!-- Table Body -->
+          <div class="row">
+            <div class="input-table col-xs-12">
+              <div *ngIf="!rows.length" class="tbl-row-wrap center">
+                <div class="tbl-row" style="margin: 0 auto">{{ 'no_record_error' | translate }}</div>
+              </div>
+              <div
+                class="tbl-row-wrap"
+                [ngClass]="{
+                  'show-row': row.output.showRow,
+                  'hide-row': !row.output.showRow
+                }"
+                *ngFor="let row of rows; let i = index"
+              >
+                <div class="tbl-row" [ngClass]="{ even: i % 2 == 0 }">
+                  <span class="tools">
+                    <div class="custom-checkbox">
+                      <input
+                        type="checkbox"
+                        [(ngModel)]="row.output.selected"
+                        (change)="checkAllSelected()"
+                      />
+                      <label></label>
+                    </div>
+                    <!--button id="btn-clone-{{i}}" class="btn btn-primary btn-xs" data-toggle="tooltip" title="Clone" (click)="addRow(i)"><i class="fa fa-plus" aria-hidden="true"></i></button-->
+                    <button
+                      class="btn btn-primary btn-xs"
+                      (click)="removeRow(i)"
+                      data-toggle="tooltip"
+                      title="{{ 'Delete' | translate }}"
+                    >
+                      <i class="fa fa-trash" aria-hidden="true"></i>
+                    </button>
+                    <span
+                      data-toggle="tooltip"
+                      title="{{ 'Commands' | translate }}"
+                    >
+                      <button
+                        class="btn btn-primary btn-xs"
+                        data-toggle="modal"
+                        data-target="#commands-modal"
+                        data-backdrop="static"
+                        data-keyboard="false"
+                        (click)="setCommandsModal(i)"
+                        [disabled]="!row['output']['type']"
+                      >
+                        <i class="fa fa-list-alt" aria-hidden="true"></i>
+                      </button>
+                    </span>
+                    <button
+                      *ngIf="!row.validation.show"
+                      class="btn btn-primary btn-xs btn-validation"
+                      (click)="viewMessage(i)"
+                      data-toggle="tooltip"
+                      title="{{ 'Validation' | translate }}"
+                    >
+                      <i
+                        class="fa fa-angle-double-right"
+                        aria-hidden="true"
+                        *ngIf="row.validation.loading == 'initial'"
+                      ></i>
+                      <div
+                        class="validation-loader"
+                        *ngIf="row.validation.loading == 'process'"
+                      ></div>
+                      <i
+                        class="fa fa-check green"
+                        aria-hidden="true"
+                        *ngIf="
+                          row.validation.loading == 'done' &&
+                          row.validation.status == 'success'
+                        "
+                      ></i>
+                      <i
+                        class="fa fa-close red"
+                        aria-hidden="true"
+                        *ngIf="
+                          row.validation.loading == 'done' &&
+                          row.validation.status == 'fail'
+                        "
+                      ></i>
+                      <i
+                        class="fa fa-exclamation red"
+                        aria-hidden="true"
+                        *ngIf="
+                          row.validation.loading == 'done' &&
+                          row.validation.status == 'error'
+                        "
+                      ></i>
+                    </button>
+                    <button
+                      *ngIf="row.validation.show"
+                      class="btn btn-primary btn-xs"
+                      (click)="hideMessage(i)"
+                      data-toggle="tooltip"
+                      title="{{ 'Collapse' | translate }}"
+                    >
+                      <i class="fa fa-angle-double-down" aria-hidden="true"></i>
+                    </button> </span
+                  ><span class="type">
+                    <select
+                      [(ngModel)]="row.output.type"
+                      (change)="changeType($event, i, false, true)"
+                    >
+                      <option
+                        *ngFor="let type of row.input.types; let j = index"
+                        [ngValue]="type"
+                        [attr.data-index]="j"
+                        >{{ type.title | translate }}</option
+                      >
+                    </select>
+
+                    <span class="validation" *ngIf="row.validation.type">{{
+                      notification.message
+                    }}</span> </span
+                  ><span class="subtype">
+                    <select
+                      [(ngModel)]="row.output.subtype"
+                      (change)="changeSubType($event, i, false, true)"
+                      [disabled]="!row['output']['type']"
+                    >
+                      <option
+                        *ngFor="let subtype of row.input.subtypes"
+                        [ngValue]="subtype"
+                        >{{ subtype.title | translate }}</option
+                      >
+                    </select>
+                    <span class="validation" *ngIf="row.validation.subtype">{{
+                      notification.message
+                    }}</span> </span
+                  ><span class="persona">
+                    <select
+                      [(ngModel)]="row.output.persona"
+                      (change)="changePersona($event, i)"
+                      [disabled]="!row['output']['type']"
+                    >
+                      <option
+                        *ngFor="let persona of row.input.personas"
+                        [ngValue]="persona"
+                        >{{ persona.title | translate }}</option
+                      >
+                    </select> </span
+                  ><ng-container *ngFor="let header of headers">
+                    <span
+                      [class]="header.key"
+                      [hidden]="!headerState[header.key]"
+                    >
+                      <ng-container *ngIf="header.key != 'privatekey'">
+                        <input
+                          [type]="header.type"
+                          [(ngModel)]="row.output[header.key].value"
+                          [disabled]="row.output[header.key].disabled"
+                          (focus)="changeInput($event, i)"
+                        /> </ng-container
+                      ><ng-container
+                        *ngIf="
+                          header.key == 'privatekey' &&
+                          !row.output.privatekey.disabled
+                        "
+                        ><button
+                          class="btn btn-xs btn-primary"
+                          [ngClass]="{
+                            'btn-key-set': row.output.privatekey.value
+                          }"
+                          (click)="addPKFile(i)"
+                          data-toggle="tooltip"
+                          title="{{ 'Private_key' | translate }}"
+                        >
+                          <i class="fa fa-key" aria-hidden="true"></i>
+                        </button>
+                        <input id="key-{{ i }}" type="file" hidden />
+                        <span class="filename"
+                          ><i
+                            class="fa fa-times"
+                            aria-hidden="true"
+                            *ngIf="row.output.privatekey.value"
+                            (click)="removePKFile(i)"
+                          ></i
+                        ></span>
+                        <span class="filename"
+                          ><i
+                            class="fa fa-fw"
+                            aria-hidden="true"
+                            *ngIf="!row.output.privatekey.value"
+                          ></i
+                        ></span>
+                        <span
+                          class="validation"
+                          *ngIf="row.output.privatekeyError"
+                          >{{ 'Invalid_rsa' | translate }}</span
+                        >
+                      </ng-container>
+
+                      <ng-container *ngIf="header.key == 'hostname'">
+                        <span
+                          class="validation"
+                          *ngIf="row.validation.hostname"
+                          >{{ notification.message }}</span
+                        >
+                        <span
+                          class="validation"
+                          *ngIf="row.validation.hostnameFormat"
+                          >{{ 'Wrong_format' | translate }}</span
+                        >
+                      </ng-container>
+                      <ng-container *ngIf="header.key == 'username'">
+                        <span
+                          class="validation"
+                          *ngIf="row.validation.username"
+                          >{{ notification.message }}</span
+                        >
+                      </ng-container>
+                      <ng-container *ngIf="header.key == 'port'">
+                        <span class="validation" *ngIf="row.validation.port">{{
+                          'Port_validate' | translate
+                        }}</span>
+                      </ng-container>
+                    </span> </ng-container
+                  ><span
+                    class="enable_sudo"
+                    [hidden]="!headerState['enable_sudo']"
+                  >
+                    <div class="custom-checkbox">
+                      <input
+                        type="checkbox"
+                        [(ngModel)]="row.output.sudo_enabled.value"
+                        [disabled]="row.output.enable_sudo.disabled"
+                      />
+                      <label></label>
+                    </div> </span
+                  ><span
+                    class="sudo_password"
+                    [hidden]="!headerState['enable_sudo']"
+                  >
+                    <input
+                      autocomplete="off"
+                      type="password"
+                      [(ngModel)]="row.output.sudo_password.value"
+                      [disabled]="!row.output.sudo_enabled.value"
+                    /> </span
+                  ><span
+                    class="enable_mfa"
+                    [hidden]="!headerState['enable_mfa']"
+                  >
+                    <div class="custom-checkbox">
+                      <input
+                        type="checkbox"
+                        [(ngModel)]="row.output.mfa_enabled.value"
+                        [disabled]="row.output.enable_mfa.disabled"
+                      />
+                      <label></label>
+                    </div> </span
+                  ><span class="mfa_key" [hidden]="!headerState['enable_mfa']">
+                    <input
+                      type="text"
+                      [(ngModel)]="row.output.mfa_key.value"
+                      [disabled]="!row.output.mfa_enabled.value"
+                    /> </span
+                  ><span
+                    class="enable_autodiscover"
+                    [hidden]="!headerState['enable_autodiscover']"
+                  >
+                    <div class="custom-checkbox">
+                      <input
+                        type="checkbox"
+                        [(ngModel)]="row.output.autodiscover_enabled.value"
+                        [disabled]="row.output.enable_autodiscover.disabled"
+                      />
+                      <label></label>
+                    </div> </span
+                  ><span
+                    class="sid_list"
+                    [hidden]="!headerState['enable_autodiscover']"
+                  >
+                    <input
+                      type="text"
+                      [(ngModel)]="row.output.sid_list.value"
+                      [disabled]="row.output.autodiscover_enabled.value"
+                    /> </span
+                  ><span
+                    class="perf_start"
+                    [hidden]="!headerState['perf_start']"
+                  >
+                    <angular2-date-picker
+                      *ngIf="!row.output.perf_start.disabled"
+                      [(ngModel)]="row.output.perf_start.value"
+                      [settings]="perfsettings"
+                    ></angular2-date-picker>
+                    <span
+                      class="validation"
+                      *ngIf="row.validation.perf_start"
+                      >{{ 'Validate_start' | translate }}</span
+                    > </span
+                  ><span class="perf_end" [hidden]="!headerState['perf_end']">
+                    <angular2-date-picker
+                      *ngIf="!row.output.perf_end.disabled"
+                      [(ngModel)]="row.output.perf_end.value"
+                      [settings]="perfsettings"
+                    ></angular2-date-picker>
+                  </span>
+                </div>
+
+                <div [hidden]="!row.validation.show">
+                  <div class="tbl-result-wrap clearfix">
+                    <div class="tbl-result">
+                      <p *ngFor="let detail of row.details">
+                        {{ detail.key | translate }} : {{ detail.value }}
+                      </p>
+
+                      <span
+                        *ngIf="row.validation.status"
+                        [ngClass]="{
+                          fail: row.validation.status == 'fail',
+                          success: row.validation.status == 'success'
+                        }"
+                        >{{ row.validation.report }}</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--END .tbl-row-wrap-->
+            </div>
+            <!--END .input-table-->
+          </div>
+          <!--END .row-->
+        </div>
+        <!--END .table-data-->
+        <div class="hide-scroll">&nbsp;</div>
+      </div>
+      <!--END .table-data-wrap-->
+    </div>
+    <!--END .table-outer-wrap-->
+  </div>
+</div>

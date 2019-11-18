@@ -1,0 +1,58 @@
+<div id="modal-import-failed" class="modal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+        <h4 class="modal-title">{{ 'Modal_importfailed' | translate }}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="table table-striped">
+          <tr>
+            <th>{{ 'Type' | translate }}</th>
+            <th>{{ 'Sub Type' | translate }}</th>
+            <th>{{ 'Persona' | translate }}</th>
+            <ng-container *ngFor="let header of headers">
+              <th>{{ header.tooltip | translate }}</th>
+            </ng-container>
+            <th>{{ 'Sudo Enabled' | translate }}</th>
+            <th>{{ 'Sudo Password' | translate }}</th>
+          </tr>
+          <tr class="row-data" *ngFor="let component of failedComponents">
+            <td>{{ component['type'] }}</td>
+            <td>{{ component['subtypes'] }}</td>
+            <td>{{ component['persona'] }}</td>
+            <ng-container *ngFor="let header of headers">
+              <td
+                *ngIf="
+                  header.key != 'password' &&
+                  header.key != 'sudopassword' &&
+                  header.key != 'privilegedpassword'
+                "
+              >
+                {{ component[header.key] }}
+              </td>
+              <td
+                *ngIf="
+                  header.key == 'password' ||
+                  header.key == 'sudopassword' ||
+                  header.key == 'privilegedpassword'
+                "
+              >
+                *****
+              </td>
+            </ng-container>
+            <td>{{ component['sudo_enabled'] }}</td>
+            <td>{{ component['sudo_pass'] }}</td>
+          </tr>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" data-dismiss="modal">
+          {{ 'Close' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

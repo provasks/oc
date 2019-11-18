@@ -1,0 +1,54 @@
+<div class="tab-content-wrap">
+  <div class="new-collection" *ngIf="showTopBar">
+    <a
+      [routerLink]="
+        client.features.purposeBasedCollection
+          ? '/main/purposes'
+          : '/main/new-collection'
+      "
+    >
+      <i class="fa fa-plus" aria-hidden="true"></i>
+      {{ 'Joblisting_createcollection' | translate }}
+    </a>
+    <div class="view-by">
+      <span
+        ><strong>{{ 'Joblisting_viewby' | translate }}</strong
+        >&nbsp;</span
+      >
+      <select [(ngModel)]="viewBy" (ngModelChange)="changeRoute($event)">
+        <option value="projects">{{
+          'Joblisting_byproject' | translate
+        }}</option>
+        <option value="jobs">{{
+          'Joblisting_acrossproject' | translate
+        }}</option>
+      </select>
+      <div class="tour-meta"></div>
+    </div>
+
+    <!--ConfigCompare-->
+    <div class="config-compare-placement" *ngIf="caLaunch">
+      <button
+        class="btn btn-primary"
+        style="padding-bottom: 3px;padding-top: 3px;"
+        aria-hidden="true"
+        data-toggle="tooltip"
+        tooltip-append-to-body="true"
+        data-placement="bottom"
+        title="{{ 'Joblisting_configcompare_tooltip' | translate }}"
+        (click)="navigateToConfigCompareTab()"
+        [disabled]="showConfigButton == false"
+      >
+        <span class="cursor">{{ buttonText }}</span>
+      </button>
+    </div>
+
+    <!--<oc-merged-reports *ngIf="caLaunch" [selectedJobs]=selectedJobs></oc-merged-reports>-->
+  </div>
+
+  <div class="tab-content">
+    <router-outlet></router-outlet>
+  </div>
+  <!--END .tab-content-->
+</div>
+<!--END .tab-content-wrap-->

@@ -1,0 +1,12 @@
+<div class="tab-content" *ngIf="!client.features.purposeBasedCollection">
+  <div class="not-available">{{ 'feature_not_available' | translate }}</div>
+</div>
+<div class="oc-container" *ngIf="client.features.purposeBasedCollection">
+  <div class="title">{{ 'Purpose_title' | translate }}</div>
+  <div class="card-container">
+    <oc-purpose-card
+      [objective]="objective"
+      *ngFor="let objective of objectives"
+    ></oc-purpose-card>
+  </div>
+</div>

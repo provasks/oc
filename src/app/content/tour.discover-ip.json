@@ -1,0 +1,70 @@
+{
+  "data": [
+    {
+      "anchorId": "ip-range",
+      "placement": "right",
+      "title": "Discover_ip",
+      "content": "Tour_Auto_Discovery_IpRange_Content"
+    },
+    {
+      "anchorId": "community-string",
+      "placement": "right",
+      "title": "IP_Discovery_CommunityString",
+      "content": "Tour_Auto_Discovery_CommunityString_Content"
+    },
+    {
+      "anchorId": "discover",
+      "placement": "right",
+      "title": "Tour_Auto_Discovery_Discover_Title",
+      "content": "Tour_Auto_Discovery_Discover_Content"
+    },
+    {
+      "anchorId": "use-credential",
+      "placement": "left",
+      "title": "Credential_management_use_save",
+      "content": "Credential_management_use_save_tooltip"
+    },
+    {
+      "anchorId": "filter",
+      "placement": "left",
+      "title": "Tour_Auto_Discovery_Filter_Title",
+      "content": "Tour_Auto_Discovery_Filter_Content"
+    },
+    {
+      "anchorId": "export",
+      "placement": "left",
+      "title": "Tour_Auto_Discovery_Export_Title",
+      "content": "Tour_Auto_Discovery_Export_Content"
+    },
+    {
+      "anchorId": "reset",
+      "placement": "right",
+      "title": "Reset",
+      "content": "Tour_Auto_Discovery_Reset_Content"
+    },
+    {
+      "anchorId": "mapped",
+      "placement": "right",
+      "title": "Tour_Auto_Discovery_Mapped_Title",
+      "content": "Tour_Auto_Discovery_Mapped_Content"
+    },
+    {
+      "anchorId": "data",
+      "placement": "right",
+      "title": "Tour_Auto_Discovery_Data_Title",
+      "content": "Tour_Auto_Discovery_Data_Content"
+    },
+    {
+      "anchorId": "unmapped",
+      "placement": "right",
+      "title": "Tour_Auto_Discovery_Unmapped_Title",
+      "content": "Tour_Auto_Discovery_Unmapped_Content"
+    },
+    {
+      "anchorId": "offline",
+      "placement": "right",
+      "title": "Tour_Auto_Discovery_Offline_Title",
+      "content": "Tour_Auto_Discovery_Offline_Content"
+    }
+  ]
+}

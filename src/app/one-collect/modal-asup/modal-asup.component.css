@@ -1,0 +1,57 @@
+/* Modal Header*/
+.modal-dialog {
+  width: 1000px;
+  height: 498px;
+}
+.modal-content {
+  height: 497px;
+}
+.modal .modal-header {
+  background: #173e77;
+  padding: 10px 15px;
+}
+.modal .modal-header button,
+.modal .modal-header h4 {
+  color: #fff;
+}
+.modal .modal-header button {
+  opacity: 0.75;
+}
+.modal .modal-header h4 {
+  background-color: none;
+  font-size: 15px;
+}
+strong {
+  font-weight: 500;
+}
+strong.section-head {
+  font-weight: 600;
+}
+span.red {
+  font-size: 16px;
+  font-weight: 600;
+  color: red;
+}
+/* Modal Body */
+.modal-body {
+  font-size: 14px;
+  width: 100%;
+  height: 400px;
+  overflow: auto;
+}
+.modal-body tr.row-data:hover {
+  cursor: pointer;
+  background-color: #6ea6d7;
+}
+.modal-body tr.row-data.selected,
+.modal-body tr.row-data.selected:hover {
+  background-color: #204d74;
+}
+.modal-body tr.row-data:hover td,
+.modal-body tr.row-data.selected td {
+  color: #fff;
+}
+/* Modal Footer */
+.modal-footer {
+  padding: 10px 15px;
+}

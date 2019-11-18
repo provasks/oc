@@ -1,0 +1,76 @@
+{
+  "data": [
+    {
+      "anchorId": "collection-type",
+      "placement": "right",
+      "title": "Tour_DeviceBased_CollectionType_Title",
+      "content": "Tour_DeviceBased_CollectionType_Content"
+    },
+    {
+      "anchorId": "update-credentials",
+      "placement": "right",
+      "title": "Tour_DeviceBased_UpdateCredentials_Title",
+      "content": "Tour_DeviceBased_UpdateCredentials_Content"
+    },
+    {
+      "anchorId": "reset",
+      "placement": "right",
+      "title": "Tour_DeviceBased_Reset_Title",
+      "content": "Tour_DeviceBased_Reset_Content"
+    },
+    {
+      "anchorId": "validate",
+      "placement": "right",
+      "title": "Tour_DeviceBased_Validate_Title",
+      "content": "Tour_DeviceBased_Validate_Content"
+    },
+    {
+      "anchorId": "save-collect",
+      "placement": "right",
+      "title": "Tour_DeviceBased_SaveProjects_Title",
+      "content": "Tour_DeviceBased_SaveProjects_Content"
+    },
+    {
+      "anchorId": "expand-all",
+      "placement": "right",
+      "title": "Tour_DeviceBased_ExpandAll_Title",
+      "content": "Tour_DeviceBased_ExpandAll_Content"
+    },
+    {
+      "anchorId": "filter",
+      "placement": "right",
+      "title": "Tour_DeviceBased_Filter_Title",
+      "content": "Tour_DeviceBased_Filter_Content"
+    },
+    {
+      "anchorId": "type",
+      "placement": "bottom",
+      "title": "Tour_DeviceBased_Type_Title",
+      "content": "Tour_DeviceBased_Type_Content"
+    },
+    {
+      "anchorId": "clone",
+      "placement": "right",
+      "title": "Tour_DeviceBased_Clone_Title",
+      "content": "Tour_DeviceBased_Clone_Content"
+    },
+    {
+      "anchorId": "trash",
+      "placement": "right",
+      "title": "Tour_DeviceBased_Trash_Title",
+      "content": "Tour_DeviceBased_Trash_Content"
+    },
+    {
+      "anchorId": "command",
+      "placement": "right",
+      "title": "Tour_DeviceBased_Command_Title",
+      "content": "Tour_DeviceBased_Command_Content"
+    },
+    {
+      "anchorId": "expand-row",
+      "placement": "right",
+      "title": "Tour_DeviceBased_ExpandRow_Title",
+      "content": "Tour_DeviceBased_ExpandRow_Content"
+    }
+  ]
+}

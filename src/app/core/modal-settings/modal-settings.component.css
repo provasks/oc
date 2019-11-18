@@ -1,0 +1,170 @@
+@import url('./../../../assets/css/variables.css');
+
+/* Modal Header*/
+.modal-dialog {
+  /* width: 500px; */
+}
+.modal .modal-header {
+  background: var(--btn-primary-focus);
+  padding: 10px 15px;
+}
+.modal .modal-header button,
+.modal .modal-header h4 {
+  color: var(--white);
+}
+.modal .modal-header button {
+  opacity: 0.75;
+}
+.modal .modal-header h4 {
+  background-color: none;
+  font-size: 15px;
+}
+
+strong.section-head {
+  display: inline-block;
+  font-weight: 600;
+  margin-bottom: 10px;
+  width: auto;
+}
+/* Modal Body */
+.modal-body {
+  font-size: 14px;
+}
+.modal-body .row {
+  align-items: flex-start;
+}
+.modal-body .row .col-xs-6:last-child {
+  border-left: 1px var(--modal-footer) solid;
+}
+.modal-body .col-schedule {
+  min-height: 320px;
+}
+.modal-body input[type='text'],
+.modal-body input[type='password'],
+.modal-body select {
+  display: block;
+  margin-top: 0;
+}
+.modal-body select[disabled] {
+  background-color: var(--disabled-color);
+}
+.modal-body .item .time {
+  width: 50px;
+}
+.modal-body .item.encryption {
+  margin-top: 30px;
+}
+.modal-body .item input {
+  padding: 3px;
+}
+.modal-body .start-time {
+  display: inline-block;
+  width: 50px;
+}
+.modal-body .start-time p {
+  font-size: 14px;
+}
+.modal-body .start-time select {
+  width: 50px;
+}
+.modal-body .item label {
+  cursor: pointer;
+  display: block;
+}
+.modal-body input[type='checkbox'] {
+  position: relative;
+  top: 3px;
+}
+input[disabled] {
+  background: var(--disabled-color);
+}
+.modal-body .item {
+  margin-bottom: 0px;
+}
+.modal-body .item > span {
+  display: block;
+  text-align: left;
+}
+.modal-body .item .group-input-wrap {
+  display: inline-block;
+  margin: 0;
+  margin-top: 5px;
+}
+.modal-body .item .group-input-wrap input,
+.modal-body .item .group-input-wrap .dropdown-wrap {
+  margin: 0;
+}
+
+.modal-body .item .dropdown-wrap i {
+  margin: 0;
+  color: var(--white);
+}
+.modal-body .item .inline {
+  display: inline-block;
+}
+.modal-body .item.days .days-wrap {
+  margin-top: 5px;
+}
+.modal-body .item.days label {
+  display: inline-block;
+  margin-right: 10px;
+  font-weight: 300;
+}
+.modal-body .item span.confirmation.red {
+  color: var(--error-color);
+}
+.modal-body .item span.confirmation.green {
+  color: var(--success-color);
+}
+
+/* Modal Footer */
+.modal-footer {
+  padding: 10px 15px;
+}
+
+.onecollect-info {
+  color: var(--btn-primary);
+  /* padding-left: 20px; */
+  /* float: left; */
+  /* position: absolute; */
+  /* top: 95%; */
+}
+.onecollect-info .tooltiptext {
+  visibility: hidden;
+  width: 400px;
+  background-color: var(--table-header-background);
+  color: black;
+  text-align: center;
+  padding: 5px 0;
+  font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial, Helvetica,
+    sans-serif;
+  font-size: 12px;
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+  margin-left: -400px;
+  margin-top: 5px;
+  border-radius: 2px;
+}
+.onecollect-info:hover .tooltiptext {
+  visibility: visible;
+}
+.onecollect-label {
+  display: inline-block !important;
+}
+span.validation {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--error-color);
+}
+
+.fa-info-circle {
+  display: inline-block;
+  /* color: var(--btn-primary); */
+  line-height: 20px;
+  cursor: pointer;
+}
+.verification-email {
+  width: 200px;
+  margin: 0px;
+}

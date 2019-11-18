@@ -1,0 +1,12 @@
+.luci-tooltip__content-inner {
+  top: 15px;
+  left: 0;
+}
+
+.luci-tooltip--right-bottom .luci-tooltip__content {
+  left: -webkit-calc(100% + 10px);
+  left: expression(100% + 10px);
+  left: -moz-calc(100% + 10px);
+  left: -o-calc(100% + 10px);
+  left: calc(100% + 10px);
+}

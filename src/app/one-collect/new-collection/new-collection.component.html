@@ -1,0 +1,62 @@
+<div class="new-collection-wrap">
+  <div class="n-row">
+    <div class="n-col-xs-12" [ngClass]="{ 'tab-content': caLaunch }">
+      <div
+        *ngIf="!client.features.purposeBasedCollection"
+        class="configure-new-collection"
+      >
+        <span
+          ><strong>{{ 'Collection_type' | translate }}</strong
+          >&nbsp;</span
+        >
+        <select [(ngModel)]="collectType" (ngModelChange)="changeRoute($event)">
+          <option *ngIf="!caLaunch || enableOneCollect" value="device-based">{{
+            'Collectiontype_device' | translate
+          }}</option>
+          <option value="solution-based">{{
+            'Collectiontype_solution' | translate
+          }}</option>
+          <option value="asup-based" *ngIf="client.features.asupCollection">{{
+            'Collectontype_asup' | translate
+          }}</option>
+          <option
+            *ngIf="
+              client.features.autoDiscovery && (!caLaunch || enableOneCollect)
+            "
+            value="discover-ip"
+            >{{ 'Collectiontype_ip' | translate }}</option
+          >
+          <option
+            *ngIf="!caLaunch || enableOneCollect"
+            value="import-devices"
+            >{{ 'Collectiontype_import' | translate }}</option
+          >
+          <option value="import-collected">{{
+            'Collectiontype_importfile' | translate
+          }}</option>
+          <option
+            value="performance"
+            *ngIf="
+              client.features.performanceCollection &&
+              hasPerf &&
+              (!caLaunch || enableOneCollect)
+            "
+            >{{ 'Collectiontype_perf' | translate }}</option
+          >
+          <option
+            value="import-performance"
+            *ngIf="
+              client.features.performanceCollection &&
+              hasPerf &&
+              (!caLaunch || enableOneCollect)
+            "
+            >{{ 'Collectiontype_importperf' | translate }}</option
+          >
+        </select>
+        <div class="tour-meta" tourAnchor="collection-type"></div>
+      </div>
+
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

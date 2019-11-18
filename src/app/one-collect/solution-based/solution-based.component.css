@@ -1,0 +1,84 @@
+.input-table .tbl-header span.type,
+.input-table .tbl-row span.type,
+.input-table .tbl-row span.type select {
+  min-width: 160px;
+  width: 160px;
+  max-width: 160px;
+  text-align: left;
+}
+
+/* Select number of clone items div */
+.input-table .tbl-row .auto-generate-wrap {
+  position: absolute;
+  left: 50px;
+  margin-top: -25px;
+  z-index: 5;
+  background-color: #ccc;
+  width: 100px;
+  box-shadow: 5px 5px 5px #888888;
+  padding: 10px;
+}
+.input-table .tbl-row .auto-generate-wrap p {
+  font-weight: 600;
+}
+.input-table .tbl-row .auto-generate-wrap select {
+  margin-top: 5px;
+}
+.input-table .tbl-row .auto-generate-wrap[hidden] {
+  display: none;
+}
+.basic-option select {
+  width: 182px;
+}
+
+.actions {
+  background-color: white;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.actions .validate {
+  margin-left: 20px;
+}
+.actions a {
+  color: #337ab7;
+  padding: 6px;
+}
+.actions a.validate,
+.actions a.collect {
+  font-weight: bold;
+}
+.actions a i {
+  margin-right: 2px;
+}
+.actions a:hover {
+  color: #23527c;
+  cursor: pointer;
+}
+.actions button {
+  margin: 5px;
+}
+.actions button.back {
+  position: absolute;
+  right: 13px;
+}
+.actions .basic-option {
+  display: inline-block;
+}
+.actions .basic-option label {
+  margin-right: 3px;
+}
+.actions .basic-option i {
+  color: #1e4a93;
+}
+.actions .basic-option .custom-checkbox {
+  display: inline-block;
+}
+.actions .basic-option .custom-checkbox input {
+  width: 16px;
+  height: 16px;
+  position: relative;
+  top: 3px;
+}

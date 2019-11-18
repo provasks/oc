@@ -1,0 +1,426 @@
+<div id="settings-modal" class="modal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+        <h4 class="modal-title">{{ 'Setting_title' | translate }}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xs-4" [hidden]="caLaunch" >
+            <div class="item" *ngIf="client.features.asupUpload">
+              <span>
+                <strong class="section-head">AutoSupport Settings</strong>&nbsp;
+                <i
+                  class="fa fa-info-circle"
+                  aria-hidden="true"
+                  title="{{ 'Setting_asup_tooltip' | translate }}"
+                ></i>
+              </span>
+              <label
+                ><input
+                  class="inline"
+                  type="checkbox"
+                  [(ngModel)]="options.enableASUP"
+                /><strong
+                  >Enable {{ 'OC_title' | translate }} AutoSupport
+                  (recommended)</strong
+                ></label
+              >
+              <br />
+              <!--label><input class="inline" type="checkbox" [(ngModel)]="options.telemetry"/><strong>Enable Sending {{ text.product_title }} Usage Metrics to NetApp</strong></label-->
+            </div>
+            <div class="item">
+              <span
+                ><input
+                  class="inline"
+                  type="checkbox"
+                  [(ngModel)]="options.configureProxy"
+                /><strong class="section-head">Configure Proxy</strong></span
+              >
+              <span><strong>HTTPs Proxy</strong></span>
+              <input
+                type="text"
+                [(ngModel)]="options.proxy"
+                [disabled]="!options.enableASUP || !options.configureProxy"
+              />
+            </div>
+            <div class="item">
+              <span><strong>Port</strong></span>
+              <input
+                type="text"
+                [(ngModel)]="options.port"
+                [disabled]="!options.enableASUP || !options.configureProxy"
+              />
+            </div>
+            <div class="item">
+              <span><strong>Username</strong></span>
+              <input
+                type="text"
+                [(ngModel)]="options.username"
+                [disabled]="!options.enableASUP || !options.configureProxy"
+              />
+            </div>
+            <div class="item">
+              <span><strong>Password</strong></span>
+              <input
+                autocomplete="off"
+                type="password"
+                [(ngModel)]="options.password"
+                [disabled]="!options.enableASUP || !options.configureProxy"
+              />
+            </div>
+            <br />
+            <div [hidden]="!showPluginUpdateButton">
+              <strong class="section-head">{{
+                'Setting_plugin' | translate
+              }}</strong>
+              <label
+                ><input
+                  class="inline"
+                  type="checkbox"
+                  [(ngModel)]="options.enablePluginUpdate"
+                /><strong>{{
+                  'Setting_plugin_checkbox' | translate
+                }}</strong></label
+              >
+            </div>
+          </div>
+
+          <div class="col-xs-4" [hidden]="!caLaunch || !disableAsupUI">
+            <ng-container *ngIf="!client.isOEM">
+              <div class="item">
+                <span>
+                  <strong class="section-head">{{
+                    'Setting_asup' | translate
+                  }}</strong>&nbsp;
+                  <i
+                    class="fa fa-info-circle onecollect-info"
+                    aria-hidden="true"
+                    data-toggle="tooltip"
+                    tooltip-append-to-body="true"
+                    data-placement="bottom"
+                    title="{{ 'Setting_asup_tooltip' | translate }}"
+                  ></i>
+                </span>
+                <label
+                  ><input
+                    class="inline"
+                    type="checkbox"
+                    [(ngModel)]="options.enableASUP"
+                  /><strong>{{
+                    'Setting_asup_checkbox' | translate
+                  }}</strong></label
+                >
+              </div>
+              <br />
+            </ng-container>
+            <div class="item">
+              <span
+                ><input
+                  class="inline"
+                  type="checkbox"
+                  [(ngModel)]="options.configureProxy"
+                /><strong class="section-head">{{
+                  'Setting_proxy' | translate
+                }}</strong></span
+              >
+              <span
+                ><strong>{{ 'Setting_proxyhttps' | translate }}</strong></span
+              >
+              <input
+                type="text"
+                [(ngModel)]="options.proxy"
+                [disabled]="!options.enableASUP || !options.configureProxy"
+              />
+            </div>
+            <div class="item">
+              <span
+                ><strong>{{ 'Setting_proxyport' | translate }}</strong></span
+              >
+              <input
+                type="text"
+                [(ngModel)]="options.port"
+                [disabled]="!options.enableASUP || !options.configureProxy"
+              />
+            </div>
+            <div class="item">
+              <span
+                ><strong>{{ 'Setting_user' | translate }}</strong></span
+              >
+              <input
+                type="text"
+                [(ngModel)]="options.username"
+                [disabled]="!options.enableASUP || !options.configureProxy"
+              />
+            </div>
+            <div class="item">
+              <span
+                ><strong>{{ 'Setting_password' | translate }}</strong></span
+              >
+              <input
+                autocomplete="off"
+                type="password"
+                [(ngModel)]="options.password"
+                [disabled]="!options.enableASUP || !options.configureProxy"
+              />
+            </div>
+            <br />
+            <div [hidden]="!showPluginUpdateButton">
+              <strong class="section-head">{{
+                'Setting_plugin' | translate
+              }}</strong>
+              <label
+                ><input
+                  class="inline"
+                  type="checkbox"
+                  [(ngModel)]="options.enablePluginUpdate"
+                /><strong>{{
+                  'Setting_plugin_checkbox' | translate
+                }}</strong></label
+              >
+            </div>
+          </div>
+
+          <div class="col-xs-4">
+            <div class="item">
+              <span>
+                <input
+                  class="inline"
+                  type="checkbox"
+                  [(ngModel)]="options.advance_emailNotification"
+                  (change)="changeInEmailNotification()"
+                />
+                <strong class="section-head">{{
+                  'Setting_email' | translate
+                }}</strong>&nbsp;
+                <i
+                  class="fa fa-info-circle"
+                  aria-hidden="true"
+                  data-toggle="tooltip"
+                  data-placement="bottom"
+                  title="{{ 'Setting_email_tooltip' | translate }}"
+                ></i>
+              </span>
+            </div>
+            <div class="item">
+              <span
+                ><strong>{{ 'Setting_smtp' | translate }}</strong></span
+              >
+              <input
+                type="text"
+                [(ngModel)]="options.smtp_host"
+                [disabled]="!options.advance_emailNotification"
+              />
+              <span class="validation" *ngIf="validation.smtp_host">{{
+                'Setting_smtp_invalid' | translate
+              }}</span>
+            </div>
+            <div class="item">
+              <span
+                ><strong>{{ 'Setting_port' | translate }}</strong></span
+              >
+              <input
+                type="text"
+                [(ngModel)]="options.smtp_port"
+                [disabled]="!options.advance_emailNotification"
+              />
+            </div>
+            <div class="item">
+              <span
+                ><strong>{{ 'Setting_smtpuser' | translate }}</strong></span
+              >
+              <input
+                type="text"
+                [(ngModel)]="options.smtp_username"
+                [disabled]="!options.advance_emailNotification"
+              />
+            </div>
+            <div class="item">
+              <span
+                ><strong>{{ 'Setting_smtppassword' | translate }}</strong></span
+              >
+              <input
+                type="password"
+                autocomplete="off"
+                [(ngModel)]="options.smtp_password"
+                [disabled]="!options.advance_emailNotification"
+              />
+            </div>
+            <div class="item">
+              <span
+                ><strong>{{
+                  'Setting_emailnotification' | translate
+                }}</strong></span
+              >
+              <small>{{ 'Setting_email_bracket' | translate }}</small>
+              <input
+                type="text"
+                [(ngModel)]="options.notification_email"
+                [disabled]="!options.advance_emailNotification"
+              />
+              <span class="validation" *ngIf="validation.notification_email">{{
+                'Setting_email_invalid' | translate
+              }}</span>
+            </div>
+            <br />
+            <div class="item">
+              <span
+                ><input
+                  class="inline"
+                  type="checkbox"
+                  [(ngModel)]="options.ScheduledEmailNotification"
+                  [disabled]="!options.advance_emailNotification"
+                /><strong>{{
+                  'Setting_schedule_notification' | translate
+                }}</strong></span
+              >
+            </div>
+          </div>
+
+          <div class="col-xs-4">
+            <div class="item" *ngIf="!caLaunch">
+              <span
+                ><strong class="section-head">Collection Settings</strong></span
+              >
+              <label
+                ><input
+                  class="inline"
+                  type="checkbox"
+                  [(ngModel)]="options.telnet"
+                /><strong>Disable Telnet</strong></label
+              >
+              <!--label><input class="inline" type="checkbox" [(ngModel)]="options.auto_validation"/><strong>Enable Auto Validation</strong></label-->
+            </div>
+            <div class="item" *ngIf="caLaunch">
+              <span
+                ><strong class="section-head">{{
+                  'Setting_collection' | translate
+                }}</strong></span
+              >
+              <label
+                ><input
+                  class="inline"
+                  type="checkbox"
+                  [(ngModel)]="options.telnet"
+                /><strong>{{ 'Setting_telnet' | translate }}</strong></label
+              >
+              <ng-container *ngIf="!client.isOEM">
+                  <label class="onecollect-label"
+                    ><input
+                      class="inline"
+                      type="checkbox"
+                      [(ngModel)]="options.enableOneCollect"
+                    /><strong>{{ 'Setting_onecollect' | translate }}</strong>&nbsp;</label
+                  >
+                  <i
+                    class="fa fa-info-circle onecollect-info"
+                    aria-hidden="true"
+                    data-toggle="tooltip"
+                    tooltip-append-to-body="true"
+                    data-placement="bottom"
+                    title="{{ 'Setting_onecollect_tooltip' | translate }}"
+                  ></i>
+                  <label
+                    ><input
+                      class="inline"
+                      type="checkbox"
+                      [(ngModel)]="options.disableReportCustomization"
+                    /><strong>{{ 'Setting_report' | translate }}</strong></label
+                  >
+                  <label
+                    ><input
+                      class="inline"
+                      type="checkbox"
+                      [(ngModel)]="options.enableVisualization"
+                    /><strong>{{
+                      'Setting_visualization' | translate
+                    }}</strong></label
+                  >
+              </ng-container>
+            </div>
+            <div class="item encryption">
+              <span>
+                <strong class="section-head">{{
+                  'Setting_encryption' | translate
+                }}</strong>&nbsp;
+                <i
+                  class="fa fa-info-circle"
+                  aria-hidden="true"
+                  data-toggle="tooltip"
+                  data-placement="bottom"
+                  title="{{ 'Setting_encryption_tooltip' | translate }}"
+                ></i>
+              </span>
+              <span
+                ><strong>{{ 'Setting_passphrase' | translate }}</strong></span
+              >
+              <div
+                class="passphrase-note"
+                *ngIf="!options.passPhraseAlreadySet"
+              >
+                {{ 'Collection_modal_passphasemsg' | translate }}
+              </div>
+              <input
+                autocomplete="off"
+                type="password"
+                [(ngModel)]="options.passPhrase"
+                [disabled]="options.passPhraseAlreadySet"
+              />
+              <span
+                ><strong>{{
+                  'Setting_passphrase_confirm' | translate
+                }}</strong></span
+              >
+              <input
+                autocomplete="off"
+                type="password"
+                [(ngModel)]="options.confirm_passPhrase"
+                [disabled]="options.passPhraseAlreadySet"
+              />
+              <span class="validation" *ngIf="validation.passPhrase">{{
+                validation['errMessage'] | translate
+              }}</span>
+            </div>
+            <div class="item encryption" *ngIf="disableAsupUI && caLaunch">
+              <span
+                ><strong class="section-head">{{
+                  'Setting_userverification' | translate
+                }}</strong></span
+              >
+              <span
+                ><strong>{{ 'Setting_firstname' | translate }}</strong></span
+              >
+              <input type="text" [(ngModel)]="verification.firstname" />
+              <span
+                ><strong>{{ 'Setting_lastname' | translate }}</strong></span
+              >
+              <input type="text" [(ngModel)]="verification.lastname" />
+              <span
+                ><strong>{{ 'Setting_useremail' | translate }}</strong></span
+              >
+              <input
+                type="email"
+                class="verification-email"
+                [(ngModel)]="verification.email"
+              />
+              <span class="validation" *ngIf="validation.user_email">{{
+                'Setting_useremail_invalid' | translate
+              }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" (click)="save()">
+          {{ 'Setting_save' | translate }}
+        </button>
+        <button class="btn btn-primary" data-dismiss="modal">
+          {{ 'Setting_close' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

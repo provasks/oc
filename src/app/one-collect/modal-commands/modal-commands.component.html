@@ -1,0 +1,51 @@
+<div id="commands-modal" class="modal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" (click)="closeModal()">
+          &times;
+        </button>
+        <h4 class="modal-title">
+          {{ 'Commands_modal_title' | translate }}{{ type | translate }} ({{
+            subtype | translate
+          }})
+        </h4>
+      </div>
+      <div class="modal-body">
+        <div class="toggle">
+          <div class="custom-checkbox">
+            <input
+              type="checkbox"
+              [(ngModel)]="toggleAll"
+              (click)="changeToggleAll()"
+            />
+            <label></label>
+          </div>
+          &nbsp;{{ 'Commands_modal_toggle' | translate }}
+        </div>
+        <div *ngFor="let command of commands">
+          <div class="custom-checkbox command">
+            <input
+              type="checkbox"
+              [(ngModel)]="command.selected"
+              [disabled]="command.type == 'substitution'"
+            />
+            <label></label>
+          </div>
+          &nbsp;{{ command.command }}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <span class="note" *ngIf="caLaunch">{{
+          'Commands_modal_note' | translate
+        }}</span>
+        <span class="validation" *ngIf="validation">{{
+          'Commands_modal_select' | translate
+        }}</span>
+        <button class="btn btn-primary" (click)="saveModal()">
+          {{ 'Save' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

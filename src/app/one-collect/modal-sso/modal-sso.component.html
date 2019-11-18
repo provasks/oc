@@ -1,0 +1,58 @@
+<div id="sso-modal" class="modal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+        <h4 class="modal-title">{{ 'SSO_modal_title' | translate }}</h4>
+      </div>
+      <div class="modal-body">
+        <p *ngIf="!caLaunch">
+          NetApp SSO credentials are required to upload and download
+          {{ 'OC_title' | translate }} output files to NetApp AutoSupport.
+        </p>
+        <p *ngIf="caLaunch">{{ 'SSO_modal_msg' | translate }}</p>
+        <p>{{ 'SSO_modal_asupmsg' | translate }}</p>
+        <div class="item">
+          <span>{{ 'Username' | translate }}</span>
+          <input id="sso-username" type="text" [(ngModel)]="username" />
+        </div>
+        <div class="item">
+          <span>{{ 'Password' | translate }}</span>
+          <input autocomplete="off" type="password" [(ngModel)]="password" />
+        </div>
+        <p class="new-account">
+          {{ 'SSO_modal_noaccount' | translate
+          }}<a href="https://mysupport.netapp.com/eservice/public/now.do">{{
+            'SSO_modal_create_account' | translate
+          }}</a>
+        </p>
+        <div
+          class="item"
+          [innerHTML]="'Collection_modal_link' | translate"
+        ></div>
+      </div>
+      <div class="modal-footer">
+        <span [ngClass]="{ green: result == true, red: result == false }">{{
+          message
+        }}</span>
+        <button
+          class="btn btn-primary"
+          (click)="validate()"
+          [disabled]="!username || !password"
+        >
+          {{ 'Validate' | translate }}
+        </button>
+        <button
+          id="btnSkip"
+          class="btn btn-primary"
+          data-dismiss="modal"
+          (click)="cancel()"
+        >
+          {{ 'Skip' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
